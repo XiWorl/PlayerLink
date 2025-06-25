@@ -60,3 +60,8 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+/generated/prisma
+package-lock.json
+
+generated
