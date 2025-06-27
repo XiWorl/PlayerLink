@@ -4,6 +4,7 @@ import App from "./App.jsx"
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import ProfilePage from "./components/Profile/ProfilePage"
+import PrivateRoute from "./utils/PrivateRoute.jsx"
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
@@ -13,7 +14,10 @@ createRoot(document.getElementById("root")).render(
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<App />} />
-					<Route path="/profile" element={<ProfilePage />} />
+					<Route
+						path="/profile"
+						element={<PrivateRoute page={<ProfilePage />} />}
+					/>
 				</Routes>
 			</BrowserRouter>
 		</GoogleOAuthProvider>
