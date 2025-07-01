@@ -1,7 +1,6 @@
 import { useParams, useLocation } from "react-router-dom"
 import "./ProfilePage.css"
-
-const sss = "profile-name"
+import SignupModal from "../SignupModal/SignupModal"
 
 export default function UserProfile() {
 	//TODO: This is sample data - replace with actual user data in a future commit
@@ -11,9 +10,9 @@ export default function UserProfile() {
 		bio: "Passionate software engineer with years of experience building scalable web applications and leading cross-functional teams.",
 		about: "I'm a dedicated software engineer with expertise in full-stack development, specializing in React, Node.js, and cloud technologies.",
 	}
-
 	return (
 		<div className="profile-page">
+			<SignupModal isOpen={true} />
 			<div className="profile-banner">
 				<div className="profile-picture">
 					<div className="profile-picture-placeholder">
