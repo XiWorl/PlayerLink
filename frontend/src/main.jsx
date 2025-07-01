@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client"
 import App from "./App.jsx"
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import ProfilePage from "./components/Profile/ProfilePage"
+import ProfilePage from "./pages/ProfilePage.jsx"
 import PrivateRoute from "./utils/PrivateRoute.jsx"
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID

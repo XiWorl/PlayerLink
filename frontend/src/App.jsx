@@ -1,5 +1,5 @@
 import "./App.css"
-import LoginPage from "./components/LoginPage/LoginPage"
+import LoginPage from "./pages/LoginPage"
 
 function App() {
 	return (
@@ -9,8 +9,5 @@ function App() {
 		</>
 	)
 }
-
-
-
 
 export default App
