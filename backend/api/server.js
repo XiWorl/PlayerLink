@@ -9,16 +9,21 @@ server.use(helmet())
 server.use(express.json())
 server.use(cors())
 
+function convertToBoolean(value) {
+	const YES_VALUE = "yes"
+	if (value.toLowerCase() == YES_VALUE) {
+		return true
+	} else return false
+}
 
 function checkSignupData(reqBody) {
-    const isDataValid = (
+	const isDataValid =
 		reqBody !== undefined &&
-        reqBody.email !== undefined &&
+		reqBody.email !== undefined &&
 		reqBody.firstName !== undefined &&
 		reqBody.location !== undefined &&
 		reqBody.willingToRelocate !== undefined &&
 		reqBody.yearsOfExperience !== undefined
-	)
 	return isDataValid
 }
 
@@ -58,7 +63,7 @@ server.get("/profiles/:profileId", async (req, res, next) => {
 
 server.get("/api/login/", async (req, res, next) => {
 	try {
-        const email = req.query.email
+		const email = req.query.email
 
 		if (email == null) {
 			res.status(404).json({ error: "Account not found" })
@@ -79,32 +84,31 @@ server.get("/api/login/", async (req, res, next) => {
 	}
 })
 
-
 server.post("/api/signup/", async (req, res, next) => {
 	try {
-        if (checkSignupData(req.body) == false) {
-            res.status(400).json({ error: "Invalid signup data" })
-            return
-        }
-        const data = await prisma.account.create({
-            data: {
-                accountType: "player",
-                email: req.body.email,
-                player: {
-                    create: {
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        yearsOfExperience: req.body.yearsOfExperience,
-                        location: req.body.location,
-                        willingToRelocate: false
-                    }
-                }
-            }
-        })
-        res.status(200).json(data)
-        return
-
-    } catch (err) {
+		if (checkSignupData(req.body) == false) {
+			res.status(400).json({ error: "Invalid signup data" })
+			return
+		}
+		const data = await prisma.account.create({
+			data: {
+				// TODO: Currently the account type is hardcoded to player. In the future, account type can either be "player" or "team". This change will be made after the team profile page is complete.
+				accountType: "player",
+				email: req.body.email,
+				player: {
+					create: {
+						firstName: req.body.firstName,
+						lastName: req.body.lastName,
+						yearsOfExperience: req.body.yearsOfExperience,
+						location: req.body.location,
+						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
+					},
+				},
+			},
+		})
+		res.status(200).json(data)
+		return
+	} catch (err) {
 		next(err)
 		return
 	}

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { createContext } from "react"
-import { AccountType } from "./utils"
 import { Header } from "./Header"
+import { AccountType } from "../../utils/globalUtils"
 import { DEFAULT_ERRORS_VALUE } from "./utils"
 import SignupForm from "./SignupForm"
 import "./SignupModal.css"

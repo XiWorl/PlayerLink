@@ -3,13 +3,13 @@ import { jwtDecode } from "jwt-decode"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { LOGIN_FAILURE, onLoginAttempt } from "../../api.js"
-import { AccountType } from "../SignupModal/utils.jsx"
+import { AccountType, GOOGLE_EMAIL_KEY } from "../../utils/globalUtils.js"
 import SignupModal from "../SignupModal/SignupModal"
 import "./LoginForm.css"
 
 async function onLoginSuccess(setSignupModalVisible, credentialResponse, navigate) {
 	const token = jwtDecode(credentialResponse.credential)
-	localStorage.setItem("GoogleEmail", token.email)
+	localStorage.setItem(GOOGLE_EMAIL_KEY, token.email)
 
 	const loginResult = await onLoginAttempt(token.email)
 	if (loginResult === LOGIN_FAILURE) {

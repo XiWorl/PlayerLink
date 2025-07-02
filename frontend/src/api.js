@@ -1,10 +1,9 @@
-import { AccountType } from "./components/SignupModal/utils"
+import { AccountType, BASEURL } from "./utils/globalUtils"
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
-const baseURL = import.meta.env.VITE_RENDER_LINK || "http://localhost:3000"
 
 export async function onLoginAttempt(email) {
 	try {
-		const response = await fetch(`${baseURL}/api/login/?email=${email}`)
+		const response = await fetch(`${BASEURL}/api/login/?email=${email}`)
 
 		if (response.ok === true) {
 			const data = await response.json()
@@ -18,9 +17,9 @@ export async function onLoginAttempt(email) {
 }
 
 export async function getProfileData(accountType, accountId) {
-    const accountNavigation = accountType === AccountType.PLAYER ? "profiles" : "teams"
+	const accountNavigation = accountType === AccountType.PLAYER ? "profiles" : "teams"
 	try {
-		const response = await fetch(`${baseURL}/${accountNavigation}/${accountId}`)
+		const response = await fetch(`${BASEURL}/${accountNavigation}/${accountId}`)
 		const data = await response.json()
 		return data
 	} catch (error) {

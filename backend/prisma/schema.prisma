@@ -29,6 +29,8 @@ model Player {
   yearsOfExperience String
   location    String
   willingToRelocate Boolean
+  bio         String?
+  about      String?
   accountId  Int @unique
   account     Account @relation(fields: [accountId], references: [id])
 }

@@ -5,10 +5,6 @@ export const INVALID_INPUT_CLASS = "error"
 export const VALID_INPUT_CLASS = ""
 export const DEFAULT_ERRORS_VALUE = Object.freeze({ player: {}, team: {} })
 export const DEFAULT_FORM_VALUE = ""
-export const AccountType = Object.freeze({
-	PLAYER: "player",
-	TEAM: "team",
-})
 
 const LOCATION_OPTIONS = [
 	"USA",

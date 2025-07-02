@@ -1,9 +1,9 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import App from "./App.jsx"
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { AccountType } from "./components/SignupModal/utils.jsx"
+import { AccountType } from "./utils/globalUtils.js"
+import App from "./App.jsx"
 import ProfilePage from "./pages/ProfilePage.jsx"
 import PrivateRoute from "./utils/PrivateRoute.jsx"
 
