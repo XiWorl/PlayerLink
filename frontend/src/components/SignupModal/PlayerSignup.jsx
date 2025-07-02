@@ -1,16 +1,10 @@
 import { TextFormField, LocationDropdown, YesOrNoDropdown } from "./utils"
 import { useContext } from "react"
 import { SignupModalContext } from "./SignupModal.jsx"
+import { YearsOfExperienceOptions } from "./utils"
 
 const INVALID_INPUT_CLASS = "error"
 const VALID_INPUT_CLASS = ""
-const YearsOfExperienceOptions = Object.freeze({
-	"0-1": "0-1",
-	"2-3": "2-3",
-	"4-5": "4-5",
-	"6-10": "6-10",
-	"10+": "10+",
-})
 
 export default function PlayerSignup() {
 	const { formData, formErrors, handleInputChange, selectedAccountType } =
@@ -52,11 +46,19 @@ export default function PlayerSignup() {
 					}
 				>
 					<option value="">Select experience</option>
-					<option value={YearsOfExperienceOptions[""]}>0-1 years</option>
-					<option value={YearsOfExperienceOptions["2-3"]}>2-3 years</option>
-					<option value={YearsOfExperienceOptions["4-5"]}>4-5 years</option>
-					<option value={YearsOfExperienceOptions["6-10"]}>6-10 years</option>
-					<option value={YearsOfExperienceOptions["10+"]}>10+ years</option>
+					<option value={YearsOfExperienceOptions["ZERO_TO_ONE"]}>
+						0-1 years
+					</option>
+					<option value={YearsOfExperienceOptions["TWO_TO_THREE"]}>
+						2-3 years
+					</option>
+					<option value={YearsOfExperienceOptions["FOUR_TO_FIVE"]}>
+						4-5 years
+					</option>
+					<option value={YearsOfExperienceOptions["SIX_TO_TEN"]}>
+						6-10 years
+					</option>
+					<option value={YearsOfExperienceOptions["TENPLUS"]}>10+ years</option>
 				</select>
 			</div>
 		</>

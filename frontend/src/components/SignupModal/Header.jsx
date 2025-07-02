@@ -14,8 +14,8 @@ export function Header({ onClose }) {
 		DEFAULT_FORM_DATA,
 	} = useContext(SignupModalContext)
 
-	function handleAccountTypeChange(type) {
-		setSelectedAccountType(type)
+	function onAccountTypeChange(accountTypeName) {
+		setSelectedAccountType(accountTypeName)
 		setFormData(DEFAULT_FORM_DATA)
 		setFormErrors(DEFAULT_ERRORS_VALUE)
 	}
@@ -36,7 +36,7 @@ export function Header({ onClose }) {
 							? ACTIVE_BUTTON_CLASS
 							: INACTIVE_BUTTON_CLASS
 					}`}
-					onClick={() => handleAccountTypeChange(AccountType.PLAYER)}
+					onClick={() => onAccountTypeChange(AccountType.PLAYER)}
 				>
 					Player Account
 				</button>
@@ -46,7 +46,7 @@ export function Header({ onClose }) {
 							? ACTIVE_BUTTON_CLASS
 							: INACTIVE_BUTTON_CLASS
 					}`}
-					onClick={() => handleAccountTypeChange(AccountType.TEAM)}
+					onClick={() => onAccountTypeChange(AccountType.TEAM)}
 				>
 					Team Account
 				</button>

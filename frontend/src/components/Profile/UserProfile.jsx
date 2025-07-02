@@ -10,9 +10,13 @@ export default function UserProfile() {
 		bio: "Passionate software engineer with years of experience building scalable web applications and leading cross-functional teams.",
 		about: "I'm a dedicated software engineer with expertise in full-stack development, specializing in React, Node.js, and cloud technologies.",
 	}
+
+	const isSignupModalOpen = true
+
 	return (
 		<div className="profile-page">
-			<SignupModal isOpen={true} />
+			//TODO: SignupModal is open on the profile page for testing purposes - remove this in a future commit
+			{isSignupModalOpen && <SignupModal />}
 			<div className="profile-banner">
 				<div className="profile-picture">
 					<div className="profile-picture-placeholder">
@@ -20,7 +24,6 @@ export default function UserProfile() {
 					</div>
 				</div>
 			</div>
-
 			<div className="profile-header">
 				<div className="profile-info">
 					<h1 className="profile-name">{testData.name}</h1>
@@ -28,7 +31,6 @@ export default function UserProfile() {
 					<p className="profile-location">📍 {testData.location}</p>
 				</div>
 			</div>
-
 			<div className="profile-about">
 				<h3>About</h3>
 				<p className="profile-about-text">{testData.about}</p>

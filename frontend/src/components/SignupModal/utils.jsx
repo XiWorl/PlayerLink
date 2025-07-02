@@ -9,6 +9,13 @@ export const AccountType = Object.freeze({
 	PLAYER: "player",
 	TEAM: "team",
 })
+export const YearsOfExperienceOptions = Object.freeze({
+	ZERO_TO_ONE: "0-1",
+	TWO_TO_THREE: "2-3",
+	FOUR_TO_FIVE: "4-5",
+	SIX_TO_TEN: "6-10",
+	TENPLUS: "10+",
+})
 
 const LOCATION_OPTIONS = [
 	"USA",
