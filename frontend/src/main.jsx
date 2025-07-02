@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import App from "./App.jsx"
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { AccountType } from "./components/SignupModal/utils.jsx"
 import ProfilePage from "./pages/ProfilePage.jsx"
 import PrivateRoute from "./utils/PrivateRoute.jsx"
 
@@ -15,8 +16,12 @@ createRoot(document.getElementById("root")).render(
 				<Routes>
 					<Route path="/" element={<App />} />
 					<Route
-						path="/profile"
-						element={<PrivateRoute page={<ProfilePage />} />}
+						path="/profiles/:id"
+						element={
+							<PrivateRoute
+								page={<ProfilePage accountType={AccountType.PLAYER} />}
+							/>
+						}
 					/>
 				</Routes>
 			</BrowserRouter>

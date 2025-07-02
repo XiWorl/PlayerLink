@@ -7,8 +7,25 @@ import { DEFAULT_FORM_VALUE } from "./utils.jsx"
 
 const optionalSignupInformation = ["lastName"]
 
-function onFormValid() {
-	//TODO: Send signup data to backend to create account
+async function onFormValid(formData, selectedAccountType) {
+	const baseURL = import.meta.env.VITE_RENDER_LINK || "http://localhost:3000"
+	const body = {
+		...formData[selectedAccountType],
+		email: localStorage.getItem("GoogleEmail"),
+	}
+	try {
+		const response = await fetch(`${baseURL}/api/signup/`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(body),
+		})
+
+		const data = await response.json()
+	} catch (error) {
+		console.error("Error posting data:", error)
+	}
 }
 
 function validateForm(formData, selectedAccountType, setFormErrors) {
@@ -28,16 +45,14 @@ function validateForm(formData, selectedAccountType, setFormErrors) {
 		}
 		setFormErrors(newErrors)
 
-		formValid ? onFormValid() : alert("Please make sure all fields are filled out")
+		formValid
+			? onFormValid(formData, selectedAccountType)
+			: alert("Please make sure all fields are filled out")
 		return formValid
 	}
 }
 
-function onClose() {
-	//TODO: Close signup modal and redirect to profile page
-}
-
-export default function SignupForm() {
+export default function SignupForm({ onClose }) {
 	const { formData, selectedAccountType, setFormErrors } =
 		useContext(SignupModalContext)
 

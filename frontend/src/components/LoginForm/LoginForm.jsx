@@ -1,28 +1,60 @@
 import { GoogleLogin } from "@react-oauth/google"
 import { jwtDecode } from "jwt-decode"
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { LOGIN_FAILURE, onLoginAttempt } from "../../api.js"
+import { AccountType } from "../SignupModal/utils.jsx"
+import SignupModal from "../SignupModal/SignupModal"
 import "./LoginForm.css"
 
-function onLoginSuccess(navigate) {
-	return function (credentialResponse) {
-		const token = jwtDecode(credentialResponse.credential)
-		localStorage.setItem("GoogleLoginToken", JSON.stringify(token))
+async function onLoginSuccess(setSignupModalVisible, credentialResponse, navigate) {
+	const token = jwtDecode(credentialResponse.credential)
+	localStorage.setItem("GoogleEmail", token.email)
 
-		navigate("/profile")
+	const loginResult = await onLoginAttempt(token.email)
+	if (loginResult === LOGIN_FAILURE) {
+		setSignupModalVisible(true)
+		return
+	}
+
+	if (loginResult.accountType === AccountType.PLAYER) {
+		navigate(`/profiles/${loginResult.id}`)
+	} else {
+		navigate(`/teams/${loginResult.id}`)
 	}
 }
 
-export default function LoginForm() {
+function GoogleLoginCard({ setSignupModalVisible }) {
 	const navigate = useNavigate()
 
 	return (
-		<div className="login-form-container">
-			<div className="login-form-card">
-				<h2 className="login-form-title">Login with Google</h2>
-				<div className="google-signin-wrapper">
-					<GoogleLogin onSuccess={onLoginSuccess(navigate)} />
-				</div>
+		<div className="login-form-card">
+			<h2 className="login-form-title">Login with Google</h2>
+			<div className="google-signin-wrapper">
+				<GoogleLogin
+					onSuccess={(credentialResponse) =>
+						onLoginSuccess(
+							setSignupModalVisible,
+							credentialResponse,
+							navigate
+						)
+					}
+				/>
 			</div>
+		</div>
+	)
+}
+
+export default function LoginForm() {
+	const [signupModalVisible, setSignupModalVisible] = useState(false)
+
+	return (
+		<div className="login-form-container">
+			{signupModalVisible ? (
+				<SignupModal isOpen={true} onClose={() => setSignupModalVisible(false)} />
+			) : (
+				<GoogleLoginCard setSignupModalVisible={setSignupModalVisible} />
+			)}
 		</div>
 	)
 }

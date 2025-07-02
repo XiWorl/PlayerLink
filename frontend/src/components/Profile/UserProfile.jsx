@@ -2,7 +2,7 @@ import { useParams, useLocation } from "react-router-dom"
 import "./ProfilePage.css"
 import SignupModal from "../SignupModal/SignupModal"
 
-export default function UserProfile() {
+export default function UserProfile({accountData}) {
 	//TODO: This is sample data - replace with actual user data in a future commit
 	const testData = {
 		name: "John Doe",
@@ -12,7 +12,6 @@ export default function UserProfile() {
 	}
 	return (
 		<div className="profile-page">
-			<SignupModal isOpen={true} />
 			<div className="profile-banner">
 				<div className="profile-picture">
 					<div className="profile-picture-placeholder">
@@ -23,9 +22,9 @@ export default function UserProfile() {
 
 			<div className="profile-header">
 				<div className="profile-info">
-					<h1 className="profile-name">{testData.name}</h1>
+					<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
 					<p className="profile-title">{testData.bio}</p>
-					<p className="profile-location">📍 {testData.location}</p>
+					<p className="profile-location">📍 {accountData.location}</p>
 				</div>
 			</div>
 

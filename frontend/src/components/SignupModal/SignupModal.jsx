@@ -73,13 +73,10 @@ export default function SignupModal({ isOpen, onClose }) {
 				DEFAULT_FORM_DATA,
 			}}
 		>
-			<div className="signup-modal-overlay" onClick={onClose}>
-				<div
-					className="signup-modal-content"
-					onClick={(event) => event.stopPropagation()}
-				>
-					<Header />
-					<SignupForm />
+			<div className="signup-modal-overlay">
+				<div className="signup-modal-content">
+					<Header onClose={onClose} />
+					<SignupForm onClose={onClose} />
 				</div>
 			</div>
 		</SignupModalContext.Provider>

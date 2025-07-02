@@ -23,7 +23,7 @@ export function Header({ onClose }) {
 	return (
 		<>
 			<div className="signup-modal-header">
-				<h2>Create Account</h2>
+				<h2>Create Your Account</h2>
 				<button className="close-button" onClick={onClose}>
 					&times;
 				</button>
