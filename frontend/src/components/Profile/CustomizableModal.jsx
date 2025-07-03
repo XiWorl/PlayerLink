@@ -2,7 +2,7 @@ import { useState } from "react"
 import "../SignupModal/SignupModal.css"
 
 function onClose() {
-	console.log("now close")
+	//TODO: add functionality to close modal
 }
 
 export function ModalTextBox() {
