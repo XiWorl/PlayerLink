@@ -27,17 +27,6 @@ function checkSignupData(reqBody) {
 	return isDataValid
 }
 
-server.get("/profiles", async (req, res, next) => {
-	try {
-		const data = await prisma.account.findMany()
-		res.status(200).json(data)
-		return
-	} catch (err) {
-		next(err)
-		return
-	}
-})
-
 server.get("/players", async (req, res, next) => {
 	try {
 		const data = await prisma.player.findMany()
