@@ -191,3 +191,30 @@
     background-position: right 12px center;
     background-size: 10px;
 }
+
+.modal-text-box {
+    width: 80%;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    resize: vertical;
+    max-height: 250px;
+    min-height: 30px;
+    padding: 5px;
+}
+
+.modal-buttons {
+    width: 50%;
+    display: flex;
+    margin: 0 auto 15px auto;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    padding-top: 5px;
+}

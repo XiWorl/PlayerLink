@@ -104,11 +104,24 @@
 }
 
 .profile-about {
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-about-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-about-image {
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
 }
 
 .profile-about h3 {

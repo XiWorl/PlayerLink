@@ -1,3 +1,4 @@
+import { EditButton } from "./EditButton"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
 
@@ -25,7 +26,10 @@ export default function UserProfile({ isLoading, accountData }) {
 				</div>
 			</div>
 			<div className="profile-about">
-				<h3>About</h3>
+				<div className="profile-about-header">
+					<h3>About</h3>
+					<EditButton />
+				</div>
 				<p className="profile-about-text">{`${
 					accountData.about || defaultProfileInfo
 				}`}</p>
