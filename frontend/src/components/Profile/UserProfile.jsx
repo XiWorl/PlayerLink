@@ -15,7 +15,6 @@ export default function UserProfile({ isLoading, accountData }) {
 					</div>
 				</div>
 			</div>
-
 			<div className="profile-header">
 				<div className="profile-info">
 					<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
@@ -25,7 +24,6 @@ export default function UserProfile({ isLoading, accountData }) {
 					<p className="profile-location">📍 {accountData.location}</p>
 				</div>
 			</div>
-
 			<div className="profile-about">
 				<h3>About</h3>
 				<p className="profile-about-text">{`${

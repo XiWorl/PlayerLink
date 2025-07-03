@@ -32,7 +32,7 @@ function updateFormState(event, setFormData, setFormErrors, selectedAccountType)
 	})
 }
 
-export default function SignupModal({ isOpen, onClose }) {
+export default function SignupModal({ onClose }) {
 	const DEFAULT_FORM_DATA = {
 		player: {
 			firstName: DEFAULT_FORM_VALUE,
@@ -57,8 +57,6 @@ export default function SignupModal({ isOpen, onClose }) {
 		updateFormState(event, setFormData, setFormErrors, selectedAccountType)
 	}
 
-	if (!isOpen) return null
-
 	return (
 		<SignupModalContext.Provider
 			value={{
@@ -74,7 +72,10 @@ export default function SignupModal({ isOpen, onClose }) {
 			}}
 		>
 			<div className="signup-modal-overlay">
-				<div className="signup-modal-content">
+				<div
+					className="signup-modal-content"
+					onClick={(event) => event.stopPropagation()}
+				>
 					<Header onClose={onClose} />
 					<SignupForm onClose={onClose} />
 				</div>

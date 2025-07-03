@@ -1,21 +1,11 @@
 import { useContext } from "react"
 import { SignupModalContext } from "./SignupModal.jsx"
+import { LOCATION_OPTIONS } from "../../utils/globalUtils.js"
 
 export const INVALID_INPUT_CLASS = "error"
 export const VALID_INPUT_CLASS = ""
 export const DEFAULT_ERRORS_VALUE = Object.freeze({ player: {}, team: {} })
 export const DEFAULT_FORM_VALUE = ""
-
-const LOCATION_OPTIONS = [
-	"USA",
-	"Canada",
-	"Mexico",
-	"South America",
-	"Europe",
-	"Africa",
-	"Asia",
-	"Oceania",
-]
 
 const YesOrNoEnum = Object.freeze({
 	YES: "Yes",

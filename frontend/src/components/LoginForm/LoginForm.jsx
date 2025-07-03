@@ -51,7 +51,7 @@ export default function LoginForm() {
 	return (
 		<div className="login-form-container">
 			{signupModalVisible ? (
-				<SignupModal isOpen={true} onClose={() => setSignupModalVisible(false)} />
+				<SignupModal onClose={() => setSignupModalVisible(false)} />
 			) : (
 				<GoogleLoginCard setSignupModalVisible={setSignupModalVisible} />
 			)}
