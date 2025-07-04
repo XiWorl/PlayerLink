@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { AccountType } from "../utils/globalUtils"
 import { TeamProfile } from "../components/Profile/TeamProfile"
 import { useParams } from "react-router-dom"
+import Navbar from "../components/Navbar/Navbar"
 import UserProfile from "../components/Profile/UserProfile"
 import "../components/Profile/ProfilePage.css"
 
@@ -22,7 +23,10 @@ export default function ProfilePage({ accountType }) {
 	}, [])
 
 	return accountType == AccountType.PLAYER ? (
-		<UserProfile isLoading={isLoading} accountData={accountData} />
+		<>
+			<Navbar />
+			<UserProfile isLoading={isLoading} accountData={accountData} />
+		</>
 	) : (
 		<TeamProfile isLoading={isLoading} accountData={accountData} />
 	)
