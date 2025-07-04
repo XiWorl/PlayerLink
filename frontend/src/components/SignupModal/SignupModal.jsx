@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { createContext } from "react"
-import { AccountType } from "./utils"
 import { Header } from "./Header"
+import { AccountType } from "../../utils/globalUtils"
 import { DEFAULT_ERRORS_VALUE } from "./utils"
 import SignupForm from "./SignupForm"
 import "./SignupModal.css"
@@ -32,7 +32,7 @@ function updateFormState(event, setFormData, setFormErrors, selectedAccountType)
 	})
 }
 
-export default function SignupModal() {
+export default function SignupModal({ onClose }) {
 	const DEFAULT_FORM_DATA = {
 		player: {
 			firstName: DEFAULT_FORM_VALUE,
@@ -76,8 +76,8 @@ export default function SignupModal() {
 					className="signup-modal-content"
 					onClick={(event) => event.stopPropagation()}
 				>
-					<Header />
-					<SignupForm />
+					<Header onClose={onClose} />
+					<SignupForm onClose={onClose} />
 				</div>
 			</div>
 		</SignupModalContext.Provider>

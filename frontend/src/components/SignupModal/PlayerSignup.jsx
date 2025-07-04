@@ -1,7 +1,7 @@
 import { TextFormField, LocationDropdown, YesOrNoDropdown } from "./utils"
 import { useContext } from "react"
 import { SignupModalContext } from "./SignupModal.jsx"
-import { YearsOfExperienceOptions } from "./utils"
+import { YearsOfExperienceOptions } from "../../utils/globalUtils.js"
 
 const INVALID_INPUT_CLASS = "error"
 const VALID_INPUT_CLASS = ""

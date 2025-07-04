@@ -8,7 +8,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id         String   @id @default(cuid())
+enum AccountType {
+  player
+  team
+}
+
+model Account {
+  id Int @id @default(autoincrement())
   createdAt  DateTime @default(now())
+  accountType AccountType
+  email String @unique
+  player Player?
+  team  Team?
+}
+
+model Player {
+  playerId  Int @id @default(autoincrement())
+  firstName String
+  lastName  String?
+  yearsOfExperience String
+  location    String
+  willingToRelocate Boolean
+  bio         String?
+  about      String?
+  accountId  Int @unique
+  account     Account @relation(fields: [accountId], references: [id])
+}
+
+model Team {
+  teamId     Int @id @default(autoincrement())
+  name       String
+  location   String
+  currentlyHiring Boolean
+  yearEstablished String
+  accountId  Int @unique
+  account     Account @relation(fields: [accountId], references: [id])
 }

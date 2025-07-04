@@ -1,6 +1,6 @@
 const ACTIVE_BUTTON_CLASS = "active"
 const INACTIVE_BUTTON_CLASS = ""
-import { AccountType } from "./utils"
+import { AccountType } from "../../utils/globalUtils.js"
 import { useContext } from "react"
 import { SignupModalContext } from "./SignupModal.jsx"
 import { DEFAULT_ERRORS_VALUE } from "./utils"
@@ -23,7 +23,7 @@ export function Header({ onClose }) {
 	return (
 		<>
 			<div className="signup-modal-header">
-				<h2>Create Account</h2>
+				<h2>Create Your Account</h2>
 				<button className="close-button" onClick={onClose}>
 					&times;
 				</button>

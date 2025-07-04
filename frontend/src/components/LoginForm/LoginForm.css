@@ -25,14 +25,13 @@
   font-size: 28px;
   font-weight: 600;
   margin-bottom: 30px;
-  letter-spacing: -0.5px;
 }
 
 .google-signin-wrapper {
   margin-top: 20px;
 }
 
-.login-form-card > div:last-child {
+.login-form-card > div {
   display: flex;
   justify-content: center;
   margin-top: 20px;
