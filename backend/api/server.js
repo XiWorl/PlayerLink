@@ -1,3 +1,4 @@
+const { editPlayerProfileInformation } = require("./utils")
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -96,6 +97,27 @@ server.post("/api/signup/", async (req, res, next) => {
 			},
 		})
 		res.status(200).json(data)
+		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+
+server.patch("/api/profiles/edit", async (req, res, next) => {
+	try {
+		if (req.body == null) {
+			res.status(400).json({ error: "Must provide body information" })
+			return
+		}
+
+		const result = editPlayerProfileInformation(prisma, 2, req.body)
+		if (!result) {
+			res.status(400).json({ error: "Invalid profile information, cannot update" })
+			return
+		}
+
+		res.status(200).json({ message: "Successfully updated profile" })
 		return
 	} catch (err) {
 		next(err)
