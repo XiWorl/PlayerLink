@@ -1,4 +1,8 @@
-const { editPlayerProfileInformation } = require("./utils")
+const {
+	editPlayerProfileInformation,
+	registerSessionToken,
+	verifySessionToken,
+} = require("./utils")
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -66,7 +70,13 @@ server.get("/api/login/", async (req, res, next) => {
 			return
 		}
 
-		res.status(200).json(data)
+		const token = await registerSessionToken(data)
+		const clientResponseInformation = {
+			id: data.id,
+			accountType: data.accountType,
+			token: token,
+		}
+		res.status(200).json(clientResponseInformation)
 		return
 	} catch (err) {
 		next(err)
@@ -96,7 +106,15 @@ server.post("/api/signup/", async (req, res, next) => {
 				},
 			},
 		})
-		res.status(200).json(data)
+
+		const token = await registerSessionToken(data)
+		const clientResponseInformation = {
+			accountId: createdData.accountId,
+			accountType: createdData.accountType,
+			token: token,
+		}
+
+		res.status(200).json(clientResponseInformation)
 		return
 	} catch (err) {
 		next(err)
