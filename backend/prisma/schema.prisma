@@ -41,6 +41,8 @@ model Team {
   location   String
   currentlyHiring Boolean
   yearEstablished String
+  description String?
+  overview   String?
   accountId  Int @unique
   account     Account @relation(fields: [accountId], references: [id])
 }

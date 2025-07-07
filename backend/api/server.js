@@ -32,9 +32,34 @@ function checkSignupData(reqBody) {
 	return isDataValid
 }
 
+//TODO: This GET request is only used for testing purposes. Remove this before production.
 server.get("/players", async (req, res, next) => {
 	try {
 		const data = await prisma.player.findMany()
+		res.status(200).json(data)
+		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+
+//TODO: This GET request is only used for testing purposes. Remove this before production.
+server.get("/teams", async (req, res, next) => {
+	try {
+		const data = await prisma.team.findMany()
+		res.status(200).json(data)
+		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+
+server.get("/teams/:teamId", async (req, res, next) => {
+	try {
+		const id = parseInt(req.params.teamId)
+		const data = await prisma.team.findUnique({ where: { accountId: id } })
 		res.status(200).json(data)
 		return
 	} catch (err) {
