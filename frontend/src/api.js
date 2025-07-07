@@ -27,3 +27,17 @@ export async function getProfileData(accountType, accountId) {
 		console.error("Error retrieving data:", error)
 	}
 }
+
+export async function getProfileDataWithToken(token) {
+	try {
+		const response = await fetch(`${BASEURL}/api/verify/token`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		const data = await response.json()
+		return data
+	} catch (error) {
+		console.error("Error retrieving data:", error)
+	}
+}

@@ -58,3 +58,18 @@ export async function dataPagination(prisma, accountType, query) {
 		currentPage: page,
 	}
 }
+
+
+export async function getVerifiedAccountInformation(prisma, token) {
+	const decoded = await verifySessionToken(token)
+	if (!decoded) {
+		return false
+	}
+	const accountInformation = await prisma.account.findUnique({
+		where: { id: decoded.id },
+	})
+	if (!accountInformation) {
+		return false
+	}
+	return accountInformation
+}

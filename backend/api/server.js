@@ -2,7 +2,8 @@ const {
 	editPlayerProfileInformation,
 	registerSessionToken,
 	verifySessionToken,
-	dataPagination
+	dataPagination,
+	getVerifiedAccountInformation
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
@@ -128,6 +129,19 @@ server.get("/api/login/", async (req, res, next) => {
 		return
 	}
 })
+
+server.get("/api/verify/token", async (req, res, next) => {
+	const authorizationHeader = req.headers.authorization
+	const token = authorizationHeader.replace("Bearer ", "")
+	const verification = await getVerifiedAccountInformation(prisma, token)
+	if (!verification) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+	res.status(200).json(verification)
+	return
+})
+
 
 server.post("/api/signup/", async (req, res, next) => {
 	try {
