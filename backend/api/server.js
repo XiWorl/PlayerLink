@@ -2,11 +2,12 @@ const {
 	editPlayerProfileInformation,
 	registerSessionToken,
 	verifySessionToken,
+	dataPagination
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
-const { PrismaClient } = require("../generated/prisma")
+const { PrismaClient, AccountType } = require("../generated/prisma")
 const prisma = new PrismaClient()
 
 const server = express()
@@ -50,6 +51,25 @@ server.get("/teams", async (req, res, next) => {
 		const data = await prisma.team.findMany()
 		res.status(200).json(data)
 		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+
+server.get("/collection/players", async (req, res, next) => {
+	try {
+		const pageData = await dataPagination(prisma, AccountType.player, req.query)
+		res.json(pageData)
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+server.get("/collection/teams", async (req, res, next) => {
+	try {
+		const pageData = await dataPagination(prisma, AccountType.team, req.query)
+		res.json(pageData)
 	} catch (err) {
 		next(err)
 		return
@@ -163,7 +183,11 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 			return
 		}
 
-		const result = await editPlayerProfileInformation(prisma, authorization.id, req.body)
+		const result = await editPlayerProfileInformation(
+			prisma,
+			authorization.id,
+			req.body
+		)
 		if (!result) {
 			res.status(400).json({ error: "Invalid profile information, cannot update" })
 			return
