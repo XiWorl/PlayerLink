@@ -1,4 +1,4 @@
-//This file will be used to seed the database with initial data for testing purposes.
+//This file is used to seed the database with initial data for testing purposes. Will be removed in production.
 
 const { PrismaClient } = require("../generated/prisma")
 const prisma = new PrismaClient()
