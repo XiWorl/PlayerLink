@@ -41,7 +41,7 @@ export async function verifySessionToken(token) {
 
 export async function dataPagination(prisma, accountType, query) {
 	let page = 1
-	if (query != null && query.page != null && isNaN(parseInt(query.page))) {
+	if (query != null && query.page != null && !isNaN(parseInt(query.page))) {
 		page = parseInt(query.page)
 	}
 
@@ -49,7 +49,7 @@ export async function dataPagination(prisma, accountType, query) {
 		skip: (page - 1) * PAGE_SIZE,
 		take: PAGE_SIZE,
 	})
-	
+
 	const totalPages = Math.ceil((await prisma[accountType].count()) / PAGE_SIZE)
 
 	return {
