@@ -1,20 +1,40 @@
+import { AccountType } from "../../utils/globalUtils"
 import { CustomizableModal, ModalHeader } from "../CustomizableModal/CustomizableModal"
 import { ModalTextBox } from "../CustomizableModal/utils"
 import { modalSubmitHelper } from "./EditButtonUtils"
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { useParams } from "react-router-dom"
+import { UserProfileContext } from "./UserProfile"
 export const TypeOfEditButton = {
 	BIO: "bio",
 	ABOUT: "about",
 }
 
 function onAboutModalSubmitButtonClicked(textValue) {
-	return function () {
-		modalSubmitHelper(textValue, TypeOfEditButton.ABOUT)
+	const { id } = useParams()
+	const { setAbout } = useContext(UserProfileContext)
+	return async function () {
+		const updatedAboutObject = await modalSubmitHelper(
+			textValue,
+			TypeOfEditButton.ABOUT,
+			AccountType.PLAYER,
+			id
+		)
+		if (updatedAboutObject.updatedValue != null)
+			setAbout(updatedAboutObject.updatedValue)
 	}
 }
 function onBioModalSubmitButtonClicked(textValue) {
-	return function () {
-		modalSubmitHelper(textValue, TypeOfEditButton.BIO)
+	const { id } = useParams()
+	const { setBio } = useContext(UserProfileContext)
+	return async function () {
+		const updatedBioObject = await modalSubmitHelper(
+			textValue,
+			TypeOfEditButton.BIO,
+			AccountType.PLAYER,
+			id
+		)
+		if (updatedBioObject.updatedValue != null) setBio(updatedBioObject.updatedValue)
 	}
 }
 

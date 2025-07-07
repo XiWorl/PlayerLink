@@ -5,19 +5,23 @@ import dotenv from "dotenv"
 dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 
-export async function editPlayerProfileInformation(prisma, accountId, body) {
+export async function editPlayerProfileInformation(prisma, loggedInUserId, body) {
 	if (body.editType == null || body.value == null || EditType[body.editType] == null) {
 		return false
 	}
+    if (body.accountId == null || loggedInUserId != body.accountId) {
+        return false
+    }
 
 	const accountType = "player"
+    const sectionOfProfileToEdit = EditType[body.editType]
 	const updatedPlayerData = await prisma[accountType].update({
-		where: { accountId: accountId },
+		where: { accountId: loggedInUserId },
 		data: {
-			[EditType[body.editType]]: body.value,
+			[sectionOfProfileToEdit]: body.value,
 		},
 	})
-	return updatedPlayerData
+	return updatedPlayerData[sectionOfProfileToEdit]
 }
 
 export async function registerSessionToken(accountInformation) {

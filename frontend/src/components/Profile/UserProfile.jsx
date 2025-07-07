@@ -1,42 +1,46 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
+import { createContext, useState } from "react"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
+
+export const UserProfileContext = createContext()
 
 export default function UserProfile({ isLoading, accountData }) {
 	if (isLoading) {
 		return <h1>Loading...</h1>
 	}
 
+	const [bio, setBio] = useState(accountData.bio || defaultProfileInfo)
+	const [about, setAbout] = useState(accountData.about || defaultProfileInfo)
+
 	return (
-		<div className="profile-page">
-			<div className="profile-banner">
-				<div className="profile-picture">
-					<div className="profile-picture-placeholder">
-						{accountData.firstName.charAt(0)}
+		<UserProfileContext.Provider value={{ setAbout, setBio }}>
+			<div className="profile-page">
+				<div className="profile-banner">
+					<div className="profile-picture">
+						<div className="profile-picture-placeholder">
+							{accountData.firstName.charAt(0)}
+						</div>
 					</div>
 				</div>
-			</div>
-			<div className="profile-header">
-				<div className="profile-info">
-					<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
-					<div className="profile-title">
-						<p className="profile-title-text">{`${
-							accountData.bio || defaultProfileInfo
-						}`}</p>
-						<BioEditButton />
+				<div className="profile-header">
+					<div className="profile-info">
+						<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
+						<div className="profile-title">
+							<p className="profile-title-text">{`${bio}`}</p>
+							<BioEditButton />
+						</div>
+						<p className="profile-location">📍 {accountData.location}</p>
 					</div>
-					<p className="profile-location">📍 {accountData.location}</p>
+				</div>
+				<div className="profile-about">
+					<div className="profile-about-header">
+						<h3>About</h3>
+						<AboutEditButton />
+					</div>
+					<p className="profile-about-text">{`${about}`}</p>
 				</div>
 			</div>
-			<div className="profile-about">
-				<div className="profile-about-header">
-					<h3>About</h3>
-					<AboutEditButton />
-				</div>
-				<p className="profile-about-text">{`${
-					accountData.about || defaultProfileInfo
-				}`}</p>
-			</div>
-		</div>
+		</UserProfileContext.Provider>
 	)
 }

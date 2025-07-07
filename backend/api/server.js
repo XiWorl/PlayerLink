@@ -109,8 +109,8 @@ server.post("/api/signup/", async (req, res, next) => {
 
 		const token = await registerSessionToken(data)
 		const clientResponseInformation = {
-			accountId: createdData.accountId,
-			accountType: createdData.accountType,
+			id: data.id,
+			accountType: data.accountType,
 			token: token,
 		}
 
@@ -123,19 +123,28 @@ server.post("/api/signup/", async (req, res, next) => {
 })
 
 server.patch("/api/profiles/edit", async (req, res, next) => {
+	const authorizationHeader = req.headers.authorization
+	const token = authorizationHeader.replace("Bearer ", "")
+	const authorization = await verifySessionToken(token)
+
+	if (authorization == null || !authorization || !authorization.id) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+
 	try {
-		if (req.body == null) {
-			res.status(400).json({ error: "Must provide body information" })
+		if (req.body == null || req.body.accountId == null) {
+			res.status(400).json({ error: "Must provide valid body information" })
 			return
 		}
 
-		const result = editPlayerProfileInformation(prisma, 2, req.body)
+		const result = await editPlayerProfileInformation(prisma, authorization.id, req.body)
 		if (!result) {
 			res.status(400).json({ error: "Invalid profile information, cannot update" })
 			return
 		}
 
-		res.status(200).json({ message: "Successfully updated profile" })
+		res.status(200).json({ updatedValue: result })
 		return
 	} catch (err) {
 		next(err)
