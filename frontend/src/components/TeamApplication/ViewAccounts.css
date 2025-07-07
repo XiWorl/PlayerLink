@@ -153,13 +153,33 @@
 
 .account-information-hiring div {
     display: flex;
-    background-color: rgba(0, 255, 0, 0.8);
     border-radius: 100%;
     width: 10px;
     height: 10px;
     margin-right: 12px;
     margin-bottom: 4px;
+}
+
+.hiring {
     box-shadow: 0 0 10px 2px rgba(0, 255, 0, 0.6);
+    background-color: rgba(0, 255, 0, 0.8);
+}
+
+.hiring + h4 {
+    color: rgb(0, 137, 0);
+    box-shadow: 0 0 0px 0px transparent;
+    background-color: transparent;
+}
+
+.not-hiring  {
+    box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.6);
+    background-color: rgba(255, 0, 0, 0.8);
+}
+
+.not-hiring + h4 {
+    color: rgb(255, 0, 0);
+    box-shadow: 0 0 0px 0px transparent;
+    background-color: transparent;
 }
 
 .account-information-hiring h4 {
@@ -168,7 +188,6 @@
     margin-top: 5px;
     font-size: 14px;
     font-weight: 400;
-    color: rgb(0, 137, 0);
     line-height: 1.4;
 }
 

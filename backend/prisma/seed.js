@@ -31,6 +31,8 @@ async function main() {
                     yearsOfExperience: "0",
                     location: "US",
                     willingToRelocate: false,
+                    bio: "#1 ranked player in the US | FPS certified | Full-time",
+                    about: "Hello!, I'm a FPS player looking to expand my reach and grow my community. I'm currently looking for a team to join and help me achieve my goals.",
                 }
             }
         }
