@@ -1,17 +1,33 @@
+import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { BASEURL, AccountType } from "../utils/globalUtils"
 import Navbar from "../components/Navbar/Navbar"
 import PageSelector from "../components/ViewAccounts/PageSelector"
 import "../components/TeamApplication/ViewAccounts.css"
 
-function createAccountDisplay(accountInformation, accountType) {
+function redirectToAccountProfile(accountInformation, accountType, navigate) {
+	return function () {
+		const navigationPath = accountType == AccountType.TEAM ? "teams" : "profiles"
+		navigate(`/${navigationPath}/${accountInformation.accountId}`)
+	}
+}
+
+function createAccountDisplay(accountInformation, accountType, navigate) {
 	const selectedHiringClassName = accountInformation.currentlyHiring
 		? "hiring"
 		: "not-hiring"
 
 	const accountDisplay =
 		accountType == AccountType.TEAM ? (
-			<div className="account" key={accountInformation.accountId}>
+			<div
+				className="account"
+				key={accountInformation.accountId}
+				onClick={redirectToAccountProfile(
+					accountInformation,
+					AccountType.TEAM,
+					navigate
+				)}
+			>
 				<div className="view-profile-picture"></div>
 				<div className="view-details">
 					<h2>{accountInformation.name}</h2>
@@ -29,7 +45,15 @@ function createAccountDisplay(accountInformation, accountType) {
 				</div>
 			</div>
 		) : (
-			<div className="account" key={accountInformation.accountId}>
+			<div
+				className="account"
+				key={accountInformation.accountId}
+				onClick={redirectToAccountProfile(
+					accountInformation,
+					AccountType.PLAYER,
+					navigate
+				)}
+			>
 				<div className="view-profile-picture"></div>
 				<div className="view-details">
 					<h2>{`${accountInformation.firstName} ${accountInformation.lastName}`}</h2>
@@ -43,7 +67,7 @@ function createAccountDisplay(accountInformation, accountType) {
 	return accountDisplay
 }
 
-async function loadPage(page, accountType, setTotalPages, setDisplay) {
+async function loadPage(page, accountType, setTotalPages, setDisplay, navigate) {
 	try {
 		const response = await fetch(
 			`${BASEURL}/collection/${accountType}s/?page=${page}`
@@ -51,7 +75,11 @@ async function loadPage(page, accountType, setTotalPages, setDisplay) {
 		const data = await response.json()
 
 		setTotalPages(data.totalPages)
-		setDisplay(data.data.map((account) => createAccountDisplay(account, accountType)))
+		setDisplay(
+			data.data.map((account) =>
+				createAccountDisplay(account, accountType, navigate)
+			)
+		)
 	} catch (error) {
 		console.error("Error retrieving data:", error)
 	}
@@ -69,9 +97,10 @@ export default function ViewAccountsPage() {
 	const [page, setPage] = useState(1)
 	const [totalPages, setTotalPages] = useState(1)
 	const [selectedAccountType, setSelectedAccountType] = useState(AccountType.TEAM)
+	const navigate = useNavigate()
 
 	useEffect(() => {
-		loadPage(page, selectedAccountType, setTotalPages, setDisplay)
+		loadPage(page, selectedAccountType, setTotalPages, setDisplay, navigate)
 	}, [page, selectedAccountType])
 
 	return (
