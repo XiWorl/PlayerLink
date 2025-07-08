@@ -10,6 +10,7 @@ const player = {
 	location: "US",
 	willingToRelocate: false,
 }
+const accounts = [{ id: 1, player: player, team: null }]
 
 async function main() {
     await prisma.account.create({
