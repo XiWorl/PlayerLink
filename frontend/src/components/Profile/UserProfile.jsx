@@ -6,7 +6,7 @@ const defaultProfileInfo = ""
 export const UserProfileContext = createContext()
 
 export default function UserProfile({ isLoading, accountData }) {
-	if (isLoading == true) {
+	if (isLoading) {
 		return <h1>Loading...</h1>
 	}
 

@@ -38,6 +38,6 @@ export async function getProfileDataWithToken(token) {
 		const data = await response.json()
 		return data
 	} catch (error) {
-		console.error("Error retrieving data:", error)
+		return null
 	}
 }
