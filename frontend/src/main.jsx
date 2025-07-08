@@ -23,6 +23,14 @@ createRoot(document.getElementById("root")).render(
 							/>
 						}
 					/>
+					<Route
+						path="/teams/:id"
+						element={
+							<PrivateRoute
+								page={<ProfilePage accountType={AccountType.TEAM} />}
+							/>
+						}
+					/>
 				</Routes>
 			</BrowserRouter>
 		</GoogleOAuthProvider>

@@ -28,6 +28,9 @@ export default function ProfilePage({ accountType }) {
 			<UserProfile isLoading={isLoading} accountData={accountData} />
 		</>
 	) : (
-		<TeamProfile isLoading={isLoading} accountData={accountData} />
+		<>
+			<Navbar />
+			<TeamProfile isLoading={isLoading} accountData={accountData} />
+		</>
 	)
 }
