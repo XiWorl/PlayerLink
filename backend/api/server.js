@@ -3,7 +3,7 @@ const {
 	registerSessionToken,
 	verifySessionToken,
 	dataPagination,
-	getVerifiedAccountInformation
+	getVerifiedAccountInformation,
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
@@ -142,6 +142,39 @@ server.get("/api/verify/token", async (req, res, next) => {
 	return
 })
 
+server.get("/account/applications/:accountId", async (req, res, next) => {
+	try {
+		const id = parseInt(req.params.accountId)
+		const data = await prisma.application.findMany({
+			where: {
+				OR: [{ playerAccountId: id }, { teamAccountId: id }],
+			},
+		})
+		console.log(data)
+		res.status(200).json(data)
+		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+
+server.post("/account/application", async (req, res, next) => {
+	try {
+		const data = await prisma.application.create({
+			data: {
+				playerAccountId: req.body.playerAccountId,
+				teamAccountId: req.body.teamAccountId,
+				status: req.body.status,
+			},
+		})
+		res.status(200).json(data)
+		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
 
 server.post("/api/signup/", async (req, res, next) => {
 	try {

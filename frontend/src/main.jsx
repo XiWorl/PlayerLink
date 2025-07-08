@@ -7,6 +7,7 @@ import App from "./App.jsx"
 import ProfilePage from "./pages/ProfilePage.jsx"
 import PrivateRoute from "./utils/PrivateRoute.jsx"
 import ViewAccountsPage from "./pages/ViewAccountsPage.jsx"
+import ApplyPage from "./pages/ApplyPage.jsx"
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
@@ -35,6 +36,10 @@ createRoot(document.getElementById("root")).render(
 					<Route
 						path="/view"
 						element={<PrivateRoute page={<ViewAccountsPage />} />}
+					/>
+					<Route
+						path="/apply/:id"
+						element={<PrivateRoute page={<ApplyPage />} />}
 					/>
 				</Routes>
 			</BrowserRouter>

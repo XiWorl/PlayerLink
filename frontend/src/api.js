@@ -41,3 +41,13 @@ export async function getProfileDataWithToken(token) {
 		return null
 	}
 }
+
+export async function getApplicationsFromAccountId(accountId) {
+	try {
+		const response = await fetch(`${BASEURL}/account/applications/${accountId}`)
+		const applicationsData = await response.json()
+		return applicationsData
+	} catch (error) {
+		return null
+	}
+}

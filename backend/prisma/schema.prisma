@@ -13,6 +13,12 @@ enum AccountType {
   team
 }
 
+enum ApplicationStatus {
+  pending
+  accepted
+  rejected
+}
+
 model Account {
   id Int @id @default(autoincrement())
   createdAt  DateTime @default(now())
@@ -20,6 +26,8 @@ model Account {
   email String @unique
   player Player?
   team  Team?
+  playerApplications Application[] @relation("PlayerApplications")
+  teamApplications Application[] @relation("TeamApplications")
 }
 
 model Player {
@@ -45,4 +53,16 @@ model Team {
   overview   String?
   accountId  Int @unique
   account     Account @relation(fields: [accountId], references: [id])
+}
+
+model Application {
+  applicationId Int @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  playerAccountId  Int
+  teamAccountId     Int
+  status     ApplicationStatus @default(pending)
+  playerAccount     Account @relation(fields: [playerAccountId], references: [id], name: "PlayerApplications")
+  teamAccount      Account @relation(fields: [teamAccountId], references: [id], name: "TeamApplications")
+
+  @@unique([playerAccountId, teamAccountId])
 }
