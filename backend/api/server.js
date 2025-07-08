@@ -176,7 +176,7 @@ server.post("/account/application", async (req, res, next) => {
 	}
 })
 
-server.post("/api/signup/", async (req, res, next) => {
+server.post("/api/signup/player", async (req, res, next) => {
 	try {
 		if (checkSignupData(req.body) == false) {
 			res.status(400).json({ error: "Invalid signup data" })
@@ -184,7 +184,6 @@ server.post("/api/signup/", async (req, res, next) => {
 		}
 		const data = await prisma.account.create({
 			data: {
-				// TODO: Currently the account type is hardcoded to player. In the future, account type can either be "player" or "team". This change will be made after the team profile page is complete.
 				accountType: "player",
 				email: req.body.email,
 				player: {
@@ -194,6 +193,38 @@ server.post("/api/signup/", async (req, res, next) => {
 						yearsOfExperience: req.body.yearsOfExperience,
 						location: req.body.location,
 						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
+					},
+				},
+			},
+		})
+
+		const token = await registerSessionToken(data)
+		const clientResponseInformation = {
+			id: data.id,
+			accountType: data.accountType,
+			token: token,
+		}
+
+		res.status(200).json(clientResponseInformation)
+		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+
+server.post("/api/signup/team", async (req, res, next) => {
+	try {
+		const data = await prisma.account.create({
+			data: {
+				accountType: "team",
+				email: req.body.email,
+				team: {
+					create: {
+						name: req.body.teamName,
+						yearEstablished: req.body.yearEstablished,
+						location: req.body.location,
+						currentlyHiring: convertToBoolean(req.body.hiring),
 					},
 				},
 			},

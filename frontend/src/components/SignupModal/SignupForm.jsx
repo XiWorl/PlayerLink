@@ -15,7 +15,7 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 	}
 
 	try {
-		const response = await fetch(`${BASEURL}/api/signup/`, {
+		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
