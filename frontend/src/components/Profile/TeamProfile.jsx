@@ -22,7 +22,6 @@ async function checkForTeamAccount(setLoggedInUserAccountData) {
 
 function onApplyButtonClicked(navigate, loggedInUserAccountData, accountData) {
 	return async function() {
-	console.log(loggedInUserAccountData.id, accountData.accountId)
 
 	await createApplication(loggedInUserAccountData.id, accountData.accountId)
 		navigate(`/apply/${loggedInUserAccountData.id}`)
