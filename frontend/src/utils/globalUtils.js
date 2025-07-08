@@ -1,4 +1,5 @@
 export const GOOGLE_EMAIL_KEY = "GoogleEmail"
+export const TOKEN_STORAGE_KEY = "Token"
 export const BASEURL = import.meta.env.VITE_RENDER_LINK || "http://localhost:3000"
 export const AccountType = Object.freeze({
 	PLAYER: "player",

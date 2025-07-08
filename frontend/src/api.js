@@ -1,4 +1,4 @@
-import { AccountType, BASEURL } from "./utils/globalUtils"
+import { AccountType, BASEURL, TOKEN_STORAGE_KEY } from "./utils/globalUtils"
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
 
 export async function onLoginAttempt(email) {
@@ -7,6 +7,7 @@ export async function onLoginAttempt(email) {
 
 		if (response.ok === true) {
 			const data = await response.json()
+			localStorage.setItem(TOKEN_STORAGE_KEY, data.token)
 			return data
 		} else {
 			return LOGIN_FAILURE

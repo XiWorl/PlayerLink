@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { SignupModalContext } from "./SignupModal.jsx"
-import { AccountType, GOOGLE_EMAIL_KEY, BASEURL } from "../../utils/globalUtils.js"
+import { AccountType, GOOGLE_EMAIL_KEY, BASEURL, TOKEN_STORAGE_KEY } from "../../utils/globalUtils.js"
 import PlayerSignup from "./PlayerSignup"
 import TeamSignup from "./TeamSignup"
 import { DEFAULT_FORM_VALUE } from "./utils.jsx"
@@ -24,6 +24,8 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		})
 
 		const data = await response.json()
+		localStorage.setItem(TOKEN_STORAGE_KEY, data.token)
+
 		const navigationURL =
 			data.accountType === AccountType.PLAYER ? "/profiles/" : "/teams/"
 		navigate(`${navigationURL}${data.id}`)
