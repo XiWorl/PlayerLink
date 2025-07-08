@@ -1,3 +1,8 @@
+const {
+	editPlayerProfileInformation,
+	registerSessionToken,
+	EditType,
+} = require("./utils")
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -65,7 +70,13 @@ server.get("/api/login/", async (req, res, next) => {
 			return
 		}
 
-		res.status(200).json(data)
+		const token = await registerSessionToken(data)
+		const clientResponseInformation = {
+			id: data.id,
+			accountType: data.accountType,
+			token: token,
+		}
+		res.status(200).json(clientResponseInformation)
 		return
 	} catch (err) {
 		next(err)
@@ -95,7 +106,53 @@ server.post("/api/signup/", async (req, res, next) => {
 				},
 			},
 		})
-		res.status(200).json(data)
+
+		const token = await registerSessionToken(data)
+		const clientResponseInformation = {
+			accountId: createdData.accountId,
+			accountType: createdData.accountType,
+			token: token,
+		}
+
+		res.status(200).json(clientResponseInformation)
+		return
+	} catch (err) {
+		next(err)
+		return
+	}
+})
+
+server.patch("/api/profiles/edit", async (req, res, next) => {
+	try {
+		if (req.body == null) {
+			res.status(400).json({
+				error: "Must provide updated profile information within the request body",
+			})
+			return
+		}
+
+		if (req.body.editType == null || req.body.value == null) {
+			res.status(400).json({
+				error: `Must provide "editType" and "value" JSON values within the request body`,
+			})
+			return
+		}
+
+		if (EditType[req.body.editType] == null) {
+			res.status(400).json({error: `Invalid editType value`})
+		}
+
+		//TODO: currently the account id is hardcoded to "2". In a future commit, this will be changed to the account id of the user who is logged in
+		const result = editPlayerProfileInformation(prisma, 2, req.body)
+
+		if (!result) {
+			res.status(400).json({
+				error: "Database error occured while updating profile information",
+			})
+			return
+		}
+
+		res.status(200).json({ message: "Successfully updated profile" })
 		return
 	} catch (err) {
 		next(err)
