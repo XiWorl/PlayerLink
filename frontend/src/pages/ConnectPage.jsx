@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, createContext } from "react"
 import { BASEURL, AccountType } from "../utils/globalUtils"
 import Navbar from "../components/Navbar/Navbar"
 import PageSelector from "../components/ViewAccounts/PageSelector"
 import "../components/TeamApplication/ViewAccounts.css"
+
+export const ConnectPageContext = createContext()
 
 function redirectToAccountProfile(accountInformation, accountType, navigate) {
 	return function () {
@@ -93,7 +95,7 @@ function onAccountTypeChange(accountType, setPage, setSelectedAccountType) {
 }
 
 export default function ConnectPage() {
-    const initialPage = 1
+	const initialPage = 1
 	const [display, setDisplay] = useState([])
 	const [page, setPage] = useState(initialPage)
 	const [totalPages, setTotalPages] = useState(initialPage)
@@ -101,11 +103,11 @@ export default function ConnectPage() {
 	const navigate = useNavigate()
 
 	const viewPlayersButtonClassName = `view-players-btn ${
-        selectedAccountType === AccountType.PLAYER ? "selected" : ""
-    }`
-    const viewTeamsButtonClassName = `view-teams-btn ${
-        selectedAccountType === AccountType.TEAM ? "selected" : ""
-    }`
+		selectedAccountType === AccountType.PLAYER ? "selected" : ""
+	}`
+	const viewTeamsButtonClassName = `view-teams-btn ${
+		selectedAccountType === AccountType.TEAM ? "selected" : ""
+	}`
 
 	useEffect(() => {
 		loadPage(page, selectedAccountType, setTotalPages, setDisplay, navigate)
@@ -113,39 +115,47 @@ export default function ConnectPage() {
 
 	return (
 		<>
-			<Navbar />
-			<div className="view-page">
-				<div className="header">
-					<div className="view-players">
-						<button
-						className={viewPlayersButtonClassName}
-							onClick={onAccountTypeChange(
-								AccountType.PLAYER,
-								setPage,
-								setSelectedAccountType
-							)}
-						>
-							View Players
-						</button>
+			<ConnectPageContext.Provider
+				value={{
+					display,
+					setDisplay,
+					navigate,
+					selectedAccountType,
+					setSelectedAccountType,
+				}}
+			>
+				<Navbar />
+				<div className="view-page">
+					<div className="header">
+						<div className="view-players">
+							<button
+								className={viewPlayersButtonClassName}
+								onClick={() => {
+									setPage(1)
+									setSelectedAccountType(AccountType.PLAYER)
+								}}
+							>
+								View Players
+							</button>
+						</div>
+						<div className="view-teams">
+							<button
+								className={viewTeamsButtonClassName}
+								onClick={() => {
+									setPage(1)
+									setSelectedAccountType(AccountType.TEAM)
+								}}
+							>
+								View Teams
+							</button>
+						</div>
 					</div>
-					<div className="view-teams">
-						<button
-						className={viewTeamsButtonClassName}
-							onClick={onAccountTypeChange(
-								AccountType.TEAM,
-								setPage,
-								setSelectedAccountType
-							)}
-						>
-							View Teams
-						</button>
+					<div className="page-content">
+						<div className="accounts">{display}</div>
 					</div>
 				</div>
-				<div className="page-content">
-					<div className="accounts">{display}</div>
-				</div>
-			</div>
-			<PageSelector page={page} setPage={setPage} totalPages={totalPages} />
+				<PageSelector page={page} setPage={setPage} totalPages={totalPages} />
+			</ConnectPageContext.Provider>
 		</>
 	)
 }
