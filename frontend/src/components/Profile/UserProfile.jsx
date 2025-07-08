@@ -1,3 +1,4 @@
+import { AboutEditButton, BioEditButton } from "./EditButton"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
 
@@ -18,14 +19,20 @@ export default function UserProfile({ isLoading, accountData }) {
 			<div className="profile-header">
 				<div className="profile-info">
 					<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
-					<p className="profile-title">{`${
-						accountData.bio || defaultProfileInfo
-					}`}</p>
+					<div className="profile-title">
+						<p className="profile-title-text">{`${
+							accountData.bio || defaultProfileInfo
+						}`}</p>
+						<BioEditButton />
+					</div>
 					<p className="profile-location">📍 {accountData.location}</p>
 				</div>
 			</div>
 			<div className="profile-about">
-				<h3>About</h3>
+				<div className="profile-about-header">
+					<h3>About</h3>
+					<AboutEditButton />
+				</div>
 				<p className="profile-about-text">{`${
 					accountData.about || defaultProfileInfo
 				}`}</p>

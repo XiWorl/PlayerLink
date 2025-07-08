@@ -10,6 +10,7 @@
   height: 200px;
   background: linear-gradient(135deg, #0077b5, #00a0dc);
   border-radius: 12px 12px 0 0;
+  z-index: 0;
 }
 
 .profile-banner img {
@@ -19,13 +20,12 @@
 }
 
 .profile-header {
-  position: relative;
   background: #ffffff;
   border-radius: 0px 0px 12px 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1px 24px 24px 24px;
   margin-bottom: 20px;
-  z-index: -1;
+  z-index: 0;
 }
 
 .profile-picture {
@@ -72,11 +72,16 @@
   padding-top: 10px;
 }
 
-.profile-title {
+.profile-title-text {
   font-size: 18px;
   color: #666666;
-  margin: 10px 0 0 0;
+  margin: 0px;
   font-weight: 400;
+}
+
+.profile-title {
+  display: flex;
+  flex-direction: row;
 }
 
 .profile-location {
@@ -104,11 +109,24 @@
 }
 
 .profile-about {
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-about-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-about-image {
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
 }
 
 .profile-about h3 {
@@ -139,7 +157,7 @@
     width: 100px;
     height: 100px;
     top: 20px;
-    z-index: 2;
+    z-index: 1;
   }
 
   .profile-info {
@@ -150,7 +168,7 @@
     font-size: 24px;
   }
 
-  .profile-title {
+  .profile-title-text {
     font-size: 16px;
   }
 }
