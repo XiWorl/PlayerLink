@@ -10,7 +10,7 @@ export const TypeOfEditButton = {
 	ABOUT: "about",
 }
 
-function onAboutModalSubmitButtonClicked(textValue) {
+function onAboutModalSubmitButtonClicked(textValue, setIsModalOpen) {
 	const { id } = useParams()
 	const { setAbout } = useContext(UserProfileContext)
 	return async function () {
@@ -22,9 +22,10 @@ function onAboutModalSubmitButtonClicked(textValue) {
 		)
 		if (updatedAboutObject.updatedValue != null)
 			setAbout(updatedAboutObject.updatedValue)
+		setIsModalOpen(false)
 	}
 }
-function onBioModalSubmitButtonClicked(textValue) {
+function onBioModalSubmitButtonClicked(textValue, setIsModalOpen) {
 	const { id } = useParams()
 	const { setBio } = useContext(UserProfileContext)
 	return async function () {
@@ -35,6 +36,7 @@ function onBioModalSubmitButtonClicked(textValue) {
 			id
 		)
 		if (updatedBioObject.updatedValue != null) setBio(updatedBioObject.updatedValue)
+		setIsModalOpen(false)
 	}
 }
 

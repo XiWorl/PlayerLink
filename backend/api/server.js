@@ -169,9 +169,7 @@ server.post("/account/application", async (req, res, next) => {
 			  },
 			},
 		  });
-		  console.log("already,",alreadyFound)
 		if (alreadyFound != null) {
-			console.log("NOPE")
 			res.status(400).json({ error: "Application already exists" })
 			return
 		}

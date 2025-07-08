@@ -21,17 +21,17 @@ async function checkForTeamAccount(setLoggedInUserAccountData) {
 }
 
 function onApplyButtonClicked(navigate, loggedInUserAccountData, accountData) {
-	return function() {
+	return async function() {
 	console.log(loggedInUserAccountData.id, accountData.accountId)
 
+	await createApplication(loggedInUserAccountData.id, accountData.accountId)
 		navigate(`/apply/${loggedInUserAccountData.id}`)
-	createApplication(loggedInUserAccountData.id, accountData.accountId)
 
 	}
 }
 
 function ApplyButton({loggedInUserAccountData, accountData}) {
-	if (!loggedInUserAccountData) return null
+	if (!loggedInUserAccountData || loggedInUserAccountData.accountType == AccountType.TEAM) return null
 
 	const navigate = useNavigate()
 	return <button onClick={onApplyButtonClicked(navigate, loggedInUserAccountData, accountData)}>Apply</button>
