@@ -2,15 +2,19 @@ import "./Navbar.css"
 import { useNavigate } from "react-router-dom"
 import { TOKEN_STORAGE_KEY, AccountType } from "../../utils/globalUtils"
 import { getProfileDataWithToken } from "../../api"
+
 export default function Navbar() {
 	return (
 		<div className="navbar">
 			<div className="navbar-contents">
 				<div className="tournament">
-					<Tournament />
+					<TournamentsButton />
 				</div>
 				<div className="connect">
 					<ConnectButton />
+				</div>
+				<div className="apply">
+					<ApplicationsButton />
 				</div>
 				<div className="profile">
 					<ProfileIcon />
@@ -18,6 +22,15 @@ export default function Navbar() {
 			</div>
 		</div>
 	)
+}
+
+function onApplyButtonClicked(navigate) {
+	return async function () {
+		const token = localStorage.getItem(TOKEN_STORAGE_KEY)
+		const userProfile = await getProfileDataWithToken(token)
+
+		navigate(`/apply/${userProfile.id}`)
+	}
 }
 
 function ConnectButton() {
@@ -45,6 +58,8 @@ function onProfileButtonClicked(navigate) {
 	}
 }
 
+
+
 function ProfileIcon() {
 	const navigate = useNavigate()
 	return (
@@ -54,10 +69,19 @@ function ProfileIcon() {
 	)
 }
 
-function Tournament() {
+function TournamentsButton() {
 	return (
 		<button className="tournament-button">
-			<h3>Tournament</h3>
+			<h3>Tournaments</h3>
+		</button>
+	)
+}
+
+function ApplicationsButton() {
+	const navigate = useNavigate()
+	return (
+		<button className="application-button" onClick={onApplyButtonClicked(navigate)}>
+			<h3>Apply</h3>
 		</button>
 	)
 }
