@@ -16,7 +16,7 @@ export async function editPlayerProfileInformation(prisma, accountId, body) {
 			},
 		})
 		return true
-	} catch (_err) {
+	} catch {
 		return false
 	}
 }
@@ -30,7 +30,7 @@ export async function verifySessionToken(token) {
 	try {
 		const decoded = jwt.verify(token, TOKEN_SECRET)
 		return decoded
-	} catch (err) {
-		return false
+	} catch {
+		return null
 	}
 }
