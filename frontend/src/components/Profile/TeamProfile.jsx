@@ -4,11 +4,6 @@ import "./ProfilePage.css"
 const defaultProfileInfo = ""
 
 export const TeamProfileContext = createContext()
-const TeamProfileTabs = {
-	HOME: "Home",
-	ROSTER: "Roster",
-	APPLY: "Apply",
-}
 
 export default function TeamProfile({ isLoading, accountData }) {
 	if (isLoading) {
@@ -17,7 +12,6 @@ export default function TeamProfile({ isLoading, accountData }) {
 
 	const [description, setDescription] = useState(accountData.description || defaultProfileInfo)
 	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
-	const [selectedTab, setSelectedTab] = useState(TeamProfileTabs.HOME)
 
 	return (
 		<TeamProfileContext.Provider value={{ setDescription, setOverview }}>
