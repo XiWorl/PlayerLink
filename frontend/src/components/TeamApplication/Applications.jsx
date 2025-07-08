@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { AccountType } from "../../utils/globalUtils"
-import { getApplicationsFromAccountId } from "../../api"
+import { getApplicationsFromAccountId, getProfileData } from "../../api"
 import "./ApplyPage.css"
 
 function Sidebar({ accountType }) {
@@ -15,16 +15,16 @@ function Sidebar({ accountType }) {
 	)
 }
 
-function createApplicationPost(applicationData) {
-    console.log(applicationData)
+async function createApplicationPost(applicationData) {
+    const info = await getProfileData(AccountType.TEAM, applicationData.teamAccountId)
 	return (
 		<div className="post" key={applicationData.applicationId}>
 			<div className="apply-profile-picture"></div>
 			<div className="apply-details">
-				<h2>Team name</h2>
+				<h2>{info.name}</h2>
 				<div className="post-information">
-					<h3>Team description</h3>
-					<button>Apply</button>
+					<h3>{info.description}</h3>
+					<button>{applicationData.status}</button>
 				</div>
 			</div>
 		</div>
@@ -49,7 +49,6 @@ async function loadApplications(accountId, setApplicationsDisplay) {
 
 	const newApplicationsDisplay = applications.map((application) => createApplicationPost(application))
     setApplicationsDisplay(newApplicationsDisplay)
-    console.log(applications)
 }
 
 export function Applications({ accountData, accountId }) {

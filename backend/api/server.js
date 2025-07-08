@@ -150,6 +150,7 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 				OR: [{ playerAccountId: id }, { teamAccountId: id }],
 			},
 		})
+		console.log(data)
 		res.status(200).json(data)
 		return
 	} catch (err) {
@@ -160,6 +161,20 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 
 server.post("/account/application", async (req, res, next) => {
 	try {
+		const alreadyFound = await prisma.application.findUnique({
+			where: {
+			  playerAccountId_teamAccountId: {
+				playerAccountId: req.body.playerAccountId,
+				teamAccountId: req.body.teamAccountId,
+			  },
+			},
+		  });
+		  console.log("already,",alreadyFound)
+		if (alreadyFound != null) {
+			console.log("NOPE")
+			res.status(400).json({ error: "Application already exists" })
+			return
+		}
 		const data = await prisma.application.create({
 			data: {
 				playerAccountId: req.body.playerAccountId,
