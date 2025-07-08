@@ -34,6 +34,6 @@ export async function verifySessionToken(token) {
 		const decoded = jwt.verify(token, TOKEN_SECRET)
 		return decoded
 	} catch (err) {
-		return false
+		return null
 	}
 }

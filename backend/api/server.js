@@ -32,51 +32,23 @@ function checkSignupData(reqBody) {
 	return isDataValid
 }
 
-//TODO: This GET request is only used for testing purposes. Remove this before production.
-server.get("/players", async (req, res, next) => {
-	try {
-		const data = await prisma.player.findMany()
-		res.status(200).json(data)
-		return
-	} catch (err) {
-		next(err)
-		return
-	}
-})
-
-//TODO: This GET request is only used for testing purposes. Remove this before production.
-server.get("/teams", async (req, res, next) => {
-	try {
-		const data = await prisma.team.findMany()
-		res.status(200).json(data)
-		return
-	} catch (err) {
-		next(err)
-		return
-	}
-})
-
 server.get("/teams/:teamId", async (req, res, next) => {
 	try {
-		const id = parseInt(req.params.teamId)
-		const data = await prisma.team.findUnique({ where: { accountId: id } })
-		res.status(200).json(data)
-		return
+		const teamId = parseInt(req.params.teamId)
+		const teamData = await prisma.team.findUnique({ where: { accountId: teamId } })
+		return res.status(200).json(teamData)
 	} catch (err) {
 		next(err)
-		return
 	}
 })
 
 server.get("/profiles/:profileId", async (req, res, next) => {
 	try {
-		const id = parseInt(req.params.profileId)
-		const data = await prisma.player.findUnique({ where: { accountId: id } })
-		res.status(200).json(data)
-		return
+		const playerId = parseInt(req.params.profileId)
+		const playerData = await prisma.player.findUnique({ where: { accountId: playerId } })
+		return res.status(200).json(playerData)
 	} catch (err) {
 		next(err)
-		return
 	}
 })
 
@@ -89,23 +61,21 @@ server.get("/api/login/", async (req, res, next) => {
 			return
 		}
 
-		const data = await prisma.account.findUnique({ where: { email: email } })
-		if (data == null) {
+		const acoountData = await prisma.account.findUnique({ where: { email: email } })
+		if (acoountData == null) {
 			res.status(404).json({ error: "Account not found" })
 			return
 		}
 
-		const token = await registerSessionToken(data)
+		const token = await registerSessionToken(acoountData)
 		const clientResponseInformation = {
-			id: data.id,
-			accountType: data.accountType,
+			id: acoountData.id,
+			accountType: acoountData.accountType,
 			token: token,
 		}
-		res.status(200).json(clientResponseInformation)
-		return
+		return res.status(200).json(clientResponseInformation)
 	} catch (err) {
 		next(err)
-		return
 	}
 })
 
@@ -150,9 +120,9 @@ server.post("/api/signup/", async (req, res, next) => {
 server.patch("/api/profiles/edit", async (req, res, next) => {
 	const authorizationHeader = req.headers.authorization
 	const token = authorizationHeader.replace("Bearer ", "")
-	const authorization = await verifySessionToken(token)
+	const verifiedAuthorization = await verifySessionToken(token)
 
-	if (authorization == null || !authorization || !authorization.id) {
+	if (verifiedAuthorization == null || !verifiedAuthorization || !verifiedAuthorization.id) {
 		res.status(401).json({ error: "Invalid authorization token" })
 		return
 	}
@@ -163,13 +133,13 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 			return
 		}
 
-		const result = await editPlayerProfileInformation(prisma, authorization.id, req.body)
-		if (!result) {
+		const updatedAccount = await editPlayerProfileInformation(prisma, authorization.id, req.body)
+		if (!updatedAccount) {
 			res.status(400).json({ error: "Invalid profile information, cannot update" })
 			return
 		}
 
-		res.status(200).json({ updatedValue: result })
+		res.status(200).json({ updatedValue: updatedAccount })
 		return
 	} catch (err) {
 		next(err)

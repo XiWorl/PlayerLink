@@ -20,7 +20,7 @@ export default function Navbar() {
 function Teams() {
 	return (
 		<button className="teams-button">
-			<h3>Teams</h3>
+			<h3>Connect</h3>
 		</button>
 	)
 }
@@ -28,7 +28,7 @@ function Teams() {
 function ProfileIcon() {
 	return (
 		<button className="profile-button">
-			<h3>Profile icon</h3>
+			<h3>My Profile</h3>
 		</button>
 	)
 }
@@ -36,7 +36,7 @@ function ProfileIcon() {
 function Tournament() {
 	return (
 		<button className="tournament-button">
-			<h3>Tournament</h3>
+			<h3>Tournaments</h3>
 		</button>
 	)
 }
