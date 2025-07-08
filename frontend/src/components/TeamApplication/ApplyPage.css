@@ -1,4 +1,3 @@
-/* TODO: This css styling page will be used in the future for applying to teams */
 .apply-page {
 	margin-top: 15px;
 }
@@ -86,6 +85,7 @@
   gap: 16px;
 }
 
+.empty-applications,
 .post {
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
@@ -96,6 +96,10 @@
   display: flex;
   flex-direction: row;
   gap: 30px;
+}
+
+.empty-applications {
+  justify-content: center;
 }
 
 .apply-details {

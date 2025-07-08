@@ -150,7 +150,6 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 				OR: [{ playerAccountId: id }, { teamAccountId: id }],
 			},
 		})
-		console.log(data)
 		res.status(200).json(data)
 		return
 	} catch (err) {

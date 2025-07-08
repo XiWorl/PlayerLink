@@ -1,5 +1,6 @@
 import { AccountType, BASEURL, TOKEN_STORAGE_KEY } from "./utils/globalUtils"
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
+const PENDING_APPLICATION_STATUS = "pending"
 
 export async function onLoginAttempt(email) {
 	try {
@@ -49,5 +50,25 @@ export async function getApplicationsFromAccountId(accountId) {
 		return applicationsData
 	} catch (error) {
 		return null
+	}
+}
+
+export async function createApplication(playerAccountId, teamAccountId) {
+	try {
+		const response = await fetch(`${BASEURL}/account/application`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				teamAccountId: teamAccountId,
+				playerAccountId: playerAccountId,
+				status: PENDING_APPLICATION_STATUS
+			}),
+		})
+		const data = await response.json()
+		return data
+	} catch (error) {
+		console.error("Error creating application:", error)
 	}
 }

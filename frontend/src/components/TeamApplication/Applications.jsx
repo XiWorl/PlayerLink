@@ -1,6 +1,7 @@
-import { useState, useEffect, use } from "react"
+import { useState, useEffect } from "react"
 import { AccountType } from "../../utils/globalUtils"
 import { getApplicationsFromAccountId } from "../../api"
+import "./ApplyPage.css"
 
 function Sidebar({ accountType }) {
 	const buttonText =
@@ -33,7 +34,7 @@ function createApplicationPost(applicationData) {
 function EmptyApplications() {
 	return (
 		<div className="empty-applications">
-			<h1>No applications found</h1>
+			<h2>No applications found</h2>
 		</div>
     )
 }

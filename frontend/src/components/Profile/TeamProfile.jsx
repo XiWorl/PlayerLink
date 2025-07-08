@@ -1,5 +1,8 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
-import { createContext, useState } from "react"
+import { createContext, useState, useEffect } from "react"
+import { TOKEN_STORAGE_KEY, AccountType } from "../../utils/globalUtils"
+import { getProfileDataWithToken, createApplication } from "../../api"
+import { useNavigate } from "react-router-dom"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
 
@@ -10,14 +13,45 @@ const TeamProfileTabs = {
 	APPLY: "Apply",
 }
 
+async function checkForTeamAccount(setLoggedInUserAccountData) {
+	const token = localStorage.getItem(TOKEN_STORAGE_KEY)
+	const accountData = await getProfileDataWithToken(token)
+
+	setLoggedInUserAccountData(accountData)
+}
+
+function onApplyButtonClicked(navigate, loggedInUserAccountData, accountData) {
+	return function() {
+	console.log(loggedInUserAccountData.id, accountData.accountId)
+
+		navigate(`/apply/${loggedInUserAccountData.id}`)
+	createApplication(loggedInUserAccountData.id, accountData.accountId)
+
+	}
+}
+
+function ApplyButton({loggedInUserAccountData, accountData}) {
+	if (!loggedInUserAccountData) return null
+
+	const navigate = useNavigate()
+	return <button onClick={onApplyButtonClicked(navigate, loggedInUserAccountData, accountData)}>Apply</button>
+}
+
 export default function TeamProfile({ isLoading, accountData }) {
 	if (isLoading) {
 		return <h1>Loading...</h1>
 	}
 
-	const [description, setDescription] = useState(accountData.description || defaultProfileInfo)
+	const [description, setDescription] = useState(
+		accountData.description || defaultProfileInfo
+	)
 	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
 	const [selectedTab, setSelectedTab] = useState(TeamProfileTabs.HOME)
+	const [loggedInUserAccountData, setLoggedInUserAccountData] = useState(null)
+
+	useEffect(() => {
+		checkForTeamAccount(setLoggedInUserAccountData)
+	}, [])
 
 	return (
 		<TeamProfileContext.Provider value={{ setDescription, setOverview }}>
@@ -41,7 +75,7 @@ export default function TeamProfile({ isLoading, accountData }) {
 						<div>
 							<button>Home</button>
 							<button>Roster</button>
-							<button>Apply</button>
+							{loggedInUserAccountData && <ApplyButton loggedInUserAccountData={loggedInUserAccountData} accountData={accountData}/>}
 						</div>
 					</div>
 				</div>
