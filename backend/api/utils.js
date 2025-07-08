@@ -9,12 +9,12 @@ export async function editPlayerProfileInformation(prisma, loggedInUserId, body)
 	if (body.editType == null || body.value == null || EditType[body.editType] == null) {
 		return false
 	}
-    if (body.accountId == null || loggedInUserId != body.accountId) {
-        return false
-    }
+	if (body.accountId == null || loggedInUserId != body.accountId) {
+		return false
+	}
 
 	const accountType = "player"
-    const sectionOfProfileToEdit = EditType[body.editType]
+	const sectionOfProfileToEdit = EditType[body.editType]
 	const updatedPlayerData = await prisma[accountType].update({
 		where: { accountId: loggedInUserId },
 		data: {

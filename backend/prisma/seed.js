@@ -10,14 +10,6 @@ const player = {
 	location: "US",
 	willingToRelocate: false,
 }
-const team = {
-	name: "Unlimited Range Gaming",
-    location: "US",
-    description: "FPS focused e-sports Team",
-    overview: "We are a team of FPS players looking to expand our reach and grow our community.",
-    yearEstablished: "2022",
-    currentlyHiring: true,
-}
 
 async function main() {
     await prisma.account.create({
@@ -32,16 +24,6 @@ async function main() {
                     location: "US",
                     willingToRelocate: false,
                 }
-            }
-        }
-    })
-
-    await prisma.account.create({
-        data: {
-            accountType: "team",
-			email: "URG@gmail.com",
-            team: {
-                create: team
             }
         }
     })

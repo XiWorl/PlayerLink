@@ -45,7 +45,9 @@ server.get("/teams/:teamId", async (req, res, next) => {
 server.get("/profiles/:profileId", async (req, res, next) => {
 	try {
 		const playerId = parseInt(req.params.profileId)
-		const playerData = await prisma.player.findUnique({ where: { accountId: playerId } })
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: playerId },
+		})
 		return res.status(200).json(playerData)
 	} catch (err) {
 		next(err)
@@ -122,7 +124,11 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 	const token = authorizationHeader.replace("Bearer ", "")
 	const verifiedAuthorization = await verifySessionToken(token)
 
-	if (verifiedAuthorization == null || !verifiedAuthorization || !verifiedAuthorization.id) {
+	if (
+		verifiedAuthorization == null ||
+		!verifiedAuthorization ||
+		!verifiedAuthorization.id
+	) {
 		res.status(401).json({ error: "Invalid authorization token" })
 		return
 	}
@@ -133,7 +139,11 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 			return
 		}
 
-		const updatedAccount = await editPlayerProfileInformation(prisma, authorization.id, req.body)
+		const updatedAccount = await editPlayerProfileInformation(
+			prisma,
+			authorization.id,
+			req.body
+		)
 		if (!updatedAccount) {
 			res.status(400).json({ error: "Invalid profile information, cannot update" })
 			return
