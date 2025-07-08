@@ -6,6 +6,7 @@ import {
 	GOOGLE_EMAIL_KEY,
 	BASEURL,
 	TOKEN_STORAGE_KEY,
+	ACCOUNT_INFORMATION_KEY
 } from "../../utils/globalUtils.js"
 import PlayerSignup from "./PlayerSignup"
 import TeamSignup from "./TeamSignup"
@@ -31,6 +32,7 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		if (!response.ok) throw new Error()
 
 		localStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
+		localStorage.setItem(ACCOUNT_INFORMATION_KEY, accountData)
 		const navigationURL =
 			accountData.accountType === AccountType.PLAYER ? "/profiles/" : "/teams/"
 

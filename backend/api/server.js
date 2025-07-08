@@ -52,23 +52,22 @@ server.get("/api/login/", async (req, res, next) => {
 		const email = req.query.email
 
 		if (email == null) {
-			res.status(404).json({ error: "Account not found" })
+			res.status(404).json({ error: "Email not found in request query" })
 			return
 		}
 
-		const acoountData = await prisma.account.findUnique({ where: { email: email } })
-		if (acoountData == null) {
-			res.status(404).json({ error: "Account not found" })
+		const accountData = await prisma.account.findUnique({ where: { email: email } })
+		if (accountData == null) {
+			res.status(404).json({ error: "Account not registered in database" })
 			return
 		}
 
-		const token = await registerSessionToken(acoountData)
-		const clientResponseInformation = {
-			id: acoountData.id,
-			accountType: acoountData.accountType,
-			token: token,
-		}
-		return res.status(200).json(clientResponseInformation)
+		const jwtToken = await registerSessionToken(accountData)
+		const clientAccountInformation = formatClientAccountInformation(
+			createdAccount,
+			jwtToken
+		)
+		return res.status(200).json(clientAccountInformation)
 	} catch (error) {
 		next(error)
 	}
