@@ -6,18 +6,19 @@ dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 
 export async function editPlayerProfileInformation(prisma, accountId, body) {
-	if (body.editType == null || body.value == null || EditType[body.editType] == null) {
+	try {
+		//TODO: Currently the accountType is hardcoded to player. In a future commit, this will be changed to be dynamic based on the accountType.
+		const accountType = "player"
+		await prisma[accountType].update({
+			where: { accountId: accountId },
+			data: {
+				[EditType[body.editType]]: body.value,
+			},
+		})
+		return true
+	} catch (_err) {
 		return false
 	}
-
-	const accountType = "player"
-	const updatedPlayerData = await prisma[accountType].update({
-		where: { accountId: accountId },
-		data: {
-			[EditType[body.editType]]: body.value,
-		},
-	})
-	return updatedPlayerData
 }
 
 export async function registerSessionToken(accountInformation) {

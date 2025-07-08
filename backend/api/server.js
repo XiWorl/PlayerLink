@@ -1,7 +1,7 @@
 const {
 	editPlayerProfileInformation,
 	registerSessionToken,
-	verifySessionToken,
+	EditType,
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
@@ -125,13 +125,30 @@ server.post("/api/signup/", async (req, res, next) => {
 server.patch("/api/profiles/edit", async (req, res, next) => {
 	try {
 		if (req.body == null) {
-			res.status(400).json({ error: "Must provide body information" })
+			res.status(400).json({
+				error: "Must provide updated profile information within the request body",
+			})
 			return
 		}
 
+		if (req.body.editType == null || req.body.value == null) {
+			res.status(400).json({
+				error: `Must provide "editType" and "value" JSON values within the request body`,
+			})
+			return
+		}
+
+		if (EditType[req.body.editType] == null) {
+			res.status(400).json({error: `Invalid editType value`})
+		}
+
+		//TODO: currently the account id is hardcoded to "2". In a future commit, this will be changed to the account id of the user who is logged in
 		const result = editPlayerProfileInformation(prisma, 2, req.body)
+
 		if (!result) {
-			res.status(400).json({ error: "Invalid profile information, cannot update" })
+			res.status(400).json({
+				error: "Database error occured while updating profile information",
+			})
 			return
 		}
 
