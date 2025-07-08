@@ -70,6 +70,13 @@ export default function ViewAccountsPage() {
 	const [totalPages, setTotalPages] = useState(1)
 	const [selectedAccountType, setSelectedAccountType] = useState(AccountType.TEAM)
 
+	const viewPlayersButtonClassName = `view-players-btn ${
+		selectedAccountType === AccountType.PLAYER ? "selected" : ""
+	}`
+	const viewTeamsButtonClassName = `view-players-btn ${
+		selectedAccountType === AccountType.TEAM ? "selected" : ""
+	}`
+	
 	useEffect(() => {
 		loadPage(page, selectedAccountType, setTotalPages, setDisplay)
 	}, [page, selectedAccountType])
@@ -81,7 +88,7 @@ export default function ViewAccountsPage() {
 				<div className="header">
 					<div className="view-players">
 						<button
-							className="view-players-btn"
+							className={viewPlayersButtonClassName}
 							onClick={onAccountTypeChange(
 								AccountType.PLAYER,
 								setPage,
@@ -93,7 +100,7 @@ export default function ViewAccountsPage() {
 					</div>
 					<div className="view-teams">
 						<button
-							className="view-teams-btn"
+							className={viewTeamsButtonClassName}
 							onClick={onAccountTypeChange(
 								AccountType.TEAM,
 								setPage,
