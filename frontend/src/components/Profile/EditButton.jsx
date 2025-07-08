@@ -64,7 +64,8 @@ export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
 	)
 }
 
-export function AboutEditButton() {
+export function AboutEditButton({ isOwnProfile }) {
+	if (!isOwnProfile) return null
 	return (
 		<EditButtonTemplate
 			detailType={TypeOfEditButton.ABOUT}
@@ -73,7 +74,8 @@ export function AboutEditButton() {
 	)
 }
 
-export function BioEditButton() {
+export function BioEditButton({ isOwnProfile }) {
+	if (!isOwnProfile) return null
 	return (
 		<EditButtonTemplate
 			detailType={TypeOfEditButton.BIO}

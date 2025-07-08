@@ -1,9 +1,22 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
-import { createContext, useState } from "react"
+import { createContext, useState, useEffect, use } from "react"
+import { TOKEN_STORAGE_KEY } from "../../utils/globalUtils"
+import { getProfileDataWithToken } from "../../api"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
 
 export const UserProfileContext = createContext()
+
+async function doesUserOwnProfile(id, setIsOwnProfile) {
+	const token = localStorage.getItem(TOKEN_STORAGE_KEY)
+	const accountData = await getProfileDataWithToken(token)
+
+	if (accountData.id.toString() === id.toString()) {
+		setIsOwnProfile(true)
+	} else {
+		setIsOwnProfile(false)
+	}
+}
 
 export default function UserProfile({ isLoading, accountData }) {
 	if (isLoading) {
@@ -12,6 +25,11 @@ export default function UserProfile({ isLoading, accountData }) {
 
 	const [bio, setBio] = useState(accountData.bio || defaultProfileInfo)
 	const [about, setAbout] = useState(accountData.about || defaultProfileInfo)
+	const [isOwnProfile, setIsOwnProfile] = useState(false)
+
+	useEffect(() => {
+		doesUserOwnProfile(accountData.accountId, setIsOwnProfile)
+	}, [])
 
 	return (
 		<UserProfileContext.Provider value={{ setAbout, setBio }}>
@@ -28,7 +46,7 @@ export default function UserProfile({ isLoading, accountData }) {
 						<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
 						<div className="profile-title">
 							<p className="profile-title-text">{`${bio}`}</p>
-							<BioEditButton />
+							<BioEditButton isOwnProfile={isOwnProfile} />
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
 					</div>
@@ -36,7 +54,7 @@ export default function UserProfile({ isLoading, accountData }) {
 				<div className="profile-about">
 					<div className="profile-about-header">
 						<h3>About</h3>
-						<AboutEditButton />
+						<AboutEditButton isOwnProfile={isOwnProfile} />
 					</div>
 					<p className="profile-about-text">{`${about}`}</p>
 				</div>
