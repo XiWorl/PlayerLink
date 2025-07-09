@@ -28,13 +28,13 @@ export const LOCATION_OPTIONS = [
 
 export function isLoggedIn() {
 	return (
-		localStorage.getItem(ACCOUNT_INFORMATION_KEY) !== null &&
-		localStorage.getItem(TOKEN_STORAGE_KEY) !== null
+		sessionStorage.getItem(ACCOUNT_INFORMATION_KEY) !== null &&
+		sessionStorage.getItem(TOKEN_STORAGE_KEY) !== null
 	)
 }
 
 export function getAccountDataFromLocalStorage() {
-	const accountInformation = localStorage.getItem(ACCOUNT_INFORMATION_KEY)
+	const accountInformation = sessionStorage.getItem(ACCOUNT_INFORMATION_KEY)
 	const parsedAccountInformation = accountInformation && JSON.parse(accountInformation)
 
 	if (

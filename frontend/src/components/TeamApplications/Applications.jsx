@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { getApplicationsFromAccountId } from "../../api"
-import { Sidebar, createApplicationTile } from "./Utils"
+import { Sidebar } from "./Utils.jsx"
+import { ApplicationTile } from "./ApplicationTile.jsx"
 import "./ApplyPage.css"
 
 function EmptyApplicationsDisplay() {
@@ -8,19 +9,21 @@ function EmptyApplicationsDisplay() {
 		<div className="empty-applications">
 			<h2>No applications found</h2>
 		</div>
-    )
+	)
 }
 
 async function loadApplications(accountId, setApplicationsDisplay) {
 	const applications = await getApplicationsFromAccountId(accountId)
 
-    if (applications.length === 0) {
-        setApplicationsDisplay(<EmptyApplicationsDisplay />)
-        return
-    }
+	if (applications.length === 0) {
+		setApplicationsDisplay(<EmptyApplicationsDisplay />)
+		return
+	}
 
-	const newApplicationsDisplay = applications.map((applicationData) => createApplicationTile(applicationData))
-    setApplicationsDisplay(newApplicationsDisplay)
+	const newApplicationsDisplay = applications.map((applicationData) => (
+		<ApplicationTile applicationData={applicationData} />
+	))
+	setApplicationsDisplay(newApplicationsDisplay)
 }
 
 export function Applications({ accountData, accountId }) {

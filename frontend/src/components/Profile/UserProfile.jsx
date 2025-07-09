@@ -1,4 +1,5 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
+import { EditProfileButton } from "./EditProfile"
 import { createContext, useState } from "react"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
@@ -28,7 +29,8 @@ export default function UserProfile({ isLoading, accountData }) {
 						<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
 						<div className="profile-title">
 							<p className="profile-title-text">{`${bio}`}</p>
-							<BioEditButton />
+							{/* <BioEditButton /> */}
+							{/* <EditProfileButton /> */}
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
 					</div>

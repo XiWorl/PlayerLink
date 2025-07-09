@@ -2,7 +2,7 @@ import { TOKEN_STORAGE_KEY, BASEURL, AccountType } from "../../utils/globalUtils
 import { LOGIN_FAILURE } from "../../api"
 
 export async function modalSubmitHelper(textValue, detailType, accountType, id) {
-	const token = localStorage.getItem(TOKEN_STORAGE_KEY)
+	const token = sessionStorage.getItem(TOKEN_STORAGE_KEY)
 	if (token == null) {
 		return
 	}
