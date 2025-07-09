@@ -4,7 +4,9 @@ import {
 	TOKEN_STORAGE_KEY,
 	ACCOUNT_INFORMATION_KEY,
 } from "./utils/globalUtils"
+
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
+const PENDING_APPLICATION_STATUS = "pending"
 
 export async function onLoginAttempt(email) {
 	try {

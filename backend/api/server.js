@@ -94,12 +94,44 @@ server.get("/api/login/", async (req, res, next) => {
 server.get("/account/applications/:accountId", async (req, res, next) => {
 	try {
 		const accountId = parseInt(req.params.accountId)
-		const data = await prisma.application.findMany({
+		const userApplications = await prisma.application.findMany({
 			where: {
 				OR: [{ playerAccountId: accountId }, { teamAccountId: accountId }],
 			},
 		})
-		return res.status(200).json(data)
+		return res.status(200).json(userApplications)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.post("/account/application", async (req, res, next) => {
+	try {
+		const playerApplicationToTeam = await prisma.application.findUnique({
+			where: {
+				playerAccountId_teamAccountId: {
+					playerAccountId: req.body.playerAccountId,
+					teamAccountId: req.body.teamAccountId,
+				},
+			},
+		})
+
+		if (playerApplicationToTeam != null) {
+			res.status(400).json({
+				error: "Cannot create application, player has already applied",
+			})
+			return
+		}
+
+		const createdApplication = await prisma.application.create({
+			data: {
+				playerAccountId: req.body.playerAccountId,
+				teamAccountId: req.body.teamAccountId,
+				status: req.body.status,
+			},
+		})
+
+		return res.status(200).json(createdApplication)
 	} catch (error) {
 		next(error)
 	}

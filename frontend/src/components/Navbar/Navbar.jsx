@@ -3,12 +3,24 @@ import { AccountType, getAccountDataFromLocalStorage } from "../../utils/globalU
 import { ACCOUNT_INFORMATION_KEY } from "../../utils/globalUtils"
 import { Link, useNavigate } from "react-router-dom"
 
+function navigateToUserProfile(navigate) {
+	const accountData = getAccountDataFromLocalStorage()
+	if (accountData === null) {
+		navigate("/")
+		return
+	}
+
+	const navigationPath =
+		accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
+	navigate(`/${navigationPath}/${accountData.id}`)
+}
+
 export default function Navbar() {
 	return (
 		<div className="navbar">
 			<div className="navbar-contents">
 				<div className="tournament">
-					<TournamentButton />
+					<TournamentsButton />
 				</div>
 				<div className="apply">
 					<ApplyButton />
@@ -22,18 +34,6 @@ export default function Navbar() {
 			</div>
 		</div>
 	)
-}
-
-function navigateToUserProfile(navigate) {
-	const accountData = getAccountDataFromLocalStorage()
-	if (accountData === null) {
-		navigate("/")
-		return
-	}
-
-	const navigationPath =
-		accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
-	navigate(`/${navigationPath}/${accountData.id}`)
 }
 
 function ConnectButton() {
@@ -60,7 +60,7 @@ function ProfileButton() {
 	)
 }
 
-function TournamentButton() {
+function TournamentsButton() {
 	return (
 		<button className="tournament-btn">
 			<h3>Tournaments</h3>
@@ -69,8 +69,18 @@ function TournamentButton() {
 }
 
 function ApplyButton() {
+	const navigate = useNavigate()
+	const accountData = getAccountDataFromLocalStorage()
+	if (accountData === null) {
+		navigate("/")
+		return
+	}
+
 	return (
-		<button className="apply-btn">
+		<button
+			onClick={() => navigate(`/apply/${accountData.id}`)}
+			className="apply-btn"
+		>
 			<h3>Apply</h3>
 		</button>
 	)
