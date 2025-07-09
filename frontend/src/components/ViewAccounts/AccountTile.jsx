@@ -58,6 +58,5 @@ export default function AccountTile({ accountInformation }) {
 				</div>
 			</div>
 		)
-
 	return accountDisplay
 }
