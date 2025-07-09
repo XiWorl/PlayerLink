@@ -58,8 +58,8 @@ export async function createTeamApplication(playerAccountId, teamAccountId) {
 				status: PENDING_APPLICATION_STATUS
 			}),
 		})
-		const data = await response.json()
-		return data
+		const teamApplication = await response.json()
+		return teamApplication
 	} catch (error) {
 		console.error("Error creating application:", error)
 	}

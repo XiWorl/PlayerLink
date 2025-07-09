@@ -8,7 +8,7 @@ export default function Navbar() {
 		<div className="navbar">
 			<div className="navbar-contents">
 				<div className="tournament">
-					<TournamentButton />
+					<TournamentsButton />
 				</div>
 				<div className="apply">
 					<ApplyButton />
@@ -60,7 +60,7 @@ function ProfileButton() {
 	)
 }
 
-function TournamentButton() {
+function TournamentsButton() {
 	return (
 		<button className="tournament-btn">
 			<h3>Tournaments</h3>
