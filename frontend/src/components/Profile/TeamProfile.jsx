@@ -10,7 +10,9 @@ export default function TeamProfile({ isLoading, accountData }) {
 		return <h1>Loading...</h1>
 	}
 
-	const [description, setDescription] = useState(accountData.description || defaultProfileInfo)
+	const [description, setDescription] = useState(
+		accountData.description || defaultProfileInfo
+	)
 	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
 
 	return (
@@ -27,7 +29,9 @@ export default function TeamProfile({ isLoading, accountData }) {
 					<div className="profile-info">
 						<h1 className="profile-name">{`${accountData.name}`}</h1>
 						<div className="profile-title">
-							<p className="profile-title-text">{`${description}`}</p>
+							<p className="profile-title-text">{`${
+								description || defaultProfileInfo
+							}`}</p>
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
 					</div>

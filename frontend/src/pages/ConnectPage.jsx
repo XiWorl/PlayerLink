@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect, createContext } from "react"
 import { AccountType } from "../utils/globalUtils"
+import { loadPage } from "../components/ViewAccounts/utils"
 import Navbar from "../components/Navbar/Navbar"
 import PageSelector from "../components/ViewAccounts/PageSelector"
-import { loadPage } from "../components/ViewAccounts/utils"
+import "../components/ViewAccounts/ConnectPage.css"
 export const ConnectPageContext = createContext()
-
-
 
 export default function ConnectPage() {
 	const initialPage = 1
