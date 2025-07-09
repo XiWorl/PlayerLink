@@ -1,5 +1,5 @@
 import "./Navbar.css"
-import { AccountType } from "../../utils/globalUtils"
+import { AccountType, getAccountDataFromLocalStorage } from "../../utils/globalUtils"
 import { ACCOUNT_INFORMATION_KEY } from "../../utils/globalUtils"
 import { Link, useNavigate } from "react-router-dom"
 
@@ -25,21 +25,15 @@ export default function Navbar() {
 }
 
 function navigateToUserProfile(navigate) {
-	const accountInformation = localStorage.getItem(ACCOUNT_INFORMATION_KEY)
-	const parsedAccountInformation = accountInformation && JSON.parse(accountInformation)
-
-	if (
-		!parsedAccountInformation ||
-		!parsedAccountInformation.id ||
-		!parsedAccountInformation.accountType
-	) {
+	const accountData = getAccountDataFromLocalStorage()
+	if (accountData === null) {
 		navigate("/")
 		return
 	}
 
 	const navigationPath =
-		parsedAccountInformation.accountType === AccountType.PLAYER ? "profiles" : "teams"
-	navigate(`/${navigationPath}/${parsedAccountInformation.id}`)
+		accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
+	navigate(`/${navigationPath}/${accountData.id}`)
 }
 
 function ConnectButton() {

@@ -27,5 +27,21 @@ export const LOCATION_OPTIONS = [
 ]
 
 export function isLoggedIn() {
-	return localStorage.getItem(ACCOUNT_INFORMATION_KEY) !== null && localStorage.getItem(TOKEN_STORAGE_KEY) !== null
+	return (
+		localStorage.getItem(ACCOUNT_INFORMATION_KEY) !== null &&
+		localStorage.getItem(TOKEN_STORAGE_KEY) !== null
+	)
+}
+
+export function getAccountDataFromLocalStorage() {
+	const accountInformation = localStorage.getItem(ACCOUNT_INFORMATION_KEY)
+	const parsedAccountInformation = accountInformation && JSON.parse(accountInformation)
+
+	if (
+		!parsedAccountInformation ||
+		!parsedAccountInformation.id ||
+		!parsedAccountInformation.accountType
+	)
+		return null
+	return parsedAccountInformation
 }
