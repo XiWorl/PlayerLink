@@ -6,8 +6,6 @@ import PageSelector from "../components/ViewAccounts/PageSelector"
 import { loadPage } from "../components/ViewAccounts/utils"
 export const ConnectPageContext = createContext()
 
-
-
 export default function ConnectPage() {
 	const initialPage = 1
 	const [display, setDisplay] = useState([])
