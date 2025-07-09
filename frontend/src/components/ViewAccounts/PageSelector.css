@@ -1,0 +1,32 @@
+.page-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .page-btn {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background-color: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .page-btn.active:hover {
+    background-color: #f5f5f5;
+  }
+
+  .page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .page-info {
+    font-size: 14px;
+    color: #666;
+    margin: 0 8px;
+  }
