@@ -1,4 +1,4 @@
-import { BASEURL } from "../../utils/globalUtils"
+import { BASEURL, AccountType } from "../../utils/globalUtils"
 import AccountTile from "./AccountTile"
 
 export function redirectToAccountProfile(accountInformation, accountType, navigate) {
