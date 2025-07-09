@@ -1,10 +1,10 @@
 import "./Navbar.css"
-import { AccountType, getAccountDataFromLocalStorage } from "../../utils/globalUtils"
+import { AccountType, getAccountDataFromSessionStorage } from "../../utils/globalUtils"
 import { ACCOUNT_INFORMATION_KEY } from "../../utils/globalUtils"
 import { Link, useNavigate } from "react-router-dom"
 
 function navigateToUserProfile(navigate) {
-	const accountData = getAccountDataFromLocalStorage()
+	const accountData = getAccountDataFromSessionStorage()
 	if (accountData === null) {
 		navigate("/")
 		return
@@ -70,7 +70,7 @@ function TournamentsButton() {
 
 function ApplyButton() {
 	const navigate = useNavigate()
-	const accountData = getAccountDataFromLocalStorage()
+	const accountData = getAccountDataFromSessionStorage()
 	if (accountData === null) {
 		navigate("/")
 		return

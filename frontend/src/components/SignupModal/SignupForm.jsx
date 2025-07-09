@@ -5,8 +5,8 @@ import {
 	AccountType,
 	GOOGLE_EMAIL_KEY,
 	BASEURL,
-	TOKEN_STORAGE_KEY,
-	ACCOUNT_INFORMATION_KEY
+	TOKEN_SESSION_KEY,
+	ACCOUNT_INFORMATION_KEY,
 } from "../../utils/globalUtils.js"
 import PlayerSignup from "./PlayerSignup"
 import TeamSignup from "./TeamSignup"
@@ -17,7 +17,7 @@ const optionalSignupInformation = ["lastName"]
 async function onFormValid(formData, selectedAccountType, navigate) {
 	const body = {
 		...formData[selectedAccountType],
-		email: localStorage.getItem(GOOGLE_EMAIL_KEY),
+		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),
 	}
 
 	try {
@@ -31,8 +31,8 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		const accountData = await response.json()
 		if (!response.ok) throw new Error()
 
-		localStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
-		localStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
+		sessionStorage.setItem(TOKEN_SESSION_KEY, accountData.token)
+		sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 		const navigationURL =
 			accountData.accountType === AccountType.PLAYER ? "/profiles/" : "/teams/"
 
