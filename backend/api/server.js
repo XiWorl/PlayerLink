@@ -32,26 +32,25 @@ function checkSignupData(reqBody) {
 	return isDataValid
 }
 
-server.get("/players", async (req, res, next) => {
+server.get("/teams/:teamId", async (req, res, next) => {
 	try {
-		const data = await prisma.player.findMany()
-		res.status(200).json(data)
-		return
+		const teamId = parseInt(req.params.teamId)
+		const teamData = await prisma.team.findUnique({ where: { accountId: teamId } })
+		return res.status(200).json(teamData)
 	} catch (err) {
 		next(err)
-		return
 	}
 })
 
 server.get("/profiles/:profileId", async (req, res, next) => {
 	try {
-		const id = parseInt(req.params.profileId)
-		const data = await prisma.player.findUnique({ where: { accountId: id } })
-		res.status(200).json(data)
-		return
+		const playerId = parseInt(req.params.profileId)
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: playerId },
+		})
+		return res.status(200).json(playerData)
 	} catch (err) {
 		next(err)
-		return
 	}
 })
 
@@ -64,23 +63,21 @@ server.get("/api/login/", async (req, res, next) => {
 			return
 		}
 
-		const data = await prisma.account.findUnique({ where: { email: email } })
-		if (data == null) {
+		const accountData = await prisma.account.findUnique({ where: { email: email } })
+		if (accountData == null) {
 			res.status(404).json({ error: "Account not found" })
 			return
 		}
 
-		const token = await registerSessionToken(data)
+		const token = await registerSessionToken(accountData)
 		const clientResponseInformation = {
-			id: data.id,
-			accountType: data.accountType,
+			id: accountData.id,
+			accountType: accountData.accountType,
 			token: token,
 		}
-		res.status(200).json(clientResponseInformation)
-		return
+		return res.status(200).json(clientResponseInformation)
 	} catch (err) {
 		next(err)
-		return
 	}
 })
 
@@ -109,8 +106,8 @@ server.post("/api/signup/", async (req, res, next) => {
 
 		const token = await registerSessionToken(data)
 		const clientResponseInformation = {
-			accountId: createdData.accountId,
-			accountType: createdData.accountType,
+			id: data.id,
+			accountType: data.accountType,
 			token: token,
 		}
 
@@ -123,36 +120,36 @@ server.post("/api/signup/", async (req, res, next) => {
 })
 
 server.patch("/api/profiles/edit", async (req, res, next) => {
+	const authorizationHeader = req.headers.authorization
+	const token = authorizationHeader.replace("Bearer ", "")
+	const verifiedAuthorization = await verifySessionToken(token)
+
+	if (
+		verifiedAuthorization == null ||
+		!verifiedAuthorization ||
+		!verifiedAuthorization.id
+	) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+
 	try {
-		if (req.body == null) {
-			res.status(400).json({
-				error: "Must provide updated profile information within the request body",
-			})
+		if (req.body == null || req.body.accountId == null) {
+			res.status(400).json({ error: `Must provide "editType" and "value" JSON values within the request body` })
 			return
 		}
 
-		if (req.body.editType == null || req.body.value == null) {
-			res.status(400).json({
-				error: `Must provide "editType" and "value" JSON values within the request body`,
-			})
+		const updatedAccount = await editPlayerProfileInformation(
+			prisma,
+			authorization.id,
+			req.body
+		)
+		if (!updatedAccount) {
+			res.status(400).json({ error: "Invalid profile information, cannot update" })
 			return
 		}
 
-		if (EditType[req.body.editType] == null) {
-			res.status(400).json({error: `Invalid editType value`})
-		}
-
-		//TODO: currently the account id is hardcoded to "2". In a future commit, this will be changed to the account id of the user who is logged in
-		const result = editPlayerProfileInformation(prisma, 2, req.body)
-
-		if (!result) {
-			res.status(400).json({
-				error: "Database error occured while updating profile information",
-			})
-			return
-		}
-
-		res.status(200).json({ message: "Successfully updated profile" })
+		res.status(200).json({ updatedValue: updatedAccount })
 		return
 	} catch (err) {
 		next(err)

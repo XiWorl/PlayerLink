@@ -5,20 +5,23 @@ import dotenv from "dotenv"
 dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 
-export async function editPlayerProfileInformation(prisma, accountId, body) {
-	try {
-		//TODO: Currently the accountType is hardcoded to player. In a future commit, this will be changed to be dynamic based on the accountType.
-		const accountType = "player"
-		await prisma[accountType].update({
-			where: { accountId: accountId },
-			data: {
-				[EditType[body.editType]]: body.value,
-			},
-		})
-		return true
-	} catch {
+export async function editPlayerProfileInformation(prisma, loggedInUserId, body) {
+	if (body.editType == null || body.value == null || EditType[body.editType] == null) {
 		return false
 	}
+	if (body.accountId == null || loggedInUserId != body.accountId) {
+		return false
+	}
+
+	const accountType = "player"
+	const sectionOfProfileToEdit = EditType[body.editType]
+	const updatedPlayerData = await prisma[accountType].update({
+		where: { accountId: loggedInUserId },
+		data: {
+			[sectionOfProfileToEdit]: body.value,
+		},
+	})
+	return updatedPlayerData[sectionOfProfileToEdit]
 }
 
 export async function registerSessionToken(accountInformation) {
@@ -30,7 +33,7 @@ export async function verifySessionToken(token) {
 	try {
 		const decoded = jwt.verify(token, TOKEN_SECRET)
 		return decoded
-	} catch {
+	} catch (err) {
 		return null
 	}
 }
