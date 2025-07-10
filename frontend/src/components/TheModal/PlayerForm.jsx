@@ -28,7 +28,7 @@ function validateForm(
 
 		// Validate required text fields
 		for (const key in currentFormData) {
-			if (key === "gamesPlayed" || key === "gameUsernames") continue
+			if (key === "gamingExperience" || key === "gameUsernames") continue
 
 			const inputValue =
 				typeof currentFormData[key] === "string"
@@ -43,8 +43,8 @@ function validateForm(
 		}
 
 		// Validate games played
-		if (currentFormData.gamesPlayed.length === 0) {
-			newErrors[selectedAccountType].gamesPlayed = "Please select at least one game"
+		if (currentFormData.gamingExperience.length === 0) {
+			newErrors[selectedAccountType].gamingExperience = "Please select at least one game"
 			isFormValid = false
 		}
 
@@ -97,7 +97,7 @@ export default function PlayerForm({ onClose, onSubmit }) {
 
 			<ExperienceDropdown />
 
-			<GamesSelection title="Gaming experience" elementName="gamesPlayed" />
+			<GamesSelection title="Gaming experience" elementName="gamingExperience" />
 
 			<PlayStyleDropdown />
 

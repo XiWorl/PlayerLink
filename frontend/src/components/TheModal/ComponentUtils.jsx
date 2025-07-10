@@ -145,7 +145,7 @@ export function GamesSelection({ title = "Gaming experience" }) {
 		selectedAccountType,
 	} = useContext(ModalBodyContext)
 
-	const gamesField = selectedAccountType === "team" ? "supportedGames" : "gamesPlayed"
+	const gamesField = selectedAccountType === "team" ? "supportedGames" : "gamingExperience"
 	const currentGames = formData[selectedAccountType][gamesField]
 	const showUsernames = selectedAccountType === "player"
 

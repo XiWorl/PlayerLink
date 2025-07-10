@@ -56,9 +56,8 @@ export default function UserProfile({ isLoading, accountData }) {
 						<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
 						<div className="profile-title">
 							<p className="profile-title-text">{`${bio}`}</p>
-							{/* <BioEditButton /> */}
+							<BioEditButton />
 							{/* <EditProfileButton /> */}
-							<MyComponent title={"Edit your profile"} />
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
 					</div>

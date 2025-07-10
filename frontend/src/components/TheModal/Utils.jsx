@@ -33,7 +33,7 @@ export function handleGameSelectionLogic(
 	setFormData(function (previousValue) {
 		const currentFormData = previousValue[selectedAccountType]
 		const gamesField =
-			selectedAccountType === "team" ? "supportedGames" : "gamesPlayed"
+			selectedAccountType === "team" ? "supportedGames" : "gamingExperience"
 		const isGameAlreadySelected = currentFormData[gamesField].includes(game)
 		const newGameUsernames = { ...currentFormData.gameUsernames }
 
@@ -57,7 +57,7 @@ export function handleGameSelectionLogic(
 
 	setFormErrors(function (previousValue) {
 		const gamesField =
-			selectedAccountType === "team" ? "supportedGames" : "gamesPlayed"
+			selectedAccountType === "team" ? "supportedGames" : "gamingExperience"
 		return {
 			...previousValue,
 			[selectedAccountType]: {

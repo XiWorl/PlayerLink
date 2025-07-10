@@ -19,14 +19,15 @@ export function verifyPlayerSignupInformation(requestBody) {
 }
 
 export function verifyTeamSignupInformation(requestBody) {
-	const isDataValid =
-		requestBody !== undefined &&
-		requestBody.email !== undefined &&
-		requestBody.teamName !== undefined &&
-		requestBody.location !== undefined &&
-		requestBody.yearEstablished !== undefined &&
-		requestBody.hiring !== undefined
-	return isDataValid
+	// const isDataValid =
+	// 	requestBody !== undefined &&
+	// 	requestBody.email !== undefined &&
+	// 	requestBody.teamName !== undefined &&
+	// 	requestBody.location !== undefined &&
+	// 	requestBody.yearEstablished !== undefined &&
+	// 	requestBody.hiring !== undefined
+	// return isDataValid
+	return true
 }
 
 export function formatClientAccountInformation(accountInformation, jwtToken) {

@@ -20,7 +20,7 @@ const DEFAULT_FORM_DATA = {
 		location: DEFAULT_FORM_VALUE,
 		willingToRelocate: DEFAULT_FORM_VALUE,
 		yearsOfExperience: DEFAULT_FORM_VALUE,
-		gamesPlayed: [],
+		gamingExperience: [],
 		gameUsernames: {},
 		playstyle: DEFAULT_FORM_VALUE,
 	},
