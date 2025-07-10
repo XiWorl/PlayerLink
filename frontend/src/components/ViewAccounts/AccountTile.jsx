@@ -2,7 +2,6 @@ import { AccountType } from "../../utils/globalUtils"
 import { ConnectPageContext } from "../../pages/ConnectPage"
 import { useContext } from "react"
 import { redirectToAccountProfile } from "./utils"
-const defaultProfileInfo = ""
 
 export default function AccountTile({ accountInformation }) {
 	const { selectedAccountType, navigate } = useContext(ConnectPageContext)

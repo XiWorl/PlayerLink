@@ -6,10 +6,6 @@ export function redirectToAccountProfile(accountInformation, accountType, naviga
 		const navigationPath = accountType == AccountType.TEAM ? "teams" : "profiles"
 		navigate(`/${navigationPath}/${accountInformation.accountId}`)
 	}
-	return function () {
-		const navigationPath = accountType == AccountType.TEAM ? "teams" : "profiles"
-		navigate(`/${navigationPath}/${accountInformation.accountId}`)
-	}
 }
 
 export async function loadPage(accountType, page, setTotalPages, setDisplay) {
