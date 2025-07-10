@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { UserInfoModalContext } from "./ModalBody.jsx"
+import { ModalBodyContext } from "./ModalBody.jsx"
 import {
 	TextFormField,
 	LocationDropdown,
@@ -62,7 +62,7 @@ function validateForm(
 
 export default function TeamForm({ onClose, onSubmit }) {
 	const { formData, setFormErrors, handleClose, selectedAccountType } =
-		useContext(UserInfoModalContext)
+		useContext(ModalBodyContext)
 
 	return (
 		<form

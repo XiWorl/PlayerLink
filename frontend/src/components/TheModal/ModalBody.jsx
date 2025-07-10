@@ -11,7 +11,7 @@ import PlayerForm from "./PlayerForm"
 import TeamForm from "./TeamForm"
 import "../SignupModal/SignupModal.css"
 
-export const UserInfoModalContext = createContext()
+export const ModalBodyContext = createContext()
 
 const DEFAULT_FORM_DATA = {
 	player: {
@@ -34,7 +34,7 @@ const DEFAULT_FORM_DATA = {
 	},
 }
 
-export default function UserInfoModal({ isOpen, onClose, onSubmit, title, accountType }) {
+export default function ModalBody({ isOpen, onClose, onSubmit, title, accountType }) {
 	const [selectedAccountType, _setSelectedAccountType] = useState(accountType)
 	const [formData, setFormData] = useState(DEFAULT_FORM_DATA)
 	const [formErrors, setFormErrors] = useState(DEFAULT_ERRORS_VALUE)
@@ -60,7 +60,7 @@ export default function UserInfoModal({ isOpen, onClose, onSubmit, title, accoun
 	if (!isOpen) return null
 
 	return (
-		<UserInfoModalContext.Provider
+		<ModalBodyContext.Provider
 			value={{
 				formData,
 				formErrors,
@@ -108,6 +108,6 @@ export default function UserInfoModal({ isOpen, onClose, onSubmit, title, accoun
 					)}
 				</div>
 			</div>
-		</UserInfoModalContext.Provider>
+		</ModalBodyContext.Provider>
 	)
 }

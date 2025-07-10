@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { UserInfoModalContext } from "./ModalBody.jsx"
+import { ModalBodyContext } from "./ModalBody.jsx"
 import {
 	LocationOptions,
 	YearsOfExperienceOptions,
@@ -23,7 +23,7 @@ const YesOrNoEnum = Object.freeze({
 
 export function TextFormField({ title, isRequired, elementName, placeholder }) {
 	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(UserInfoModalContext)
+		useContext(ModalBodyContext)
 	let displayTitle = title
 	let className = VALID_INPUT_CLASS
 
@@ -51,7 +51,7 @@ export function TextFormField({ title, isRequired, elementName, placeholder }) {
 
 export function LocationDropdown() {
 	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(UserInfoModalContext)
+		useContext(ModalBodyContext)
 
 	return (
 		<div className="form-group">
@@ -79,7 +79,7 @@ export function LocationDropdown() {
 
 export function YesOrNoDropdown({ title, elementName }) {
 	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(UserInfoModalContext)
+		useContext(ModalBodyContext)
 
 	return (
 		<div className="form-group">
@@ -104,7 +104,7 @@ export function YesOrNoDropdown({ title, elementName }) {
 
 export function ExperienceDropdown() {
 	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(UserInfoModalContext)
+		useContext(ModalBodyContext)
 
 	return (
 		<div className="form-group">
@@ -140,7 +140,7 @@ export function PlayStyleDropdown({
 	elementName = "playStyle",
 }) {
 	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(UserInfoModalContext)
+		useContext(ModalBodyContext)
 
 	return (
 		<div className="form-group">
@@ -176,7 +176,7 @@ export function GamesSelection({ title = "Gaming experience" }) {
 		handleUsernameChange,
 		formErrors,
 		selectedAccountType,
-	} = useContext(UserInfoModalContext)
+	} = useContext(ModalBodyContext)
 
 	const gamesField = selectedAccountType === "team" ? "supportedGames" : "gamesPlayed"
 	const currentGames = formData[selectedAccountType][gamesField]
@@ -234,7 +234,7 @@ export function GamesSelection({ title = "Gaming experience" }) {
 
 export function DesiredSkillLevelDropdown() {
 	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(UserInfoModalContext)
+		useContext(ModalBodyContext)
 
 	const skillLevelOptions = ["High", "Medium", "Low"]
 

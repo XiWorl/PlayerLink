@@ -3,7 +3,7 @@ import { EditProfileButton } from "./EditProfile"
 import { createContext, useState } from "react"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
-import UserInfoModal from "../TheModal/ModalBody"
+import ModalBody from "../TheModal/ModalBody"
 
 export const UserProfileContext = createContext()
 
@@ -25,7 +25,7 @@ function MyComponent({ title }) {
 		<div>
 			<button onClick={() => setIsModalOpen(true)}>Open User Info Modal</button>
 
-			<UserInfoModal
+			<ModalBody
 				isOpen={isModalOpen}
 				onClose={handleClose}
 				onSubmit={handleSubmit}
