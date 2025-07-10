@@ -32,7 +32,7 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		if (!response.ok) throw new Error()
 
 		localStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
-		localStorage.setItem(ACCOUNT_INFORMATION_KEY, accountData)
+		localStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 		const navigationURL =
 			accountData.accountType === AccountType.PLAYER ? "/profiles/" : "/teams/"
 
