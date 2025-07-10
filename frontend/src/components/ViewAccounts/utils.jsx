@@ -8,7 +8,12 @@ export function redirectToAccountProfile(accountInformation, accountType, naviga
 	}
 }
 
-export async function loadPage(selectedAccountType, page, setTotalPages, setDisplay) {
+export async function loadPage(
+	selectedAccountType,
+	page,
+	setTotalPages,
+	setVisibleAccounts
+) {
 	try {
 		const response = await fetch(
 			`${BASEURL}/collection/${selectedAccountType}s/?page=${page}`
@@ -17,7 +22,7 @@ export async function loadPage(selectedAccountType, page, setTotalPages, setDisp
 		if (!response.ok) throw new Error()
 
 		setTotalPages(pageData.totalPages)
-		setDisplay(pageData.data.map((account) => AccountTile(account)))
+		setVisibleAccounts(pageData.data.map((account) => AccountTile(account)))
 	} catch (error) {
 		console.error(`Error while retrieving page ${page} data:`, error)
 	}

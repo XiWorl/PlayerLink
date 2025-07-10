@@ -5,32 +5,33 @@ import Navbar from "../components/Navbar/Navbar"
 import PageSelector from "../components/ViewAccounts/PageSelector"
 import { loadPage } from "../components/ViewAccounts/utils"
 export const ConnectPageContext = createContext()
+const initialPage = 1
+const selectedClassName = "selected"
 
 export default function ConnectPage() {
-	const initialPage = 1
-	const [display, setDisplay] = useState([])
+	const [visibleAccounts, setVisibleAccounts] = useState([])
 	const [page, setPage] = useState(initialPage)
 	const [totalPages, setTotalPages] = useState(initialPage)
 	const [selectedAccountType, setSelectedAccountType] = useState(AccountType.TEAM)
 	const navigate = useNavigate()
 
 	const viewPlayersButtonClassName = `view-players-btn ${
-		selectedAccountType === AccountType.PLAYER ? "selected" : ""
+		selectedAccountType === AccountType.PLAYER ? selectedClassName : ""
 	}`
 	const viewTeamsButtonClassName = `view-teams-btn ${
-		selectedAccountType === AccountType.TEAM ? "selected" : ""
+		selectedAccountType === AccountType.TEAM ? selectedClassName : ""
 	}`
 
 	useEffect(() => {
-		loadPage(selectedAccountType, page, setTotalPages, setDisplay)
+		loadPage(selectedAccountType, page, setTotalPages, setVisibleAccounts)
 	}, [page, selectedAccountType])
 
 	return (
 		<>
 			<ConnectPageContext.Provider
 				value={{
-					display,
-					setDisplay,
+					visibleAccounts,
+					setVisibleAccounts,
 					navigate,
 					selectedAccountType,
 					setSelectedAccountType,
@@ -63,7 +64,7 @@ export default function ConnectPage() {
 						</div>
 					</div>
 					<div className="page-content">
-						<div className="accounts">{display}</div>
+						<div className="accounts">{visibleAccounts}</div>
 					</div>
 				</div>
 				<PageSelector page={page} setPage={setPage} totalPages={totalPages} />
