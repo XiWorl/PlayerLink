@@ -1,16 +1,17 @@
 import { useContext } from "react"
 import { UserInfoModalContext } from "./ModalBody.jsx"
+import { LocationOptions, YearsOfExperienceOptions, GameOptions, PlaystyleOptions } from "../../utils/globalUtils.js"
 
 export const INVALID_INPUT_CLASS = "error"
 export const VALID_INPUT_CLASS = ""
 export const DEFAULT_FORM_VALUE = ""
 export const DEFAULT_ERRORS_VALUE = Object.freeze({})
-
-const LOCATION_OPTIONS = ["USA", "Asia", "Mexico", "Canada", "Europe"]
-const EXPERIENCE_OPTIONS = ["0-1", "1-2", "2-3"]
-const PLAY_STYLE_OPTIONS = ["support", "strategist", "main"]
-const GAME_OPTIONS = ["Valorant", "League Of Legends", "Apex Legends", "CS:GO"]
-const GAME_PLACEHOLDER = {}
+const Placeholders = {
+	VALORANT: "Valorant username and tagline (username#tagline)",
+	FORTNITE: "Fortnite Epic Games username",
+	APEX_LEGENDS: "Apex Legends Origin username",
+}
+const PLAY_STYLE_OPTIONS = ["tactical", "supportive", "aggressive", "defensive", "adaptable"]
 const YesOrNoEnum = Object.freeze({
 	YES: "yes",
 	NO: "no",
@@ -22,7 +23,7 @@ export function TextFormField({ title, isRequired, elementName, placeholder }) {
 	let className = VALID_INPUT_CLASS
 
 	if (isRequired) {
-		displayTitle = title + " *"
+		displayTitle = title + "*"
 		className = formErrors[elementName] ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS
 	}
 
@@ -47,7 +48,7 @@ export function LocationDropdown() {
 
 	return (
 		<div className="form-group">
-			<label htmlFor="location">Location *</label>
+			<label htmlFor="location">Location*</label>
 			<select
 				id="location"
 				name="location"
@@ -56,7 +57,7 @@ export function LocationDropdown() {
 				className={formErrors.location ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS}
 			>
 				<option value="">Select your location</option>
-				{LOCATION_OPTIONS.map((location) => (
+				{LocationOptions.map((location) => (
 					<option key={location} value={location}>
 						{location}
 					</option>
@@ -71,7 +72,7 @@ export function YesOrNoDropdown({ title, elementName }) {
 
 	return (
 		<div className="form-group">
-			<label htmlFor={elementName}>{title} *</label>
+			<label htmlFor={elementName}>{title}*</label>
 			<select
 				id={elementName}
 				name={elementName}
@@ -94,7 +95,7 @@ export function ExperienceDropdown() {
 
 	return (
 		<div className="form-group">
-			<label htmlFor="yearsOfExperience">Years of Experience *</label>
+			<label htmlFor="yearsOfExperience">Years of Experience*</label>
 			<select
 				id="yearsOfExperience"
 				name="yearsOfExperience"
@@ -105,11 +106,16 @@ export function ExperienceDropdown() {
 				}
 			>
 				<option value="">Select experience level</option>
-				{EXPERIENCE_OPTIONS.map((exp) => (
-					<option key={exp} value={exp}>
-						{exp} years
-					</option>
-				))}
+				{Object.keys(YearsOfExperienceOptions).map((experience) => {
+					return (
+						<option
+							key={YearsOfExperienceOptions[experience]}
+							value={YearsOfExperienceOptions[experience]}
+						>
+							{YearsOfExperienceOptions[experience]} years
+						</option>
+					)
+				})}
 			</select>
 		</div>
 	)
@@ -120,7 +126,7 @@ export function PlayStyleDropdown() {
 
 	return (
 		<div className="form-group">
-			<label htmlFor="playStyle">Play Style *</label>
+			<label htmlFor="playStyle">Preferred Playstyle*</label>
 			<select
 				id="playStyle"
 				name="playStyle"
@@ -128,10 +134,10 @@ export function PlayStyleDropdown() {
 				onChange={handleInputChange}
 				className={formErrors.playStyle ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS}
 			>
-				<option value="">Select your play style</option>
-				{PLAY_STYLE_OPTIONS.map((style) => (
-					<option key={style} value={style}>
-						{style.charAt(0).toUpperCase() + style.slice(1)}
+				<option value="">Select your playstyle</option>
+				{Object.keys(PlaystyleOptions).map((playstyle) => (
+					<option key={PlaystyleOptions[playstyle]} value={PlaystyleOptions[playstyle]}>
+						{PlaystyleOptions[playstyle]}
 					</option>
 				))}
 			</select>
@@ -145,28 +151,27 @@ export function GamesSelection() {
 
 	return (
 		<div className="form-group">
-			<label>Games Played * (Select all that apply)</label>
+			<label>Gaming experience* (Select all that apply)</label>
 			<div className="games-selection-list">
-				{GAME_OPTIONS.map((game) => (
-					<div key={game} className="game-selection-container">
+				{Object.keys(GameOptions).map((game) => (
+					<div key={GameOptions[game]} className="game-selection-container">
 						<div className="game-checkbox-label">
-							<h3>{game}</h3>
+							<h3>{GameOptions[game]}</h3>
 							<input
 								type="checkbox"
-								checked={formData.gamesPlayed.includes(game)}
-								onChange={() => handleGameSelection(game)}
+								checked={formData.gamesPlayed.includes(GameOptions[game])}
+								onChange={() => handleGameSelection(GameOptions[game])}
 								className="game-checkbox"
 							/>
-							{/* {game} */}
 						</div>
-						{formData.gamesPlayed.includes(game) && (
+						{formData.gamesPlayed.includes(GameOptions[game]) && (
 							<div className="username-input-container">
 								<input
 									type="text"
-									placeholder={`Enter your ${game} username`}
-									value={formData.gameUsernames[game] || ""}
+									placeholder={Placeholders[game]}
+									value={formData.gameUsernames[GameOptions[game]] || ""}
 									onChange={(e) =>
-										handleUsernameChange(game, e.target.value)
+										handleUsernameChange(GameOptions[game], e.target.value)
 									}
 									className="game-username-input"
 								/>

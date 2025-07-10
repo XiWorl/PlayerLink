@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { SignupModalContext } from "./SignupModal.jsx"
-import { LOCATION_OPTIONS } from "../../utils/globalUtils.js"
+import { LocationOptions } from "../../utils/globalUtils.js"
 
 export const INVALID_INPUT_CLASS = "error"
 export const VALID_INPUT_CLASS = ""
@@ -52,7 +52,7 @@ export function LocationDropdown({ accountType }) {
 				}
 			>
 				<option value="">Select location</option>
-				{LOCATION_OPTIONS.map((option) => (
+				{LocationOptions.map((option) => (
 					<option key={option} value={option}>
 						{option}
 					</option>

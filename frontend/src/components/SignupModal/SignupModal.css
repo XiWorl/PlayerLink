@@ -18,8 +18,10 @@
 	max-width: 500px;
 	max-height: 90vh;
 	overflow-y: auto;
+    scrollbar-width: 3px;
 	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 	animation: modalSlideIn 0.3s ease-out;
+    max-height: 70%;
 }
 
 @keyframes modalSlideIn {
@@ -219,7 +221,6 @@
 	padding-top: 5px;
 }
 
-/* Game selection styling */
 .game-selection-container {
 	display: flex;
 	flex-direction: column;
@@ -254,7 +255,6 @@
 	width: 10px;
 }
 
-/* Form error message styling */
 .form-error-message {
 	color: #e74c3c;
 	font-size: 12px;
@@ -262,7 +262,6 @@
 	margin-top: 4px;
 }
 
-/* Games selection list styling */
 .games-selection-list {
 	display: flex;
 	flex-direction: column;
@@ -272,7 +271,6 @@
 
 .game-checkbox-label {
     display: flex;
-    /* width: 5%; */
 }
 
 .game-checkbox-label h3{
@@ -282,12 +280,10 @@
     margin: 3px;
 }
 
-/* Game checkbox label styling */
 .game-checkbox-label input{
 	display: flex;
     margin-left: auto;
     width: auto;
     flex-direction: row;
 	cursor: pointer;
-	/* margin-right: 8px; */
 }
