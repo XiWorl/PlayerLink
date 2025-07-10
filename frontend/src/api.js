@@ -1,4 +1,9 @@
-import { AccountType, BASEURL, TOKEN_STORAGE_KEY, ACCOUNT_INFORMATION_KEY } from "./utils/globalUtils"
+import {
+	AccountType,
+	BASEURL,
+	TOKEN_STORAGE_KEY,
+	ACCOUNT_INFORMATION_KEY,
+} from "./utils/globalUtils"
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
 
 export async function onLoginAttempt(email) {
@@ -7,14 +12,15 @@ export async function onLoginAttempt(email) {
 
 		if (response.ok === true) {
 			const accountData = await response.json()
+
 			localStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
 			localStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 			return accountData
 		} else {
 			return LOGIN_FAILURE
 		}
-	} catch (error) {
-		console.error("Error while trying to login:", error)
+	} catch {
+		console.error(`Error while trying to login with ${email}, redirecting to signup`)
 	}
 }
 

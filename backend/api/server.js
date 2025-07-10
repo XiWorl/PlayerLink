@@ -6,6 +6,7 @@ const {
 	verifyTeamSignupInformation,
 	formatClientAccountInformation,
 	AccountType,
+	dataPagination,
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
@@ -44,6 +45,24 @@ server.get("/profiles/:profileId", async (req, res, next) => {
 		return res.status(200).json(playerData)
 	} catch (error) {
 		next(error)
+	}
+})
+
+server.get("/collection/players", async (req, res, next) => {
+	try {
+		const pageData = await dataPagination(prisma, AccountType.PLAYER, req.query)
+		return res.json(pageData)
+	} catch (err) {
+		next(err)
+	}
+})
+
+server.get("/collection/teams", async (req, res, next) => {
+	try {
+		const pageData = await dataPagination(prisma, AccountType.TEAM, req.query)
+		return res.json(pageData)
+	} catch (err) {
+		next(err)
 	}
 })
 
