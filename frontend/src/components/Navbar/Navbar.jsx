@@ -4,6 +4,7 @@ import { ACCOUNT_INFORMATION_KEY } from "../../utils/globalUtils"
 import { Link, useNavigate } from "react-router-dom"
 
 export default function Navbar() {
+	const navigate = useNavigate()
 	return (
 		<div className="navbar">
 			<div className="navbar-contents">
@@ -17,7 +18,7 @@ export default function Navbar() {
 					<ConnectButton />
 				</div>
 				<div className="profile">
-					<ProfileButton />
+					<ProfileButton navigate={navigate} />
 				</div>
 			</div>
 		</div>
@@ -52,8 +53,7 @@ function ConnectButton() {
 	)
 }
 
-function ProfileButton() {
-	const navigate = useNavigate()
+function ProfileButton({ navigate }) {
 	return (
 		<button
 			className="profile-btn"
@@ -77,7 +77,7 @@ function TournamentButton() {
 function ApplyButton() {
 	return (
 		<button className="apply-btn">
-			<h3>Apply</h3>
+			<h3>Applications</h3>
 		</button>
 	)
 }
