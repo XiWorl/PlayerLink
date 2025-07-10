@@ -56,16 +56,16 @@ server.get("/api/login/", async (req, res, next) => {
 			return
 		}
 
-		const acoountData = await prisma.account.findUnique({ where: { email: email } })
-		if (acoountData == null) {
+		const accountData = await prisma.account.findUnique({ where: { email: email } })
+		if (accountData == null) {
 			res.status(404).json({ error: "Account not found" })
 			return
 		}
 
-		const token = await registerSessionToken(acoountData)
+		const token = await registerSessionToken(accountData)
 		const clientResponseInformation = {
-			id: acoountData.id,
-			accountType: acoountData.accountType,
+			id: accountData.id,
+			accountType: accountData.accountType,
 			token: token,
 		}
 		return res.status(200).json(clientResponseInformation)
