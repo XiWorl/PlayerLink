@@ -10,24 +10,30 @@ export default function AccountTile({ accountInformation }) {
 		? "hiring"
 		: "not-hiring"
 
-	const accountDisplay =
-		selectedAccountType == AccountType.TEAM ? (
-			<div
-				className="account"
-				key={accountInformation.accountId}
-				onClick={redirectToAccountProfile(
-					accountInformation,
-					AccountType.TEAM,
-					navigate
-				)}
-			>
-				<div className="view-profile-picture"></div>
-				<div className="view-details">
-					<h2>{accountInformation.name}</h2>
-					<div className="account-information">
-						<h3>{`${accountInformation.description || defaultProfileInfo} • ${
-							accountInformation.location
-						}`}</h3>
+	const accountDisplay = (
+		<div
+			className="account"
+			key={accountInformation.accountId}
+			onClick={redirectToAccountProfile(
+				accountInformation,
+				selectedAccountType,
+				navigate
+			)}
+		>
+			<div className="view-profile-picture"></div>
+			<div className="view-details">
+				<h2>
+					{selectedAccountType == AccountType.TEAM
+						? accountInformation.name
+						: `${accountInformation.firstName} ${accountInformation.lastName}`}
+				</h2>
+				<div className="account-information">
+					<h3>
+						{selectedAccountType == AccountType.TEAM
+							? `${accountInformation.description} • ${accountInformation.location}`
+							: accountInformation.bio}
+					</h3>
+					{selectedAccountType == AccountType.TEAM && (
 						<div className="account-information-hiring">
 							<div className={selectedHiringClassName}></div>
 							<h4 className={selectedHiringClassName}>
@@ -36,27 +42,11 @@ export default function AccountTile({ accountInformation }) {
 									: "No Open Positions"}
 							</h4>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
-		) : (
-			<div
-				className="account"
-				key={accountInformation.accountId}
-				onClick={redirectToAccountProfile(
-					accountInformation,
-					AccountType.PLAYER,
-					navigate
-				)}
-			>
-				<div className="view-profile-picture"></div>
-				<div className="view-details">
-					<h2>{`${accountInformation.firstName} ${accountInformation.lastName}`}</h2>
-					<div className="account-information">
-						<h3>{accountInformation.bio}</h3>
-					</div>
-				</div>
-			</div>
-		)
+		</div>
+	)
+
 	return accountDisplay
 }
