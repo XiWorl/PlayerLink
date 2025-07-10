@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 const PAGE_SIZE = 10
+const START_PAGE = 1
 
 export function verifyPlayerSignupInformation(requestBody) {
 	const isDataValid =
@@ -72,8 +73,7 @@ export async function verifySessionToken(token) {
 }
 
 export async function dataPagination(prisma, accountType, query) {
-	const initialPage = 1
-	let page = initialPage
+	let page = START_PAGE
 	if (query != null && query.page != null && !isNaN(parseInt(query.page))) {
 		page = parseInt(query.page)
 	}
