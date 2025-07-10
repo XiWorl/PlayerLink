@@ -30,7 +30,7 @@ export function handleGameSelectionLogic(game, setFormData, setFormErrors) {
 		return {
 			...previousValue,
 			gamesPlayed: isGameAlreadySelected
-				? previousValue.gamesPlayed.filter((g) => g !== game)
+				? previousValue.gamesPlayed.filter((previousGame) => previousGame !== game)
 				: [...previousValue.gamesPlayed, game],
 			gameUsernames: newGameUsernames,
 		}

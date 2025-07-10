@@ -1,6 +1,11 @@
 import { useContext } from "react"
 import { UserInfoModalContext } from "./ModalBody.jsx"
-import { LocationOptions, YearsOfExperienceOptions, GameOptions, PlaystyleOptions } from "../../utils/globalUtils.js"
+import {
+	LocationOptions,
+	YearsOfExperienceOptions,
+	GameOptions,
+	PlaystyleOptions,
+} from "../../utils/globalUtils.js"
 
 export const INVALID_INPUT_CLASS = "error"
 export const VALID_INPUT_CLASS = ""
@@ -11,7 +16,6 @@ const Placeholders = {
 	FORTNITE: "Fortnite Epic Games username",
 	APEX_LEGENDS: "Apex Legends Origin username",
 }
-const PLAY_STYLE_OPTIONS = ["tactical", "supportive", "aggressive", "defensive", "adaptable"]
 const YesOrNoEnum = Object.freeze({
 	YES: "yes",
 	NO: "no",
@@ -29,10 +33,9 @@ export function TextFormField({ title, isRequired, elementName, placeholder }) {
 
 	return (
 		<div className="form-group">
-			<label htmlFor={elementName}>{displayTitle}</label>
+			<label>{displayTitle}</label>
 			<input
 				type="text"
-				id={elementName}
 				name={elementName}
 				value={formData[elementName]}
 				onChange={handleInputChange}
@@ -48,9 +51,8 @@ export function LocationDropdown() {
 
 	return (
 		<div className="form-group">
-			<label htmlFor="location">Location*</label>
+			<label>Location*</label>
 			<select
-				id="location"
 				name="location"
 				value={formData.location}
 				onChange={handleInputChange}
@@ -72,9 +74,8 @@ export function YesOrNoDropdown({ title, elementName }) {
 
 	return (
 		<div className="form-group">
-			<label htmlFor={elementName}>{title}*</label>
+			<label>{title}*</label>
 			<select
-				id={elementName}
 				name={elementName}
 				value={formData[elementName]}
 				onChange={handleInputChange}
@@ -95,9 +96,8 @@ export function ExperienceDropdown() {
 
 	return (
 		<div className="form-group">
-			<label htmlFor="yearsOfExperience">Years of Experience*</label>
+			<label>Years of Experience*</label>
 			<select
-				id="yearsOfExperience"
 				name="yearsOfExperience"
 				value={formData.yearsOfExperience}
 				onChange={handleInputChange}
@@ -126,9 +126,8 @@ export function PlayStyleDropdown() {
 
 	return (
 		<div className="form-group">
-			<label htmlFor="playStyle">Preferred Playstyle*</label>
+			<label>Preferred Playstyle*</label>
 			<select
-				id="playStyle"
 				name="playStyle"
 				value={formData.playStyle}
 				onChange={handleInputChange}
@@ -136,7 +135,10 @@ export function PlayStyleDropdown() {
 			>
 				<option value="">Select your playstyle</option>
 				{Object.keys(PlaystyleOptions).map((playstyle) => (
-					<option key={PlaystyleOptions[playstyle]} value={PlaystyleOptions[playstyle]}>
+					<option
+						key={PlaystyleOptions[playstyle]}
+						value={PlaystyleOptions[playstyle]}
+					>
 						{PlaystyleOptions[playstyle]}
 					</option>
 				))}
@@ -169,9 +171,14 @@ export function GamesSelection() {
 								<input
 									type="text"
 									placeholder={Placeholders[game]}
-									value={formData.gameUsernames[GameOptions[game]] || ""}
-									onChange={(e) =>
-										handleUsernameChange(GameOptions[game], e.target.value)
+									value={
+										formData.gameUsernames[GameOptions[game]] || ""
+									}
+									onChange={(event) =>
+										handleUsernameChange(
+											GameOptions[game],
+											event.target.value
+										)
 									}
 									className="game-username-input"
 								/>
