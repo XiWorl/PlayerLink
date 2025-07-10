@@ -1,7 +1,7 @@
 const {
 	editPlayerProfileInformation,
 	registerSessionToken,
-	verifySessionToken,
+	EditType,
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
