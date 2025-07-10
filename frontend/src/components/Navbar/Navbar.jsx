@@ -11,8 +11,8 @@ export default function Navbar() {
 				<div className="tournament">
 					<TournamentButton />
 				</div>
-				<div className="apply">
-					<ApplyButton />
+				<div className="applications">
+					<ApplicationsButton />
 				</div>
 				<div className="connect">
 					<ConnectButton />
@@ -74,7 +74,7 @@ function TournamentButton() {
 	)
 }
 
-function ApplyButton() {
+function ApplicationsButton() {
 	return (
 		<button className="apply-btn">
 			<h3>Applications</h3>
