@@ -31,6 +31,6 @@ export async function modalSubmitHelper(textValue, detailType, accountType, id) 
 			return LOGIN_FAILURE
 		}
 	} catch (error) {
-		console.error("Error trying to login:", error)
+		console.error(`Error while attempting to update ${detailType}:`, error)
 	}
 }
