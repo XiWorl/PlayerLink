@@ -30,6 +30,7 @@ function MyComponent({ title }) {
 				onClose={handleClose}
 				onSubmit={handleSubmit}
 				title={title}
+				accountType="player"
 			/>
 		</div>
 	)

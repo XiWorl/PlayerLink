@@ -4,43 +4,55 @@ import {
 	TextFormField,
 	LocationDropdown,
 	YesOrNoDropdown,
-	ExperienceDropdown,
 	PlayStyleDropdown,
 	GamesSelection,
+	DesiredSkillLevelDropdown,
 	DEFAULT_FORM_VALUE,
 } from "./ComponentUtils.jsx"
 
-const optionalFields = ["lastName"]
+const optionalFields = []
 
-function validateForm(formData, setFormErrors, onSubmit, handleClose) {
+function validateForm(
+	formData,
+	setFormErrors,
+	onSubmit,
+	handleClose,
+	selectedAccountType
+) {
 	return function (event) {
 		event.preventDefault()
 
 		let isFormValid = true
-		const newErrors = {}
+		const newErrors = { [selectedAccountType]: {} }
+		const currentFormData = formData[selectedAccountType]
 
-		for (const key in formData) {
-			if (key === "gamesPlayed" || key === "gameUsernames") continue
+		// Validate required text fields
+		for (const key in currentFormData) {
+			if (key === "supportedGames" || key === "gameUsernames") continue
 
 			const inputValue =
-				typeof formData[key] === "string" ? formData[key].trim() : formData[key]
+				typeof currentFormData[key] === "string"
+					? currentFormData[key].trim()
+					: currentFormData[key]
 
-			if (inputValue === DEFAULT_FORM_VALUE) {
+			if (inputValue === DEFAULT_FORM_VALUE || inputValue === "") {
 				if (optionalFields.includes(key)) continue
-				newErrors[key] = `${key} is required`
+				newErrors[selectedAccountType][key] = `${key} is required`
 				isFormValid = false
 			}
 		}
 
-		if (formData.gamesPlayed.length === 0) {
-			newErrors.gamesPlayed = "Please select at least one game"
+		// Validate supported games
+		if (currentFormData.supportedGames.length === 0) {
+			newErrors[selectedAccountType].supportedGames =
+				"Please select at least one supported game"
 			isFormValid = false
 		}
 
 		setFormErrors(newErrors)
 
 		if (isFormValid) {
-			onSubmit(formData)
+			onSubmit(currentFormData)
 			handleClose()
 		}
 
@@ -48,31 +60,37 @@ function validateForm(formData, setFormErrors, onSubmit, handleClose) {
 	}
 }
 
-export default function UserInfoForm({ onClose, onSubmit }) {
-	const { formData, setFormErrors, handleClose } = useContext(UserInfoModalContext)
+export default function TeamForm({ onClose, onSubmit }) {
+	const { formData, setFormErrors, handleClose, selectedAccountType } =
+		useContext(UserInfoModalContext)
 
 	return (
 		<form
-			onSubmit={validateForm(formData, setFormErrors, onSubmit, handleClose)}
+			onSubmit={validateForm(
+				formData,
+				setFormErrors,
+				onSubmit,
+				handleClose,
+				selectedAccountType
+			)}
 			className="signup-form"
 		>
 			<TextFormField
 				title="Team Name"
 				isRequired={true}
-				elementName="firstName"
+				elementName="teamName"
 				placeholder="Enter your team name"
 			/>
 
 			<LocationDropdown />
 
-			<YesOrNoDropdown
-				title="Currently Hiring"
-				elementName="currentlyHiring"
-			/>
+			<YesOrNoDropdown title="Currently Hiring" elementName="currentlyHiring" />
 
-			<ExperienceDropdown />
+			<PlayStyleDropdown title="Desired Playstyle" elementName="desiredPlaystyle" />
 
-			<GamesSelection title={"Supported Games"} elementName={"supportedGames"}/>
+			<GamesSelection title="Supported Games" elementName="supportedGames" />
+
+			<DesiredSkillLevelDropdown />
 
 			<div className="form-actions">
 				<button type="button" className="cancel-btn" onClick={onClose}>

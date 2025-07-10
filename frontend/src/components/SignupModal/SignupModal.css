@@ -18,10 +18,10 @@
 	max-width: 500px;
 	max-height: 90vh;
 	overflow-y: auto;
-    scrollbar-width: 3px;
+	scrollbar-width: 3px;
 	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 	animation: modalSlideIn 0.3s ease-out;
-    max-height: 70%;
+	max-height: 70%;
 }
 
 @keyframes modalSlideIn {
@@ -270,20 +270,20 @@
 }
 
 .game-checkbox-label {
-    display: flex;
+	display: flex;
 }
 
-.game-checkbox-label h3{
-    display: flex;
+.game-checkbox-label h3 {
+	display: flex;
 	font-size: 14px;
 	font-weight: 300;
-    margin: 3px;
+	margin: 3px;
 }
 
-.game-checkbox-label input{
+.game-checkbox-label input {
 	display: flex;
-    margin-left: auto;
-    width: auto;
-    flex-direction: row;
+	margin-left: auto;
+	width: auto;
+	flex-direction: row;
 	cursor: pointer;
 }

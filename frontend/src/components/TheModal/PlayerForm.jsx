@@ -12,35 +12,46 @@ import {
 
 const optionalFields = ["lastName"]
 
-function validateForm(formData, setFormErrors, onSubmit, handleClose) {
+function validateForm(
+	formData,
+	setFormErrors,
+	onSubmit,
+	handleClose,
+	selectedAccountType
+) {
 	return function (event) {
 		event.preventDefault()
 
 		let isFormValid = true
-		const newErrors = {}
+		const newErrors = { [selectedAccountType]: {} }
+		const currentFormData = formData[selectedAccountType]
 
-		for (const key in formData) {
+		// Validate required text fields
+		for (const key in currentFormData) {
 			if (key === "gamesPlayed" || key === "gameUsernames") continue
 
 			const inputValue =
-				typeof formData[key] === "string" ? formData[key].trim() : formData[key]
+				typeof currentFormData[key] === "string"
+					? currentFormData[key].trim()
+					: currentFormData[key]
 
-			if (inputValue === DEFAULT_FORM_VALUE) {
+			if (inputValue === DEFAULT_FORM_VALUE || inputValue === "") {
 				if (optionalFields.includes(key)) continue
-				newErrors[key] = `${key} is required`
+				newErrors[selectedAccountType][key] = `${key} is required`
 				isFormValid = false
 			}
 		}
 
-		if (formData.gamesPlayed.length === 0) {
-			newErrors.gamesPlayed = "Please select at least one game"
+		// Validate games played
+		if (currentFormData.gamesPlayed.length === 0) {
+			newErrors[selectedAccountType].gamesPlayed = "Please select at least one game"
 			isFormValid = false
 		}
 
 		setFormErrors(newErrors)
 
 		if (isFormValid) {
-			onSubmit(formData)
+			onSubmit(currentFormData)
 			handleClose()
 		}
 
@@ -48,12 +59,19 @@ function validateForm(formData, setFormErrors, onSubmit, handleClose) {
 	}
 }
 
-export default function UserInfoForm({ onClose, onSubmit }) {
-	const { formData, setFormErrors, handleClose } = useContext(UserInfoModalContext)
+export default function PlayerForm({ onClose, onSubmit }) {
+	const { formData, setFormErrors, handleClose, selectedAccountType } =
+		useContext(UserInfoModalContext)
 
 	return (
 		<form
-			onSubmit={validateForm(formData, setFormErrors, onSubmit, handleClose)}
+			onSubmit={validateForm(
+				formData,
+				setFormErrors,
+				onSubmit,
+				handleClose,
+				selectedAccountType
+			)}
 			className="signup-form"
 		>
 			<TextFormField
@@ -79,7 +97,7 @@ export default function UserInfoForm({ onClose, onSubmit }) {
 
 			<ExperienceDropdown />
 
-			<GamesSelection />
+			<GamesSelection title="Gaming experience" elementName="gamesPlayed" />
 
 			<PlayStyleDropdown />
 

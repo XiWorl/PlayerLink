@@ -10,7 +10,7 @@ import {
 export const INVALID_INPUT_CLASS = "error"
 export const VALID_INPUT_CLASS = ""
 export const DEFAULT_FORM_VALUE = ""
-export const DEFAULT_ERRORS_VALUE = Object.freeze({})
+export const DEFAULT_ERRORS_VALUE = Object.freeze({ player: {}, team: {} })
 const Placeholders = {
 	VALORANT: "Valorant username and tagline (username#tagline)",
 	FORTNITE: "Fortnite Epic Games username",
@@ -22,13 +22,16 @@ const YesOrNoEnum = Object.freeze({
 })
 
 export function TextFormField({ title, isRequired, elementName, placeholder }) {
-	const { formData, handleInputChange, formErrors } = useContext(UserInfoModalContext)
+	const { formData, handleInputChange, formErrors, selectedAccountType } =
+		useContext(UserInfoModalContext)
 	let displayTitle = title
 	let className = VALID_INPUT_CLASS
 
 	if (isRequired) {
 		displayTitle = title + "*"
-		className = formErrors[elementName] ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS
+		className = formErrors[selectedAccountType]?.[elementName]
+			? INVALID_INPUT_CLASS
+			: VALID_INPUT_CLASS
 	}
 
 	return (
@@ -37,7 +40,7 @@ export function TextFormField({ title, isRequired, elementName, placeholder }) {
 			<input
 				type="text"
 				name={elementName}
-				value={formData[elementName]}
+				value={formData[selectedAccountType][elementName]}
 				onChange={handleInputChange}
 				className={className}
 				placeholder={placeholder}
@@ -47,18 +50,23 @@ export function TextFormField({ title, isRequired, elementName, placeholder }) {
 }
 
 export function LocationDropdown() {
-	const { formData, handleInputChange, formErrors } = useContext(UserInfoModalContext)
+	const { formData, handleInputChange, formErrors, selectedAccountType } =
+		useContext(UserInfoModalContext)
 
 	return (
 		<div className="form-group">
 			<label>Location*</label>
 			<select
 				name="location"
-				value={formData.location}
+				value={formData[selectedAccountType].location}
 				onChange={handleInputChange}
-				className={formErrors.location ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS}
+				className={
+					formErrors[selectedAccountType]?.location
+						? INVALID_INPUT_CLASS
+						: VALID_INPUT_CLASS
+				}
 			>
-				<option value="">Select your location</option>
+				<option value={DEFAULT_FORM_VALUE}>Select your location</option>
 				{LocationOptions.map((location) => (
 					<option key={location} value={location}>
 						{location}
@@ -70,20 +78,23 @@ export function LocationDropdown() {
 }
 
 export function YesOrNoDropdown({ title, elementName }) {
-	const { formData, handleInputChange, formErrors } = useContext(UserInfoModalContext)
+	const { formData, handleInputChange, formErrors, selectedAccountType } =
+		useContext(UserInfoModalContext)
 
 	return (
 		<div className="form-group">
 			<label>{title}*</label>
 			<select
 				name={elementName}
-				value={formData[elementName]}
+				value={formData[selectedAccountType][elementName]}
 				onChange={handleInputChange}
 				className={
-					formErrors[elementName] ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS
+					formErrors[selectedAccountType]?.[elementName]
+						? INVALID_INPUT_CLASS
+						: VALID_INPUT_CLASS
 				}
 			>
-				<option value="">Select an option</option>
+				<option value={DEFAULT_FORM_VALUE}>Select an option</option>
 				<option value={YesOrNoEnum.YES}>Yes</option>
 				<option value={YesOrNoEnum.NO}>No</option>
 			</select>
@@ -92,20 +103,23 @@ export function YesOrNoDropdown({ title, elementName }) {
 }
 
 export function ExperienceDropdown() {
-	const { formData, handleInputChange, formErrors } = useContext(UserInfoModalContext)
+	const { formData, handleInputChange, formErrors, selectedAccountType } =
+		useContext(UserInfoModalContext)
 
 	return (
 		<div className="form-group">
 			<label>Years of Experience*</label>
 			<select
 				name="yearsOfExperience"
-				value={formData.yearsOfExperience}
+				value={formData[selectedAccountType].yearsOfExperience}
 				onChange={handleInputChange}
 				className={
-					formErrors.yearsOfExperience ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS
+					formErrors[selectedAccountType]?.yearsOfExperience
+						? INVALID_INPUT_CLASS
+						: VALID_INPUT_CLASS
 				}
 			>
-				<option value="">Select experience level</option>
+				<option value={DEFAULT_FORM_VALUE}>Select experience level</option>
 				{Object.keys(YearsOfExperienceOptions).map((experience) => {
 					return (
 						<option
@@ -121,19 +135,27 @@ export function ExperienceDropdown() {
 	)
 }
 
-export function PlayStyleDropdown() {
-	const { formData, handleInputChange, formErrors } = useContext(UserInfoModalContext)
+export function PlayStyleDropdown({
+	title = "Preferred Playstyle",
+	elementName = "playStyle",
+}) {
+	const { formData, handleInputChange, formErrors, selectedAccountType } =
+		useContext(UserInfoModalContext)
 
 	return (
 		<div className="form-group">
-			<label>Preferred Playstyle*</label>
+			<label>{title}*</label>
 			<select
-				name="playStyle"
-				value={formData.playStyle}
+				name={elementName}
+				value={formData[selectedAccountType][elementName]}
 				onChange={handleInputChange}
-				className={formErrors.playStyle ? INVALID_INPUT_CLASS : VALID_INPUT_CLASS}
+				className={
+					formErrors[selectedAccountType]?.[elementName]
+						? INVALID_INPUT_CLASS
+						: VALID_INPUT_CLASS
+				}
 			>
-				<option value="">Select your playstyle</option>
+				<option value={DEFAULT_FORM_VALUE}>Select your playstyle</option>
 				{Object.keys(PlaystyleOptions).map((playstyle) => (
 					<option
 						key={PlaystyleOptions[playstyle]}
@@ -147,13 +169,22 @@ export function PlayStyleDropdown() {
 	)
 }
 
-export function GamesSelection({title, elementName}) {
-	const { formData, handleGameSelection, handleUsernameChange, formErrors } =
-		useContext(UserInfoModalContext)
+export function GamesSelection({ title = "Gaming experience" }) {
+	const {
+		formData,
+		handleGameSelection,
+		handleUsernameChange,
+		formErrors,
+		selectedAccountType,
+	} = useContext(UserInfoModalContext)
+
+	const gamesField = selectedAccountType === "team" ? "supportedGames" : "gamesPlayed"
+	const currentGames = formData[selectedAccountType][gamesField]
+	const showUsernames = selectedAccountType === "player"
 
 	return (
 		<div className="form-group">
-			<label>Gaming experience* (Select all that apply)</label>
+			<label>{title}* (Select all that apply)</label>
 			<div className="games-selection-list">
 				{Object.keys(GameOptions).map((game) => (
 					<div key={GameOptions[game]} className="game-selection-container">
@@ -161,18 +192,23 @@ export function GamesSelection({title, elementName}) {
 							<h3>{GameOptions[game]}</h3>
 							<input
 								type="checkbox"
-								checked={formData.gamesPlayed.includes(GameOptions[game])}
+								checked={currentGames.includes(GameOptions[game])}
 								onChange={() => handleGameSelection(GameOptions[game])}
 								className="game-checkbox"
 							/>
 						</div>
-						{formData.gamesPlayed.includes(GameOptions[game]) && (
+						{showUsernames && currentGames.includes(GameOptions[game]) && (
 							<div className="username-input-container">
 								<input
 									type="text"
-									placeholder={Placeholders[game]}
+									placeholder={
+										Placeholders[game] ||
+										`Enter your ${GameOptions[game]} username`
+									}
 									value={
-										formData.gameUsernames[GameOptions[game]] || ""
+										formData[selectedAccountType].gameUsernames[
+											GameOptions[game]
+										] || DEFAULT_FORM_VALUE
 									}
 									onChange={(event) =>
 										handleUsernameChange(
@@ -187,9 +223,41 @@ export function GamesSelection({title, elementName}) {
 					</div>
 				))}
 			</div>
-			{formErrors.gamesPlayed && (
-				<span className="form-error-message">{formErrors.gamesPlayed}</span>
+			{formErrors[selectedAccountType]?.[gamesField] && (
+				<span className="form-error-message">
+					{formErrors[selectedAccountType][gamesField]}
+				</span>
 			)}
+		</div>
+	)
+}
+
+export function DesiredSkillLevelDropdown() {
+	const { formData, handleInputChange, formErrors, selectedAccountType } =
+		useContext(UserInfoModalContext)
+
+	const skillLevelOptions = ["High", "Medium", "Low"]
+
+	return (
+		<div className="form-group">
+			<label>Desired Skill Level*</label>
+			<select
+				name="desiredSkillLevel"
+				value={formData[selectedAccountType].desiredSkillLevel}
+				onChange={handleInputChange}
+				className={
+					formErrors[selectedAccountType]?.desiredSkillLevel
+						? INVALID_INPUT_CLASS
+						: VALID_INPUT_CLASS
+				}
+			>
+				<option value={DEFAULT_FORM_VALUE}>Select desired skill level</option>
+				{skillLevelOptions.map((level) => (
+					<option key={level} value={level.toLowerCase()}>
+						{level}
+					</option>
+				))}
+			</select>
 		</div>
 	)
 }
