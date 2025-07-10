@@ -147,7 +147,7 @@ export function PlayStyleDropdown() {
 	)
 }
 
-export function GamesSelection() {
+export function GamesSelection({title, elementName}) {
 	const { formData, handleGameSelection, handleUsernameChange, formErrors } =
 		useContext(UserInfoModalContext)
 

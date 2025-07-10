@@ -57,31 +57,22 @@ export default function UserInfoForm({ onClose, onSubmit }) {
 			className="signup-form"
 		>
 			<TextFormField
-				title="First Name"
+				title="Team Name"
 				isRequired={true}
 				elementName="firstName"
-				placeholder="Enter your first name"
-			/>
-
-			<TextFormField
-				title="Last Name"
-				isRequired={false}
-				elementName="lastName"
-				placeholder="Enter your last name (optional)"
+				placeholder="Enter your team name"
 			/>
 
 			<LocationDropdown />
 
 			<YesOrNoDropdown
-				title="Willing to Relocate"
-				elementName="willingToRelocate"
+				title="Currently Hiring"
+				elementName="currentlyHiring"
 			/>
 
 			<ExperienceDropdown />
 
-			<GamesSelection />
-
-			<PlayStyleDropdown />
+			<GamesSelection title={"Supported Games"} elementName={"supportedGames"}/>
 
 			<div className="form-actions">
 				<button type="button" className="cancel-btn" onClick={onClose}>
