@@ -135,7 +135,7 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 
 	try {
 		if (req.body == null || req.body.accountId == null) {
-			res.status(400).json({ error: "Must provide valid body information" })
+			res.status(400).json({ error: `Must provide "editType" and "value" JSON values within the request body` })
 			return
 		}
 

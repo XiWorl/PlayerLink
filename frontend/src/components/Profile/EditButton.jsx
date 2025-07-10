@@ -1,5 +1,5 @@
 import { AccountType } from "../../utils/globalUtils"
-import { CustomizableModal, ModalHeader } from "../CustomizableModal/CustomizableModal"
+import { CustomizableModal } from "../CustomizableModal/CustomizableModal"
 import { ModalTextBox } from "../CustomizableModal/utils"
 import { modalSubmitHelper } from "./EditButtonUtils"
 import { useState, useContext } from "react"
