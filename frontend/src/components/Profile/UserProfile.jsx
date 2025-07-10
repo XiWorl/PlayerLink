@@ -12,9 +12,6 @@ function MyComponent({ title }) {
 
 	const handleSubmit = (formData) => {
 		console.log("User data:", formData)
-		// Handle the submitted data
-		// formData contains: firstName, lastName, location, willingToRelocate,
-		// yearsOfExperience, gamesPlayed, playStyle
 	}
 
 	const handleClose = () => {

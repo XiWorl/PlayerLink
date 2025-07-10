@@ -48,6 +48,7 @@ model Team {
   name       String
   location   String
   currentlyHiring Boolean
+  yearEstablished String
   description String?
   overview   String?
   accountId  Int @unique

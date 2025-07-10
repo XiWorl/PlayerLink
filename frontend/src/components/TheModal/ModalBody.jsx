@@ -1,5 +1,4 @@
 import { useState, createContext } from "react"
-import { Header } from "./Header"
 import { DEFAULT_FORM_VALUE, DEFAULT_ERRORS_VALUE } from "./ComponentUtils"
 import {
 	handleUsernameChangeLogic,
@@ -35,8 +34,15 @@ const DEFAULT_FORM_DATA = {
 	},
 }
 
-export default function ModalBody({ isOpen, onClose, onSubmit, title, accountType }) {
-	const [selectedAccountType, _setSelectedAccountType] = useState(accountType)
+export default function ModalBody({
+	isOpen,
+	onClose,
+	onSubmit,
+	title,
+	accountType,
+	isHeaderActive,
+}) {
+	const [selectedAccountType, setSelectedAccountType] = useState(accountType)
 	const [formData, setFormData] = useState(DEFAULT_FORM_DATA)
 	const [formErrors, setFormErrors] = useState(DEFAULT_ERRORS_VALUE)
 
@@ -67,8 +73,6 @@ export default function ModalBody({ isOpen, onClose, onSubmit, title, accountTyp
 		onClose()
 	}
 
-	if (!isOpen) return null
-
 	return (
 		<ModalBodyContext.Provider
 			value={{
@@ -89,28 +93,36 @@ export default function ModalBody({ isOpen, onClose, onSubmit, title, accountTyp
 					className="signup-modal-content"
 					onClick={(event) => event.stopPropagation()}
 				>
-					<Header onClose={handleClose} title={title} />
-
-					{/* <div className="account-type-selector">
-						<button
-							type="button"
-							className={`account-type-btn ${
-								selectedAccountType === "player" ? "active" : ""
-							}`}
-							onClick={() => setSelectedAccountType("player")}
-						>
-							Player
-						</button>
-						<button
-							type="button"
-							className={`account-type-btn ${
-								selectedAccountType === "team" ? "active" : ""
-							}`}
-							onClick={() => setSelectedAccountType("team")}
-						>
-							Team
-						</button>
-					</div> */}
+					{isHeaderActive && (
+						<>
+							<div className="signup-modal-header">
+								<h2>{title}</h2>
+								<button className="close-button" onClick={onClose}>
+									&times;
+								</button>
+							</div>
+							<div className="account-type-selector">
+								<button
+									type="button"
+									className={`account-type-btn ${
+										selectedAccountType === AccountType.PLAYER ? "active" : ""
+									}`}
+									onClick={() => setSelectedAccountType(AccountType.PLAYER)}
+								>
+									Player
+								</button>
+								<button
+									type="button"
+									className={`account-type-btn ${
+										selectedAccountType === AccountType.TEAM ? "active" : ""
+									}`}
+									onClick={() => setSelectedAccountType(AccountType.TEAM)}
+								>
+									Team
+								</button>
+							</div>{" "}
+						</>
+					)}
 
 					{selectedAccountType === AccountType.PLAYER ? (
 						<PlayerForm onClose={onClose} onSubmit={onSubmit} />
