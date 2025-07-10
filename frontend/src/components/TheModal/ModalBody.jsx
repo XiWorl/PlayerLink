@@ -4,6 +4,7 @@ import { DEFAULT_FORM_VALUE, DEFAULT_ERRORS_VALUE } from "./ComponentUtils"
 import {
 	handleUsernameChangeLogic,
 	handleGameSelectionLogic,
+	handlePlaystyleSelectionLogic,
 	updateFormState,
 } from "./utils"
 import { AccountType } from "../../utils/globalUtils"
@@ -22,13 +23,13 @@ const DEFAULT_FORM_DATA = {
 		yearsOfExperience: DEFAULT_FORM_VALUE,
 		gamesPlayed: [],
 		gameUsernames: {},
-		playStyle: DEFAULT_FORM_VALUE,
+		playstyle: DEFAULT_FORM_VALUE,
 	},
 	team: {
 		teamName: DEFAULT_FORM_VALUE,
 		currentlyHiring: DEFAULT_FORM_VALUE,
 		location: DEFAULT_FORM_VALUE,
-		desiredPlaystyle: DEFAULT_FORM_VALUE,
+		desiredPlaystyle: [],
 		supportedGames: [],
 		desiredSkillLevel: DEFAULT_FORM_VALUE,
 	},
@@ -51,6 +52,15 @@ export default function ModalBody({ isOpen, onClose, onSubmit, title, accountTyp
 		handleUsernameChangeLogic(game, username, setFormData, selectedAccountType)
 	}
 
+	function handlePlaystyleSelection(playstyle) {
+		handlePlaystyleSelectionLogic(
+			playstyle,
+			setFormData,
+			setFormErrors,
+			selectedAccountType
+		)
+	}
+
 	function handleClose() {
 		setFormData(DEFAULT_FORM_DATA)
 		setFormErrors(DEFAULT_ERRORS_VALUE)
@@ -67,6 +77,7 @@ export default function ModalBody({ isOpen, onClose, onSubmit, title, accountTyp
 				handleInputChange,
 				handleGameSelection,
 				handleUsernameChange,
+				handlePlaystyleSelection,
 				setFormErrors,
 				setFormData,
 				handleClose,

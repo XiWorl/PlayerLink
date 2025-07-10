@@ -87,3 +87,39 @@ export function handleUsernameChangeLogic(
 		}
 	})
 }
+
+export function handlePlaystyleSelectionLogic(
+	playstyle,
+	setFormData,
+	setFormErrors,
+	selectedAccountType
+) {
+	setFormData(function (previousValue) {
+		const currentFormData = previousValue[selectedAccountType]
+		const playstyleField = "desiredPlaystyle"
+		const isPlaystyleAlreadySelected =
+			currentFormData[playstyleField].includes(playstyle)
+
+		return {
+			...previousValue,
+			[selectedAccountType]: {
+				...currentFormData,
+				[playstyleField]: isPlaystyleAlreadySelected
+					? currentFormData[playstyleField].filter(
+							(previousPlaystyle) => previousPlaystyle !== playstyle
+					  )
+					: [...currentFormData[playstyleField], playstyle],
+			},
+		}
+	})
+
+	setFormErrors(function (previousValue) {
+		return {
+			...previousValue,
+			[selectedAccountType]: {
+				...previousValue[selectedAccountType],
+				desiredPlaystyle: DEFAULT_FORM_VALUE,
+			},
+		}
+	})
+}

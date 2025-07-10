@@ -49,95 +49,13 @@ export function TextFormField({ title, isRequired, elementName, placeholder }) {
 	)
 }
 
-export function LocationDropdown() {
-	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(ModalBodyContext)
-
-	return (
-		<div className="form-group">
-			<label>Location*</label>
-			<select
-				name="location"
-				value={formData[selectedAccountType].location}
-				onChange={handleInputChange}
-				className={
-					formErrors[selectedAccountType]?.location
-						? INVALID_INPUT_CLASS
-						: VALID_INPUT_CLASS
-				}
-			>
-				<option value={DEFAULT_FORM_VALUE}>Select your location</option>
-				{LocationOptions.map((location) => (
-					<option key={location} value={location}>
-						{location}
-					</option>
-				))}
-			</select>
-		</div>
-	)
-}
-
-export function YesOrNoDropdown({ title, elementName }) {
-	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(ModalBodyContext)
-
-	return (
-		<div className="form-group">
-			<label>{title}*</label>
-			<select
-				name={elementName}
-				value={formData[selectedAccountType][elementName]}
-				onChange={handleInputChange}
-				className={
-					formErrors[selectedAccountType]?.[elementName]
-						? INVALID_INPUT_CLASS
-						: VALID_INPUT_CLASS
-				}
-			>
-				<option value={DEFAULT_FORM_VALUE}>Select an option</option>
-				<option value={YesOrNoEnum.YES}>Yes</option>
-				<option value={YesOrNoEnum.NO}>No</option>
-			</select>
-		</div>
-	)
-}
-
-export function ExperienceDropdown() {
-	const { formData, handleInputChange, formErrors, selectedAccountType } =
-		useContext(ModalBodyContext)
-
-	return (
-		<div className="form-group">
-			<label>Years of Experience*</label>
-			<select
-				name="yearsOfExperience"
-				value={formData[selectedAccountType].yearsOfExperience}
-				onChange={handleInputChange}
-				className={
-					formErrors[selectedAccountType]?.yearsOfExperience
-						? INVALID_INPUT_CLASS
-						: VALID_INPUT_CLASS
-				}
-			>
-				<option value={DEFAULT_FORM_VALUE}>Select experience level</option>
-				{Object.keys(YearsOfExperienceOptions).map((experience) => {
-					return (
-						<option
-							key={YearsOfExperienceOptions[experience]}
-							value={YearsOfExperienceOptions[experience]}
-						>
-							{YearsOfExperienceOptions[experience]} years
-						</option>
-					)
-				})}
-			</select>
-		</div>
-	)
-}
-
-export function PlayStyleDropdown({
-	title = "Preferred Playstyle",
-	elementName = "playStyle",
+export function Dropdown({
+	title,
+	elementName,
+	options,
+	defaultOptionText,
+	optionValueTransform,
+	optionDisplayTransform,
 }) {
 	const { formData, handleInputChange, formErrors, selectedAccountType } =
 		useContext(ModalBodyContext)
@@ -155,17 +73,66 @@ export function PlayStyleDropdown({
 						: VALID_INPUT_CLASS
 				}
 			>
-				<option value={DEFAULT_FORM_VALUE}>Select your playstyle</option>
-				{Object.keys(PlaystyleOptions).map((playstyle) => (
-					<option
-						key={PlaystyleOptions[playstyle]}
-						value={PlaystyleOptions[playstyle]}
-					>
-						{PlaystyleOptions[playstyle]}
-					</option>
-				))}
+				<option value={DEFAULT_FORM_VALUE}>{defaultOptionText}</option>
+				{options.map((option) => {
+					const value = optionValueTransform
+						? optionValueTransform(option)
+						: option
+					const display = optionDisplayTransform
+						? optionDisplayTransform(option)
+						: option
+					return (
+						<option key={value} value={value}>
+							{display}
+						</option>
+					)
+				})}
 			</select>
 		</div>
+	)
+}
+
+export function LocationDropdown() {
+	return (
+		<Dropdown
+			title="Location"
+			elementName="location"
+			options={LocationOptions}
+			defaultOptionText="Select your location"
+		/>
+	)
+}
+
+export function YesOrNoDropdown({ title, elementName }) {
+	const yesNoOptions = [YesOrNoEnum.YES, YesOrNoEnum.NO]
+
+	return (
+		<Dropdown
+			title={title}
+			elementName={elementName}
+			options={yesNoOptions}
+			defaultOptionText="Select an option"
+			optionDisplayTransform={(option) =>
+				option === YesOrNoEnum.YES ? "Yes" : "No"
+			}
+		/>
+	)
+}
+
+export function ExperienceDropdown() {
+	const experienceOptions = Object.keys(YearsOfExperienceOptions)
+
+	return (
+		<Dropdown
+			title="Years of Experience"
+			elementName="yearsOfExperience"
+			options={experienceOptions}
+			defaultOptionText="Select experience level"
+			optionValueTransform={(experience) => YearsOfExperienceOptions[experience]}
+			optionDisplayTransform={(experience) =>
+				`${YearsOfExperienceOptions[experience]} years`
+			}
+		/>
 	)
 }
 
@@ -232,32 +199,70 @@ export function GamesSelection({ title = "Gaming experience" }) {
 	)
 }
 
-export function DesiredSkillLevelDropdown() {
-	const { formData, handleInputChange, formErrors, selectedAccountType } =
+export function PlaystyleSelection() {
+	const { formData, handlePlaystyleSelection, formErrors, selectedAccountType } =
 		useContext(ModalBodyContext)
 
-	const skillLevelOptions = ["High", "Medium", "Low"]
+	const currentPlaystyles = formData[selectedAccountType].desiredPlaystyle
 
 	return (
 		<div className="form-group">
-			<label>Desired Skill Level*</label>
-			<select
-				name="desiredSkillLevel"
-				value={formData[selectedAccountType].desiredSkillLevel}
-				onChange={handleInputChange}
-				className={
-					formErrors[selectedAccountType]?.desiredSkillLevel
-						? INVALID_INPUT_CLASS
-						: VALID_INPUT_CLASS
-				}
-			>
-				<option value={DEFAULT_FORM_VALUE}>Select desired skill level</option>
-				{skillLevelOptions.map((level) => (
-					<option key={level} value={level.toLowerCase()}>
-						{level}
-					</option>
+			<label>Desired playstyle* (Select all that apply)</label>
+			<div className="games-selection-list">
+				{Object.keys(PlaystyleOptions).map((playstyle) => (
+					<div
+						key={PlaystyleOptions[playstyle]}
+						className="game-selection-container"
+					>
+						<div className="game-checkbox-label">
+							<h3>{PlaystyleOptions[playstyle]}</h3>
+							<input
+								type="checkbox"
+								checked={currentPlaystyles.includes(
+									PlaystyleOptions[playstyle]
+								)}
+								onChange={() =>
+									handlePlaystyleSelection(PlaystyleOptions[playstyle])
+								}
+								className="game-checkbox"
+							/>
+						</div>
+					</div>
 				))}
-			</select>
+			</div>
+			{formErrors[selectedAccountType]?.desiredPlaystyle && (
+				<span className="form-error-message">
+					{formErrors[selectedAccountType].desiredPlaystyle}
+				</span>
+			)}
 		</div>
+	)
+}
+
+export function DesiredSkillLevelDropdown() {
+	const skillLevelOptions = ["High", "Medium", "Low"]
+
+	return (
+		<Dropdown
+			title="Desired Skill Level"
+			elementName="desiredSkillLevel"
+			options={skillLevelOptions}
+			defaultOptionText="Select desired skill level"
+			optionValueTransform={(level) => level.toLowerCase()}
+		/>
+	)
+}
+
+export function PlayStyleDropdown() {
+	const skillLevelOptions = ["High", "Medium", "Low"]
+
+	return (
+		<Dropdown
+			title="Preferred Playstyle"
+			elementName="playstyle"
+			options={skillLevelOptions}
+			defaultOptionText="Select preferred playstyle"
+			optionValueTransform={(level) => level.toLowerCase()}
+		/>
 	)
 }

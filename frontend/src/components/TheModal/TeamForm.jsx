@@ -4,7 +4,7 @@ import {
 	TextFormField,
 	LocationDropdown,
 	YesOrNoDropdown,
-	PlayStyleDropdown,
+	PlaystyleSelection,
 	GamesSelection,
 	DesiredSkillLevelDropdown,
 	DEFAULT_FORM_VALUE,
@@ -42,10 +42,15 @@ function validateForm(
 			}
 		}
 
-		// Validate supported games
 		if (currentFormData.supportedGames.length === 0) {
 			newErrors[selectedAccountType].supportedGames =
 				"Please select at least one supported game"
+			isFormValid = false
+		}
+
+		if (currentFormData.desiredPlaystyle.length === 0) {
+			newErrors[selectedAccountType].desiredPlaystyle =
+				"Please select at least one desired playstyle"
 			isFormValid = false
 		}
 
@@ -83,13 +88,9 @@ export default function TeamForm({ onClose, onSubmit }) {
 			/>
 
 			<LocationDropdown />
-
 			<YesOrNoDropdown title="Currently Hiring" elementName="currentlyHiring" />
-
-			<PlayStyleDropdown title="Desired Playstyle" elementName="desiredPlaystyle" />
-
+			<PlaystyleSelection />
 			<GamesSelection title="Supported Games" elementName="supportedGames" />
-
 			<DesiredSkillLevelDropdown />
 
 			<div className="form-actions">
