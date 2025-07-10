@@ -1,5 +1,5 @@
 import { AccountType } from "../../utils/globalUtils"
-import { CustomizableModal, ModalHeader } from "../CustomizableModal/CustomizableModal"
+import { CustomizableModal } from "../CustomizableModal/CustomizableModal"
 import { ModalTextBox } from "../CustomizableModal/utils"
 import { modalSubmitHelper } from "./EditButtonUtils"
 import { useState, useContext } from "react"
@@ -43,7 +43,6 @@ export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
 	const modalTitle =
 		detailType === TypeOfEditButton.BIO ? "Edit Your Bio" : "Edit Your About"
 
-	const header = <ModalHeader title={modalTitle} setIsModalOpen={setIsModalOpen} />
 	const textBox = (
 		<ModalTextBox
 			setIsModalOpen={setIsModalOpen}
@@ -59,7 +58,13 @@ export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
 				className="profile-about-image"
 				onClick={() => setIsModalOpen(!isModalOpen)}
 			/>
-			{isModalOpen && <CustomizableModal components={[header, textBox]} />}
+			{isModalOpen && (
+				<CustomizableModal
+					components={[textBox]}
+					title={modalTitle}
+					setIsModalOpen={setIsModalOpen}
+				/>
+			)}
 		</>
 	)
 }
