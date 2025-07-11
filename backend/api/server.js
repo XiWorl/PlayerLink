@@ -52,8 +52,8 @@ server.get("/collection/players", async (req, res, next) => {
 	try {
 		const pageData = await dataPagination(prisma, AccountType.PLAYER, req.query)
 		return res.json(pageData)
-	} catch (err) {
-		next(err)
+	} catch (error) {
+		next(error)
 	}
 })
 
@@ -61,8 +61,8 @@ server.get("/collection/teams", async (req, res, next) => {
 	try {
 		const pageData = await dataPagination(prisma, AccountType.TEAM, req.query)
 		return res.json(pageData)
-	} catch (err) {
-		next(err)
+	} catch (error) {
+		next(error)
 	}
 })
 
@@ -87,6 +87,20 @@ server.get("/api/login/", async (req, res, next) => {
 			jwtToken
 		)
 		return res.status(200).json(clientAccountInformation)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/account/applications/:accountId", async (req, res, next) => {
+	try {
+		const accountId = parseInt(req.params.accountId)
+		const userApplications = await prisma.application.findMany({
+			where: {
+				OR: [{ playerAccountId: accountId }, { teamAccountId: accountId }],
+			},
+		})
+		return res.status(200).json(userApplications)
 	} catch (error) {
 		next(error)
 	}
