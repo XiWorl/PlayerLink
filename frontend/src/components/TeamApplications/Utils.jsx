@@ -17,15 +17,3 @@ export async function ApplicationTile({ applicationData }) {
 		</div>
 	)
 }
-
-export function Sidebar({ accountType }) {
-	const buttonText =
-		accountType === AccountType.PLAYER ? "My Applications" : "View Applications"
-	return (
-		<div className="sidebar">
-			<div className="sidebar-options">
-				<button className="sidebar-options-btn">{buttonText}</button>
-			</div>
-		</div>
-	)
-}

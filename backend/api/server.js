@@ -91,6 +91,7 @@ server.get("/api/login/", async (req, res, next) => {
 		next(error)
 	}
 })
+
 server.get("/account/applications/:accountId", async (req, res, next) => {
 	try {
 		const accountId = parseInt(req.params.accountId)
