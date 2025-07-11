@@ -1,4 +1,10 @@
+import { EditProfileTextButton } from "./EditButton"
+import {
+	onDescriptionModalSubmitButtonClicked,
+	onOverviewModalSubmitButtonClicked,
+} from "./EditButtonUtils"
 import { createContext, useState } from "react"
+import { useParams } from "react-router-dom"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
 import ApplyButton from "./ApplyButton"
 import "./ProfilePage.css"
@@ -11,6 +17,7 @@ export default function TeamProfile({ isLoading, accountData }) {
 		return <h1>Loading...</h1>
 	}
 
+	const { id } = useParams()
 	const [description, setDescription] = useState(
 		accountData.description || defaultProfileInfo
 	)
@@ -18,7 +25,7 @@ export default function TeamProfile({ isLoading, accountData }) {
 	const sessionStorageAccountData = getAccountDataFromSessionStorage()
 
 	return (
-		<TeamProfileContext.Provider value={{ setDescription, setOverview }}>
+		<TeamProfileContext.Provider value={{ setDescription, setOverview, id }}>
 			<div className="profile-page">
 				<div className="profile-banner">
 					<div className="profile-picture">
@@ -34,6 +41,13 @@ export default function TeamProfile({ isLoading, accountData }) {
 							<p className="profile-title-text">{`${
 								description || defaultProfileInfo
 							}`}</p>
+							<EditProfileTextButton
+								modalTitle={"Edit Description"}
+								onSubmitButtonClicked={
+									onDescriptionModalSubmitButtonClicked
+								}
+								profileId={id}
+							/>
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
 					</div>
@@ -57,6 +71,11 @@ export default function TeamProfile({ isLoading, accountData }) {
 				<div className="profile-about">
 					<div className="profile-about-header">
 						<h3>Overview</h3>
+						<EditProfileTextButton
+							modalTitle={"Edit Overview"}
+							onSubmitButtonClicked={onOverviewModalSubmitButtonClicked}
+							profileId={id}
+						/>
 					</div>
 					<p className="profile-about-text">{`${overview}`}</p>
 				</div>

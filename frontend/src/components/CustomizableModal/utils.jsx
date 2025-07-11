@@ -4,6 +4,11 @@ function onTextFieldValueChange(event, setText) {
 	setText(event.target.value)
 }
 
+function closeModal(onSubmitButtonClicked, text, setIsModalOpen) {
+	onSubmitButtonClicked(text)
+	setIsModalOpen(false)
+}
+
 export function ModalTextBox({ setIsModalOpen, onSubmitButtonClicked }) {
 	const [text, setText] = useState("")
 

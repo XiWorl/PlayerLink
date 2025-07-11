@@ -1,5 +1,5 @@
 const {
-	editPlayerProfileInformation,
+	editProfileInformation,
 	registerSessionToken,
 	verifySessionToken,
 	verifyPlayerSignupInformation,
@@ -7,6 +7,7 @@ const {
 	formatClientAccountInformation,
 	AccountType,
 	dataPagination,
+	verifyUserAuthorization
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
@@ -212,30 +213,23 @@ server.post("/api/signup/team", async (req, res, next) => {
 })
 
 server.patch("/api/profiles/edit", async (req, res, next) => {
-	const authorizationHeader = req.headers.authorization
-	const token = authorizationHeader.replace("Bearer ", "")
-	const verifiedAuthorization = await verifySessionToken(token)
+	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
 
-	if (
-		verifiedAuthorization == null ||
-		!verifiedAuthorization ||
-		!verifiedAuthorization.id
-	) {
+	if (!verifiedAuthorization) {
 		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+	if (req.body == null || req.body.accountId == null || req.body.accountType == null) {
+		res.status(400).json({
+			error: "Invalid request body: JSON payload is incomplete or malformed",
+		})
 		return
 	}
 
 	try {
-		if (req.body == null || req.body.accountId == null) {
-			res.status(400).json({
-				error: "Invalid request body: JSON payload is incomplete or malformed",
-			})
-			return
-		}
-
-		const updatedAccount = await editPlayerProfileInformation(
+		const updatedAccount = await editProfileInformation(
 			prisma,
-			authorization.id,
+			verifiedAuthorization.id,
 			req.body
 		)
 		if (!updatedAccount) {
