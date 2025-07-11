@@ -2,6 +2,7 @@ import { AboutEditButton, BioEditButton } from "./EditButton"
 // import { EditProfileButton } from "./EditProfile"
 import EditProfileButton from "./EditProfile"
 import { createContext, useState } from "react"
+import { AccountType } from "../../utils/globalUtils"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
 import ModalBody from "../TheModal/ModalBody"
@@ -61,7 +62,7 @@ export default function UserProfile({ isLoading, accountData }) {
 							{/* <EditProfileButton /> */}
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
-						< EditProfileButton />
+						<EditProfileButton accountType={AccountType.PLAYER} />
 					</div>
 				</div>
 				<div className="profile-about">

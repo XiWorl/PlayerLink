@@ -1,6 +1,7 @@
 import { createContext, useState } from "react"
 import { getAccountDataFromLocalStorage, AccountType } from "../../utils/globalUtils"
 import ApplyButton from "./ApplyButton"
+import EditProfileButton from "./EditProfile"
 import "./ProfilePage.css"
 
 const defaultProfileInfo = ""
@@ -49,6 +50,7 @@ export default function TeamProfile({ isLoading, accountData }) {
 										teamAccountId={accountData.accountId}
 									/>
 								)}
+							<EditProfileButton accountType={AccountType.TEAM}/>
 						</div>
 					</div>
 				</div>

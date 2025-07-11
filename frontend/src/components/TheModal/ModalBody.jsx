@@ -50,7 +50,12 @@ export default function ModalBody({
 
 	useEffect(() => {
 		if (autoPopulatedData) {
-			autoPopulatedData.willingToRelocate = convertBooleanToYesOrNo(autoPopulatedData.willingToRelocate)
+			if (accountType == AccountType.PLAYER) {
+				autoPopulatedData.willingToRelocate = convertBooleanToYesOrNo(autoPopulatedData.willingToRelocate)
+			} else {
+				autoPopulatedData.currentlyHiring = convertBooleanToYesOrNo(autoPopulatedData.currentlyHiring)
+				autoPopulatedData.teamName = autoPopulatedData.name
+			}
 			console.log(autoPopulatedData)
 			setFormData(function (prevFormData) {
 				return {

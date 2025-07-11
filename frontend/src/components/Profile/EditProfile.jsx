@@ -21,7 +21,18 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 	const body = {
 		...formData,
 	}
+	if (selectedAccountType == AccountType.PLAYER) {
+		body.willingToRelocate = convertToBoolean(body.willingToRelocate)
+		delete body.email
+	} else {
+		body.currentlyHiring = convertToBoolean(body.currentlyHiring)
+		body.name = body.teamName
+		delete body.teamName
+	}
 	console.log("We here:", body)
+	delete body.playerId
+	delete body.accountId
+	body.accountType = selectedAccountType
 
 	try {
 		const response = await fetch(`${BASEURL}/api/profiles/edit/account`, {
@@ -33,11 +44,10 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 			body: JSON.stringify(body),
 		})
 		await response.json()
-		navigate(0)
+		// navigate(0)
 	} catch (error) {
 		console.log("Error:", error)
 	}
-
 }
 
 async function autoPopulateForm(accountType, setAutoPopulatedData) {
@@ -46,13 +56,20 @@ async function autoPopulateForm(accountType, setAutoPopulatedData) {
 	setAutoPopulatedData(profileData)
 }
 
-export default function EditProfileButton() {
+function convertToBoolean(value) {
+	const YES_VALUE = "yes"
+	if (value.toLowerCase() == YES_VALUE) {
+		return true
+	} else return false
+}
+
+export default function EditProfileButton({ accountType }) {
 	const navigate = useNavigate()
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [autoPopulatedData, setAutoPopulatedData] = useState(null)
 
 	useEffect(() => {
-		autoPopulateForm(AccountType.PLAYER, setAutoPopulatedData)
+		autoPopulateForm(accountType, setAutoPopulatedData)
 	}, [])
 
 	const handleSubmit = (formData, accountType) => {
@@ -82,7 +99,7 @@ export default function EditProfileButton() {
 						onClose={handleClose}
 						onSubmit={handleSubmit}
 						title={title}
-						accountType={AccountType.PLAYER}
+						accountType={accountType}
 						useSignupHeader={false}
 						autoPopulatedData={autoPopulatedData}
 					/>

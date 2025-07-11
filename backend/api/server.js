@@ -221,7 +221,6 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 	const authorizationHeader = req.headers.authorization
 	const token = authorizationHeader.replace("Bearer ", "")
 	const verifiedAuthorization = await verifySessionToken(token)
-	console.log(verifiedAuthorization, token)
 
 	if (
 		verifiedAuthorization == null ||
@@ -233,21 +232,23 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 	}
 
 	try {
-		if (req.body == null || req.body.accountId == null) {
+		if (req.body == null ) {
 			res.status(400).json({
 				error: "Invalid request body: JSON payload is incomplete or malformed",
 			})
 			return
 		}
 
-		req.body.willingToRelocate = convertToBoolean(req.body.willingToRelocate)
-		delete req.body.playerId
-		delete req.body.email
-		delete req.body.accountId
-
+		// req.body.willingToRelocate = convertToBoolean(req.body.willingToRelocate)
+		// delete req.body.playerId
+		// delete req.body.email
+		// delete req.body.accountId
+		const accountType = req.body.accountType
+		delete req.body.accountType
 		console.log(req.body)
 
-		const existingPlayer = await prisma.player.findUnique({
+
+		const existingPlayer = await prisma[accountType].findUnique({
 			where: { accountId: 1 },
 		})
 		console.log(existingPlayer)
@@ -257,7 +258,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 			return
 		}
 
-		const updatedPlayerData = await prisma.player.update({
+		const updatedPlayerData = await prisma[accountType].update({
 			where: { accountId: 1 },
 			data: req.body,
 		})
