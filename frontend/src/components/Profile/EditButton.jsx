@@ -1,4 +1,4 @@
-import { AccountType } from "../../utils/globalUtils"
+import { AccountType, getAccountDataFromSessionStorage } from "../../utils/globalUtils"
 import { CustomizableModal } from "../CustomizableModal/CustomizableModal"
 import { ModalTextBox } from "../CustomizableModal/utils"
 import { modalSubmitHelper } from "./EditButtonUtils"
@@ -69,7 +69,16 @@ export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
 	)
 }
 
+function verifyUserOwnsProfile(id) {
+	const accountData = getAccountDataFromSessionStorage()
+	if (!accountData || id != getAccountDataFromSessionStorage().id) return false
+	return true
+}
+
 export function AboutEditButton() {
+	const { id } = useParams()
+	if (!verifyUserOwnsProfile(id)) return null
+
 	return (
 		<EditButtonTemplate
 			detailType={TypeOfEditButton.ABOUT}
@@ -79,6 +88,9 @@ export function AboutEditButton() {
 }
 
 export function BioEditButton() {
+	const { id } = useParams()
+	if (!verifyUserOwnsProfile(id)) return null
+
 	return (
 		<EditButtonTemplate
 			detailType={TypeOfEditButton.BIO}
