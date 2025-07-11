@@ -1,5 +1,5 @@
 import { createContext, useState } from "react"
-import { getAccountDataFromLocalStorage, AccountType } from "../../utils/globalUtils"
+import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
 import ApplyButton from "./ApplyButton"
 import "./ProfilePage.css"
 
@@ -15,7 +15,7 @@ export default function TeamProfile({ isLoading, accountData }) {
 		accountData.description || defaultProfileInfo
 	)
 	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
-	const localStorageAccountData = getAccountDataFromLocalStorage()
+	const sessionStorageAccountData = getAccountDataFromSessionStorage()
 
 	return (
 		<TeamProfileContext.Provider value={{ setDescription, setOverview }}>
@@ -41,11 +41,13 @@ export default function TeamProfile({ isLoading, accountData }) {
 						<div>
 							<button>Home</button>
 							<button>Roster</button>
-							{localStorageAccountData &&
-								localStorageAccountData.accountType != AccountType.TEAM &&
-								localStorageAccountData.id !== accountData.accountId && (
+							{sessionStorageAccountData &&
+								sessionStorageAccountData.accountType !=
+									AccountType.TEAM &&
+								sessionStorageAccountData.id !==
+									accountData.accountId && (
 									<ApplyButton
-										playerAccountId={localStorageAccountData.id}
+										playerAccountId={sessionStorageAccountData.id}
 										teamAccountId={accountData.accountId}
 									/>
 								)}

@@ -1,7 +1,7 @@
 import {
 	AccountType,
 	BASEURL,
-	TOKEN_STORAGE_KEY,
+	TOKEN_SESSION_KEY,
 	ACCOUNT_INFORMATION_KEY,
 } from "./utils/globalUtils"
 
@@ -15,8 +15,8 @@ export async function onLoginAttempt(email) {
 		if (response.ok === true) {
 			const accountData = await response.json()
 
-			localStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
-			localStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
+			sessionStorage.setItem(TOKEN_SESSION_KEY, accountData.token)
+			sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 			return accountData
 		} else {
 			return LOGIN_FAILURE
@@ -57,7 +57,7 @@ export async function createTeamApplication(playerAccountId, teamAccountId) {
 			body: JSON.stringify({
 				teamAccountId: teamAccountId,
 				playerAccountId: playerAccountId,
-				status: PENDING_APPLICATION_STATUS
+				status: PENDING_APPLICATION_STATUS,
 			}),
 		})
 		const teamApplication = await response.json()
