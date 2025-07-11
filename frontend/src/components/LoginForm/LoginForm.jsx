@@ -9,7 +9,7 @@ import "./LoginForm.css"
 
 async function onLoginSuccess(setSignupModalVisible, credentialResponse, navigate) {
 	const token = jwtDecode(credentialResponse.credential)
-	localStorage.setItem(GOOGLE_EMAIL_KEY, token.email)
+	sessionStorage.setItem(GOOGLE_EMAIL_KEY, token.email)
 
 	const loginResult = await onLoginAttempt(token.email)
 	if (loginResult === LOGIN_FAILURE) {

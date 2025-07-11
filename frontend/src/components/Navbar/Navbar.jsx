@@ -1,4 +1,4 @@
-import { getAccountDataFromLocalStorage, AccountType } from "../../utils/globalUtils"
+import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
 import { useState, useEffect, createContext, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import "./Navbar.css"
@@ -11,7 +11,7 @@ export default function Navbar() {
 	const [accountData, setAccountData] = useState(null)
 
 	useEffect(() => {
-		const accountData = getAccountDataFromLocalStorage()
+		const accountData = getAccountDataFromSessionStorage()
 		if (accountData === null) {
 			navigate("/")
 			return
