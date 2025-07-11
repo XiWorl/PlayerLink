@@ -27,6 +27,7 @@ function convertToBoolean(value) {
 }
 
 server.get("/teams/:teamId", async (req, res, next) => {
+	console.log(req.params.teamId)
 	try {
 		const teamId = parseInt(req.params.teamId)
 		const teamData = await prisma.team.findUnique({ where: { accountId: teamId } })
@@ -138,6 +139,8 @@ server.post("/account/application", async (req, res, next) => {
 })
 
 server.post("/api/signup/player", async (req, res, next) => {
+	console.log("player")
+	console.log(req.body)
 	try {
 		if (verifyPlayerSignupInformation(req.body) == false) {
 			res.status(400).json({
@@ -178,6 +181,8 @@ server.post("/api/signup/player", async (req, res, next) => {
 })
 
 server.post("/api/signup/team", async (req, res, next) => {
+	console.log("body")
+	console.log(req.body)
 	try {
 		if (verifyTeamSignupInformation(req.body) == false) {
 			res.status(400).json({
@@ -202,6 +207,8 @@ server.post("/api/signup/team", async (req, res, next) => {
 				},
 			},
 		})
+
+		console.log(createdAccount)
 
 		const jwtToken = await registerSessionToken(createdAccount)
 		const clientAccountInformation = formatClientAccountInformation(

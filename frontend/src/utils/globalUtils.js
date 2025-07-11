@@ -37,6 +37,11 @@ export const GameOptions = Object.freeze({
 	APEX_LEGENDS: "Apex Legends",
 	FORTNITE: "Fortnite",
 })
+export const SkillLevelOptions = Object.freeze({
+	SEMI_PRO: "Semi-Pro",
+	PRO: "Pro",
+	ELITE: "Elite",
+})
 
 export function isLoggedIn() {
 	return (

@@ -26,7 +26,6 @@ function validateForm(
 		const newErrors = { [selectedAccountType]: {} }
 		const currentFormData = formData[selectedAccountType]
 
-		// Validate required text fields
 		for (const key in currentFormData) {
 			if (key === "gamingExperience" || key === "gameUsernames") continue
 
@@ -42,7 +41,6 @@ function validateForm(
 			}
 		}
 
-		// Validate games played
 		if (currentFormData.gamingExperience.length === 0) {
 			newErrors[selectedAccountType].gamingExperience = "Please select at least one game"
 			isFormValid = false
@@ -51,7 +49,7 @@ function validateForm(
 		setFormErrors(newErrors)
 
 		if (isFormValid) {
-			onSubmit(currentFormData)
+			onSubmit(currentFormData, selectedAccountType)
 			handleClose()
 		}
 

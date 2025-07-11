@@ -39,9 +39,10 @@ export default function SignupModal({ onClose }) {
 	const [selectedAccountType, setSelectedAccountType] = useState(AccountType.PLAYER)
 	const [isModalOpen, setIsModalOpen] = useState(true)
 
-	const handleSubmit = (formData) => {
+	const handleSubmit = (formData, accountType) => {
 		console.log("User data:", formData)
-		onFormValid(formData, selectedAccountType, navigate)
+		console.log("Account type:", accountType)
+		onFormValid(formData, accountType, navigate)
 	}
 
 	const handleClose = () => {

@@ -1,10 +1,12 @@
 import { useContext } from "react"
 import { ModalBodyContext } from "./ModalBody.jsx"
+import { AccountType } from "../../utils/globalUtils.js"
 import {
 	LocationOptions,
 	YearsOfExperienceOptions,
 	GameOptions,
 	PlaystyleOptions,
+	SkillLevelOptions,
 } from "../../utils/globalUtils.js"
 
 export const INVALID_INPUT_CLASS = "error"
@@ -81,6 +83,7 @@ export function Dropdown({
 					const display = optionDisplayTransform
 						? optionDisplayTransform(option)
 						: option
+
 					return (
 						<option key={value} value={value}>
 							{display}
@@ -136,7 +139,33 @@ export function ExperienceDropdown() {
 	)
 }
 
-export function GamesSelection({ title = "Gaming experience" }) {
+export function DesiredSkillLevelDropdown() {
+	const skillLevelOptions = Object.values(SkillLevelOptions)
+	return (
+		<Dropdown
+			title="Desired Skill Level"
+			elementName="desiredSkillLevel"
+			options={skillLevelOptions}
+			defaultOptionText="Select desired skill level"
+			optionValueTransform={(level) => level.toLowerCase()}
+		/>
+	)
+}
+
+export function PlayStyleDropdown() {
+	const playstyleOptions = Object.values(PlaystyleOptions)
+	return (
+		<Dropdown
+			title="Preferred Playstyle"
+			elementName="playstyle"
+			options={playstyleOptions}
+			defaultOptionText="Select preferred playstyle"
+			optionValueTransform={(level) => level.toLowerCase()}
+		/>
+	)
+}
+
+export function GamesSelection({ title }) {
 	const {
 		formData,
 		handleGameSelection,
@@ -145,7 +174,8 @@ export function GamesSelection({ title = "Gaming experience" }) {
 		selectedAccountType,
 	} = useContext(ModalBodyContext)
 
-	const gamesField = selectedAccountType === "team" ? "supportedGames" : "gamingExperience"
+	const gamesField =
+		selectedAccountType === "team" ? "supportedGames" : "gamingExperience"
 	const currentGames = formData[selectedAccountType][gamesField]
 	const showUsernames = selectedAccountType === "player"
 
@@ -164,29 +194,31 @@ export function GamesSelection({ title = "Gaming experience" }) {
 								className="game-checkbox"
 							/>
 						</div>
-						{showUsernames && currentGames.includes(GameOptions[game]) && (
-							<div className="username-input-container">
-								<input
-									type="text"
-									placeholder={
-										Placeholders[game] ||
-										`Enter your ${GameOptions[game]} username`
-									}
-									value={
-										formData[selectedAccountType].gameUsernames[
-											GameOptions[game]
-										] || DEFAULT_FORM_VALUE
-									}
-									onChange={(event) =>
-										handleUsernameChange(
-											GameOptions[game],
-											event.target.value
-										)
-									}
-									className="game-username-input"
-								/>
-							</div>
-						)}
+						{showUsernames &&
+							selectedAccountType == AccountType.PLAYER &&
+							currentGames.includes(GameOptions[game]) && (
+								<div className="username-input-container">
+									<input
+										type="text"
+										placeholder={
+											Placeholders[game] ||
+											`Enter your ${GameOptions[game]} username`
+										}
+										value={
+											formData[selectedAccountType].gameUsernames[
+												GameOptions[game]
+											] || DEFAULT_FORM_VALUE
+										}
+										onChange={(event) =>
+											handleUsernameChange(
+												GameOptions[game],
+												event.target.value
+											)
+										}
+										className="game-username-input"
+									/>
+								</div>
+							)}
 					</div>
 				))}
 			</div>
@@ -236,33 +268,5 @@ export function PlaystyleSelection() {
 				</span>
 			)}
 		</div>
-	)
-}
-
-export function DesiredSkillLevelDropdown() {
-	const skillLevelOptions = ["High", "Medium", "Low"]
-
-	return (
-		<Dropdown
-			title="Desired Skill Level"
-			elementName="desiredSkillLevel"
-			options={skillLevelOptions}
-			defaultOptionText="Select desired skill level"
-			optionValueTransform={(level) => level.toLowerCase()}
-		/>
-	)
-}
-
-export function PlayStyleDropdown() {
-	const skillLevelOptions = ["High", "Medium", "Low"]
-
-	return (
-		<Dropdown
-			title="Preferred Playstyle"
-			elementName="playstyle"
-			options={skillLevelOptions}
-			defaultOptionText="Select preferred playstyle"
-			optionValueTransform={(level) => level.toLowerCase()}
-		/>
 	)
 }
