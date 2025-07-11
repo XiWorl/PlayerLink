@@ -11,7 +11,7 @@ export async function modalSubmitHelper(textValue, detailType, accountType, id) 
 	detailType = detailType.toUpperCase()
 
 	try {
-		const response = await fetch(`${BASEURL}/api/${profileType}/edit`, {
+		const response = await fetch(`${BASEURL}/api/${profileType}/edit/profile`, {
 			method: "PATCH",
 			headers: {
 				"Content-Type": "application/json",

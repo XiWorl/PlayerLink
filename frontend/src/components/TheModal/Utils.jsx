@@ -123,3 +123,9 @@ export function handlePlaystyleSelectionLogic(
 		}
 	})
 }
+
+export function convertBooleanToYesOrNo(value) {
+	if (value) {
+		return "yes"
+	} else return "no"
+}

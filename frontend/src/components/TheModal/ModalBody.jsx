@@ -1,10 +1,11 @@
-import { useState, createContext } from "react"
+import { useState, createContext, useEffect, use } from "react"
 import { DEFAULT_FORM_VALUE, DEFAULT_ERRORS_VALUE } from "./ComponentUtils"
 import {
 	handleUsernameChangeLogic,
 	handleGameSelectionLogic,
 	handlePlaystyleSelectionLogic,
 	updateFormState,
+	convertBooleanToYesOrNo
 } from "./utils"
 import { AccountType } from "../../utils/globalUtils"
 import PlayerForm from "./PlayerForm"
@@ -41,10 +42,26 @@ export default function ModalBody({
 	title,
 	accountType,
 	useSignupHeader,
+	autoPopulatedData,
 }) {
 	const [selectedAccountType, setSelectedAccountType] = useState(accountType)
 	const [formData, setFormData] = useState(DEFAULT_FORM_DATA)
 	const [formErrors, setFormErrors] = useState(DEFAULT_ERRORS_VALUE)
+
+	useEffect(() => {
+		if (autoPopulatedData) {
+			autoPopulatedData.willingToRelocate = convertBooleanToYesOrNo(autoPopulatedData.willingToRelocate)
+			console.log(autoPopulatedData)
+			setFormData(function (prevFormData) {
+				return {
+					...prevFormData,
+					[accountType]: {
+						...prevFormData[accountType],
+						...autoPopulatedData,
+				}}
+			})
+		}
+	}, [autoPopulatedData])
 
 	function handleInputChange(event) {
 		updateFormState(event, setFormData, setFormErrors, selectedAccountType)

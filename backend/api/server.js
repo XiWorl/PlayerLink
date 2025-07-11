@@ -139,8 +139,6 @@ server.post("/account/application", async (req, res, next) => {
 })
 
 server.post("/api/signup/player", async (req, res, next) => {
-	console.log("player")
-	console.log(req.body)
 	try {
 		if (verifyPlayerSignupInformation(req.body) == false) {
 			res.status(400).json({
@@ -181,8 +179,6 @@ server.post("/api/signup/player", async (req, res, next) => {
 })
 
 server.post("/api/signup/team", async (req, res, next) => {
-	console.log("body")
-	console.log(req.body)
 	try {
 		if (verifyTeamSignupInformation(req.body) == false) {
 			res.status(400).json({
@@ -221,8 +217,63 @@ server.post("/api/signup/team", async (req, res, next) => {
 		next(error)
 	}
 })
+server.patch("/api/profiles/edit/account", async (req, res, next) => {
+	const authorizationHeader = req.headers.authorization
+	const token = authorizationHeader.replace("Bearer ", "")
+	const verifiedAuthorization = await verifySessionToken(token)
+	console.log(verifiedAuthorization, token)
 
-server.patch("/api/profiles/edit", async (req, res, next) => {
+	if (
+		verifiedAuthorization == null ||
+		!verifiedAuthorization ||
+		!verifiedAuthorization.id
+	) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+
+	try {
+		if (req.body == null || req.body.accountId == null) {
+			res.status(400).json({
+				error: "Invalid request body: JSON payload is incomplete or malformed",
+			})
+			return
+		}
+
+		req.body.willingToRelocate = convertToBoolean(req.body.willingToRelocate)
+		delete req.body.playerId
+		delete req.body.email
+		delete req.body.accountId
+
+		console.log(req.body)
+
+		const existingPlayer = await prisma.player.findUnique({
+			where: { accountId: 1 },
+		})
+		console.log(existingPlayer)
+
+		if (!existingPlayer) {
+			res.status(404).json({ error: "Player record not found for this account" })
+			return
+		}
+
+		const updatedPlayerData = await prisma.player.update({
+			where: { accountId: 1 },
+			data: req.body,
+		})
+
+		if (!updatedPlayerData) {
+			res.status(400).json({ error: "Invalid profile information, cannot update" })
+			return
+		}
+
+		return res.status(200).json({ updatedValue: updatedPlayerData })
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/api/profiles/edit/profile", async (req, res, next) => {
 	const authorizationHeader = req.headers.authorization
 	const token = authorizationHeader.replace("Bearer ", "")
 	const verifiedAuthorization = await verifySessionToken(token)
