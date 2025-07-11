@@ -7,7 +7,6 @@ export const NavbarContext = createContext()
 
 export default function Navbar() {
 	const navigate = useNavigate()
-	const navigate = useNavigate()
 	const [accountData, setAccountData] = useState(null)
 
 	useEffect(() => {
@@ -27,7 +26,7 @@ export default function Navbar() {
 						<TournamentsButton />
 					</div>
 					<div className="apply">
-						<ApplyButton />
+						<ApplicationsButton />
 					</div>
 					<div className="connect">
 						<ConnectButton />
@@ -51,7 +50,6 @@ function ConnectButton() {
 	)
 }
 
-function ProfileButton({ navigate }) {
 function ProfileButton() {
 	const { accountData, navigate } = useContext(NavbarContext)
 	if (accountData === null) return
@@ -80,18 +78,15 @@ function TournamentsButton() {
 }
 
 function ApplicationsButton() {
-function ApplyButton() {
 	const { accountData, navigate } = useContext(NavbarContext)
 	if (accountData === null) return
 
 	return (
-		<button className="apply-btn">
-			<h3>Applications</h3>
 		<button
 			onClick={() => navigate(`/apply/${accountData.id}`)}
 			className="apply-btn"
 		>
-			<h3>Apply</h3>
+			<h3>Applications</h3>
 		</button>
 	)
 }
