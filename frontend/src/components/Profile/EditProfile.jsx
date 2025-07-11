@@ -1,57 +1,60 @@
-import { AccountType } from "../../utils/globalUtils"
-import { CustomizableModal, ModalHeader } from "../CustomizableModal/CustomizableModal"
-import { ModalTextBox } from "../CustomizableModal/utils"
-import { modalSubmitHelper } from "./EditButtonUtils"
-import { useState, useContext } from "react"
-import { useParams } from "react-router-dom"
-import { UserProfileContext } from "./UserProfile"
-export const TypeOfEditButton = {
-	BIO: "bio",
-	ABOUT: "about",
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { createContext } from "react"
+import {
+	AccountType,
+	GOOGLE_EMAIL_KEY,
+	BASEURL,
+	TOKEN_STORAGE_KEY,
+} from "../../utils/globalUtils"
+import ModalBody from "../TheModal/ModalBody"
+import "../SignupModal/SignupModal.css"
+export const SignupModalContext = createContext()
+
+async function onFormValid(formData, selectedAccountType, navigate) {
+	const body = {
+		...formData,
+		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),
+	}
+	console.log("We here:", body)
 }
 
-export function EditProfileButton() {
+export default function EditProfileButton() {
+	const navigate = useNavigate()
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	const modalTitle = "Edit your profile"
+
+	const handleSubmit = (formData, accountType) => {
+		console.log("User data:", formData)
+		onFormValid(formData, accountType, navigate)
+	}
+
+	const handleClose = () => {
+		setIsModalOpen(false)
+	}
+
+	const title = "Edit your profile"
 
 	return (
 		<>
-			<input
-				type="image"
-				src="/pen-to-square.png"
-				className="profile-about-image"
-				onClick={() => setIsModalOpen(!isModalOpen)}
-			/>
-
-			<div className="signup-modal-overlay">
-				<div className="signup-modal-content">
-					<div className="signup-modal-header">
-						<h2>Edit your profile</h2>
-						<button
-							className="close-button"
-							onClick={() => setIsModalOpen(false)}
-						>
-							&times;
-						</button>
-					</div>
-					<form class="signup-form">
-						<div className="modal-text">
-							<textarea className="modal-text-box"></textarea>
-						</div>
-						<div className="form-group">
-							<label>Years of Experience*</label>
-							<select name="yearsOfExperience">
-								<option value="">Select experience</option>
-								<option value="ss">0-1 years</option>
-								<option value="ss">2-3 years</option>
-								<option value="ss">4-5 years</option>
-								<option value="ss">6-10 years</option>
-								<option value="ss">10+ years</option>
-							</select>
-						</div>
-					</form>
+			<button
+				onClick={() => {
+					setIsModalOpen(true)
+				}}
+			>
+				Edit your profile
+			</button>
+			{isModalOpen && (
+				<div>
+					<ModalBody
+						isOpen={isModalOpen}
+						onClose={handleClose}
+						onSubmit={handleSubmit}
+						title={title}
+						accountType={AccountType.PLAYER}
+						useSignupHeader={false}
+					/>
 				</div>
-			</div>
+			)}{" "}
 		</>
 	)
 }

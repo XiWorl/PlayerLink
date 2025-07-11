@@ -1,5 +1,6 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
-import { EditProfileButton } from "./EditProfile"
+// import { EditProfileButton } from "./EditProfile"
+import EditProfileButton from "./EditProfile"
 import { createContext, useState } from "react"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
@@ -60,6 +61,7 @@ export default function UserProfile({ isLoading, accountData }) {
 							{/* <EditProfileButton /> */}
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
+						< EditProfileButton />
 					</div>
 				</div>
 				<div className="profile-about">

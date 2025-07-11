@@ -63,7 +63,7 @@ export default function SignupModal({ onClose }) {
 				onSubmit={handleSubmit}
 				title={title}
 				accountType={selectedAccountType}
-				isHeaderActive={true}
+				useSignupHeader={true}
 			/>
 		</div>
 	)

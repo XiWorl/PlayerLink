@@ -40,7 +40,7 @@ export default function ModalBody({
 	onSubmit,
 	title,
 	accountType,
-	isHeaderActive,
+	useSignupHeader,
 }) {
 	const [selectedAccountType, setSelectedAccountType] = useState(accountType)
 	const [formData, setFormData] = useState(DEFAULT_FORM_DATA)
@@ -93,7 +93,7 @@ export default function ModalBody({
 					className="signup-modal-content"
 					onClick={(event) => event.stopPropagation()}
 				>
-					{isHeaderActive && (
+					{useSignupHeader && (
 						<>
 							<div className="signup-modal-header">
 								<h2>{title}</h2>
@@ -105,23 +105,40 @@ export default function ModalBody({
 								<button
 									type="button"
 									className={`account-type-btn ${
-										selectedAccountType === AccountType.PLAYER ? "active" : ""
+										selectedAccountType === AccountType.PLAYER
+											? "active"
+											: ""
 									}`}
-									onClick={() => setSelectedAccountType(AccountType.PLAYER)}
+									onClick={() =>
+										setSelectedAccountType(AccountType.PLAYER)
+									}
 								>
 									Player
 								</button>
 								<button
 									type="button"
 									className={`account-type-btn ${
-										selectedAccountType === AccountType.TEAM ? "active" : ""
+										selectedAccountType === AccountType.TEAM
+											? "active"
+											: ""
 									}`}
-									onClick={() => setSelectedAccountType(AccountType.TEAM)}
+									onClick={() =>
+										setSelectedAccountType(AccountType.TEAM)
+									}
 								>
 									Team
 								</button>
 							</div>{" "}
 						</>
+					)}
+
+					{!useSignupHeader && (
+						<div className="signup-modal-header">
+							<h2>{title}</h2>
+							<button className="close-button" onClick={onClose}>
+								&times;
+							</button>
+						</div>
 					)}
 
 					{selectedAccountType === AccountType.PLAYER ? (
