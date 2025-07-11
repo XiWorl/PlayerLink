@@ -1,7 +1,11 @@
 const {
 	editPlayerProfileInformation,
 	registerSessionToken,
-	EditType,
+	verifySessionToken,
+	verifyPlayerSignupInformation,
+	verifyTeamSignupInformation,
+	formatClientAccountInformation,
+	AccountType,
 } = require("./utils")
 const express = require("express")
 const cors = require("cors")
@@ -21,24 +25,13 @@ function convertToBoolean(value) {
 	} else return false
 }
 
-function checkSignupData(reqBody) {
-	const isDataValid =
-		reqBody !== undefined &&
-		reqBody.email !== undefined &&
-		reqBody.firstName !== undefined &&
-		reqBody.location !== undefined &&
-		reqBody.willingToRelocate !== undefined &&
-		reqBody.yearsOfExperience !== undefined
-	return isDataValid
-}
-
 server.get("/teams/:teamId", async (req, res, next) => {
 	try {
 		const teamId = parseInt(req.params.teamId)
 		const teamData = await prisma.team.findUnique({ where: { accountId: teamId } })
 		return res.status(200).json(teamData)
-	} catch (err) {
-		next(err)
+	} catch (error) {
+		next(error)
 	}
 })
 
@@ -49,8 +42,8 @@ server.get("/profiles/:profileId", async (req, res, next) => {
 			where: { accountId: playerId },
 		})
 		return res.status(200).json(playerData)
-	} catch (err) {
-		next(err)
+	} catch (error) {
+		next(error)
 	}
 })
 
@@ -59,38 +52,39 @@ server.get("/api/login/", async (req, res, next) => {
 		const email = req.query.email
 
 		if (email == null) {
-			res.status(404).json({ error: "Account not found" })
+			res.status(404).json({ error: "Email not found in request query" })
 			return
 		}
 
 		const accountData = await prisma.account.findUnique({ where: { email: email } })
 		if (accountData == null) {
-			res.status(404).json({ error: "Account not found" })
+			res.status(404).json({ error: "Account not registered in database" })
 			return
 		}
 
-		const token = await registerSessionToken(accountData)
-		const clientResponseInformation = {
-			id: accountData.id,
-			accountType: accountData.accountType,
-			token: token,
-		}
-		return res.status(200).json(clientResponseInformation)
-	} catch (err) {
-		next(err)
+		const jwtToken = await registerSessionToken(accountData)
+		const clientAccountInformation = formatClientAccountInformation(
+			createdAccount,
+			jwtToken
+		)
+		return res.status(200).json(clientAccountInformation)
+	} catch (error) {
+		next(error)
 	}
 })
 
-server.post("/api/signup/", async (req, res, next) => {
+server.post("/api/signup/player", async (req, res, next) => {
 	try {
-		if (checkSignupData(req.body) == false) {
-			res.status(400).json({ error: "Invalid signup data" })
+		if (verifyPlayerSignupInformation(req.body) == false) {
+			res.status(400).json({
+				error: "Invalid request body: JSON payload is incomplete or malformed",
+			})
 			return
 		}
-		const data = await prisma.account.create({
+
+		const createdAccount = await prisma.account.create({
 			data: {
-				// TODO: Currently the account type is hardcoded to player. In the future, account type can either be "player" or "team". This change will be made after the team profile page is complete.
-				accountType: "player",
+				accountType: AccountType.PLAYER,
 				email: req.body.email,
 				player: {
 					create: {
@@ -104,18 +98,51 @@ server.post("/api/signup/", async (req, res, next) => {
 			},
 		})
 
-		const token = await registerSessionToken(data)
-		const clientResponseInformation = {
-			id: data.id,
-			accountType: data.accountType,
-			token: token,
+		const jwtToken = await registerSessionToken(createdAccount)
+		const clientAccountInformation = formatClientAccountInformation(
+			createdAccount,
+			jwtToken
+		)
+
+		return res.status(200).json(clientAccountInformation)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.post("/api/signup/team", async (req, res, next) => {
+	try {
+		if (verifyTeamSignupInformation(req.body) == false) {
+			res.status(400).json({
+				error: "Invalid request body: JSON payload is incomplete or malformed",
+			})
+			return
 		}
 
-		res.status(200).json(clientResponseInformation)
-		return
-	} catch (err) {
-		next(err)
-		return
+		const createdAccount = await prisma.account.create({
+			data: {
+				accountType: AccountType.TEAM,
+				email: req.body.email,
+				team: {
+					create: {
+						name: req.body.teamName,
+						yearEstablished: req.body.yearEstablished,
+						location: req.body.location,
+						currentlyHiring: convertToBoolean(req.body.hiring),
+					},
+				},
+			},
+		})
+
+		const jwtToken = await registerSessionToken(createdAccount)
+		const clientAccountInformation = formatClientAccountInformation(
+			createdAccount,
+			jwtToken
+		)
+
+		return res.status(200).json(clientAccountInformation)
+	} catch (error) {
+		next(error)
 	}
 })
 
@@ -135,7 +162,9 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 
 	try {
 		if (req.body == null || req.body.accountId == null) {
-			res.status(400).json({ error: `Must provide "editType" and "value" JSON values within the request body` })
+			res.status(400).json({
+				error: "Invalid request body: JSON payload is incomplete or malformed",
+			})
 			return
 		}
 
@@ -149,12 +178,15 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 			return
 		}
 
-		res.status(200).json({ updatedValue: updatedAccount })
-		return
-	} catch (err) {
-		next(err)
-		return
+		return res.status(200).json({ updatedValue: updatedAccount })
+	} catch (error) {
+		next(error)
 	}
+})
+
+server.use((err, res) => {
+	const { message, status = 500 } = err
+	res.status(status).json({ message })
 })
 
 module.exports = server

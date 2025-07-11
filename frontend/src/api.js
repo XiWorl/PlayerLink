@@ -1,4 +1,4 @@
-import { AccountType, BASEURL, TOKEN_STORAGE_KEY } from "./utils/globalUtils"
+import { AccountType, BASEURL, TOKEN_STORAGE_KEY, ACCOUNT_INFORMATION_KEY } from "./utils/globalUtils"
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
 
 export async function onLoginAttempt(email) {
@@ -6,14 +6,15 @@ export async function onLoginAttempt(email) {
 		const response = await fetch(`${BASEURL}/api/login/?email=${email}`)
 
 		if (response.ok === true) {
-			const data = await response.json()
-			localStorage.setItem(TOKEN_STORAGE_KEY, data.token)
-			return data
+			const accountData = await response.json()
+			localStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
+			localStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
+			return accountData
 		} else {
 			return LOGIN_FAILURE
 		}
 	} catch (error) {
-		console.error("Error trying to login:", error)
+		console.error("Error while trying to login:", error)
 	}
 }
 
@@ -21,9 +22,9 @@ export async function getProfileData(accountType, accountId) {
 	const accountNavigation = accountType === AccountType.PLAYER ? "profiles" : "teams"
 	try {
 		const response = await fetch(`${BASEURL}/${accountNavigation}/${accountId}`)
-		const data = await response.json()
-		return data
+		const profileData = await response.json()
+		return profileData
 	} catch (error) {
-		console.error("Error retrieving data:", error)
+		console.error("Error retrieving profile data:", error)
 	}
 }

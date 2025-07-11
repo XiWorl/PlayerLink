@@ -1,5 +1,9 @@
 import { useState } from "react"
 
+function onTextFieldValueChange(event, setText) {
+	setText(event.target.value)
+}
+
 export function ModalTextBox({ setIsModalOpen, onSubmitButtonClicked }) {
 	const [text, setText] = useState("")
 
@@ -8,7 +12,7 @@ export function ModalTextBox({ setIsModalOpen, onSubmitButtonClicked }) {
 			<textarea
 				className="modal-text-box"
 				value={text}
-				onChange={(event) => setText(event.target.value)}
+				onChange={(event) => onTextFieldValueChange(event, setText)}
 			></textarea>
 			<div className="modal-buttons">
 				<button className="submit-btn" onClick={onSubmitButtonClicked(text)}>

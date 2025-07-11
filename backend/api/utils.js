@@ -1,9 +1,41 @@
 import jwt from "jsonwebtoken"
 export const EditType = { ABOUT: "about", BIO: "bio", OVERVIEW: "overview" }
+export const AccountType = { PLAYER: "player", TEAM: "team" }
 import dotenv from "dotenv"
 
 dotenv.config()
 const TOKEN_SECRET = process.env.TOKEN_SECRET
+
+export function verifyPlayerSignupInformation(requestBody) {
+	const isDataValid =
+		requestBody !== undefined &&
+		requestBody.email !== undefined &&
+		requestBody.firstName !== undefined &&
+		requestBody.location !== undefined &&
+		requestBody.willingToRelocate !== undefined &&
+		requestBody.yearsOfExperience !== undefined
+	return isDataValid
+}
+
+export function verifyTeamSignupInformation(requestBody) {
+	const isDataValid =
+		requestBody !== undefined &&
+		requestBody.email !== undefined &&
+		requestBody.teamName !== undefined &&
+		requestBody.location !== undefined &&
+		requestBody.yearEstablished !== undefined &&
+		requestBody.hiring !== undefined
+	return isDataValid
+}
+
+export function formatClientAccountInformation(accountInformation, jwtToken) {
+	const clientResponseInformation = {
+		id: accountInformation.id,
+		accountType: accountInformation.accountType,
+		token: jwtToken,
+	}
+	return clientResponseInformation
+}
 
 export async function editPlayerProfileInformation(prisma, loggedInUserId, body) {
 	if (body.editType == null || body.value == null || EditType[body.editType] == null) {
