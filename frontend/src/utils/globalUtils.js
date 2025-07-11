@@ -1,5 +1,6 @@
 export const GOOGLE_EMAIL_KEY = "GoogleEmail"
-export const TOKEN_STORAGE_KEY = "Token"
+export const TOKEN_SESSION_KEY = "Token"
+export const ACCOUNT_INFORMATION_KEY = "AccountInformation"
 export const BASEURL = import.meta.env.VITE_RENDER_LINK || "http://localhost:3000"
 export const AccountType = Object.freeze({
 	PLAYER: "player",
@@ -26,5 +27,21 @@ export const LOCATION_OPTIONS = [
 ]
 
 export function isLoggedIn() {
-	return localStorage.getItem(GOOGLE_EMAIL_KEY) !== null
+	return (
+		sessionStorage.getItem(ACCOUNT_INFORMATION_KEY) !== null &&
+		sessionStorage.getItem(TOKEN_SESSION_KEY) !== null
+	)
+}
+
+export function getAccountDataFromSessionStorage() {
+	const accountInformation = sessionStorage.getItem(ACCOUNT_INFORMATION_KEY)
+	const parsedAccountInformation = accountInformation && JSON.parse(accountInformation)
+
+	if (
+		!parsedAccountInformation ||
+		!parsedAccountInformation.id ||
+		!parsedAccountInformation.accountType
+	)
+		return null
+	return parsedAccountInformation
 }

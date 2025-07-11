@@ -1,7 +1,13 @@
 import { useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { SignupModalContext } from "./SignupModal.jsx"
-import { AccountType, GOOGLE_EMAIL_KEY, BASEURL, TOKEN_STORAGE_KEY } from "../../utils/globalUtils.js"
+import {
+	AccountType,
+	GOOGLE_EMAIL_KEY,
+	BASEURL,
+	TOKEN_SESSION_KEY,
+	ACCOUNT_INFORMATION_KEY,
+} from "../../utils/globalUtils.js"
 import PlayerSignup from "./PlayerSignup"
 import TeamSignup from "./TeamSignup"
 import { DEFAULT_FORM_VALUE } from "./utils.jsx"
@@ -11,24 +17,26 @@ const optionalSignupInformation = ["lastName"]
 async function onFormValid(formData, selectedAccountType, navigate) {
 	const body = {
 		...formData[selectedAccountType],
-		email: localStorage.getItem(GOOGLE_EMAIL_KEY),
+		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),
 	}
 
 	try {
-		const response = await fetch(`${BASEURL}/api/signup/`, {
+		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(body),
 		})
+		const accountData = await response.json()
+		if (!response.ok) throw new Error()
 
-		const data = await response.json()
-		localStorage.setItem(TOKEN_STORAGE_KEY, data.token)
-
+		sessionStorage.setItem(TOKEN_SESSION_KEY, accountData.token)
+		sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 		const navigationURL =
-			data.accountType === AccountType.PLAYER ? "/profiles/" : "/teams/"
-		navigate(`${navigationURL}${data.id}`)
+			accountData.accountType === AccountType.PLAYER ? "/profiles/" : "/teams/"
+
+		navigate(`${navigationURL}${accountData.id}`)
 	} catch (error) {
 		console.error("Error while trying to create account:", error)
 	}
