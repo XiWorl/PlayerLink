@@ -20,7 +20,9 @@ export function verifyPlayerSignupInformation(requestBody) {
 		requestBody.firstName !== undefined &&
 		requestBody.location !== undefined &&
 		requestBody.willingToRelocate !== undefined &&
-		requestBody.yearsOfExperience !== undefined
+		requestBody.playstyle !== undefined &&
+		requestBody.gamingExperience !== undefined &&
+		requestBody.gameUsernames !== undefined
 	return isDataValid
 }
 
@@ -30,8 +32,10 @@ export function verifyTeamSignupInformation(requestBody) {
 		requestBody.email !== undefined &&
 		requestBody.teamName !== undefined &&
 		requestBody.location !== undefined &&
-		requestBody.yearEstablished !== undefined &&
-		requestBody.hiring !== undefined
+		requestBody.hiring !== undefined &&
+		requestBody.desiredPlaystyle !== undefined &&
+		requestBody.desiredSkillLevel !== undefined &&
+		requestBody.supportedGames !== undefined
 	return isDataValid
 }
 

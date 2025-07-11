@@ -37,6 +37,9 @@ model Player {
   yearsOfExperience String
   location    String
   willingToRelocate Boolean
+  playstyle String
+  gamingExperience String[]
+  gameUsernames Json
   bio         String?
   about      String?
   accountId  Int @unique
@@ -48,7 +51,9 @@ model Team {
   name       String
   location   String
   currentlyHiring Boolean
-  yearEstablished String
+  desiredPlaystyle String[]
+  supportedGames String[]
+  desiredSkillLevel String
   description String?
   overview   String?
   accountId  Int @unique

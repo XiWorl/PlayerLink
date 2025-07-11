@@ -212,6 +212,49 @@ server.post("/api/signup/team", async (req, res, next) => {
 	}
 })
 
+server.patch("/api/profiles/edit/account", async (req, res, next) => {
+	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
+	if (!verifiedAuthorization) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+
+	try {
+		if (req.body == null ) {
+			res.status(400).json({
+				error: "Invalid request body: JSON payload is incomplete or malformed",
+			})
+			return
+		}
+
+		const accountType = req.body.accountType
+		delete req.body.accountType
+
+		const existingPlayer = await prisma[accountType].findUnique({
+			where: { accountId: 1 },
+		})
+
+		if (!existingPlayer) {
+			res.status(404).json({ error: "Account record not found" })
+			return
+		}
+
+		const updatedPlayerData = await prisma[accountType].update({
+			where: { accountId: 1 },
+			data: req.body,
+		})
+
+		if (!updatedPlayerData) {
+			res.status(400).json({ error: "Invalid profile information, cannot update" })
+			return
+		}
+
+		return res.status(200).json({ updatedValue: updatedPlayerData })
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.patch("/api/profiles/edit", async (req, res, next) => {
 	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
 
