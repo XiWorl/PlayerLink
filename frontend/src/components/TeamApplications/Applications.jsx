@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { getApplicationsFromAccountId } from "../../api"
-import { Sidebar, createApplicationTile } from "./Utils"
+import { createApplicationTile } from "./Utils"
 import "./ApplyPage.css"
 
 function EmptyApplicationsDisplay() {
@@ -33,7 +33,6 @@ export function Applications({ accountData, accountId }) {
 	return (
 		<div className="apply-page">
 			<div className="page-content">
-				<Sidebar accountType={accountData.accountType} />
 				<div className="postings">{applicationsDisplay}</div>
 			</div>
 		</div>
