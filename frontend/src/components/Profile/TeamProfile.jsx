@@ -1,8 +1,9 @@
-import { AboutEditButton, BioEditButton } from "./EditButton"
 import { createContext, useState } from "react"
+import { getAccountDataFromLocalStorage, AccountType } from "../../utils/globalUtils"
+import ApplyButton from "./ApplyButton"
 import "./ProfilePage.css"
-const defaultProfileInfo = ""
 
+const defaultProfileInfo = ""
 export const TeamProfileContext = createContext()
 
 export default function TeamProfile({ isLoading, accountData }) {
@@ -14,6 +15,7 @@ export default function TeamProfile({ isLoading, accountData }) {
 		accountData.description || defaultProfileInfo
 	)
 	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
+	const localStorageAccountData = getAccountDataFromLocalStorage()
 
 	return (
 		<TeamProfileContext.Provider value={{ setDescription, setOverview }}>
@@ -39,7 +41,14 @@ export default function TeamProfile({ isLoading, accountData }) {
 						<div>
 							<button>Home</button>
 							<button>Roster</button>
-							<button>Apply</button>
+							{localStorageAccountData &&
+								localStorageAccountData.accountType != AccountType.TEAM &&
+								localStorageAccountData.id !== accountData.accountId && (
+									<ApplyButton
+										playerAccountId={localStorageAccountData.id}
+										teamAccountId={accountData.accountId}
+									/>
+								)}
 						</div>
 					</div>
 				</div>

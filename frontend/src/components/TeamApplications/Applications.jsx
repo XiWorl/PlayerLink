@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { getApplicationsFromAccountId } from "../../api"
-import { ApplicationTile } from "./Utils"
+import { createApplicationTile } from "./Utils"
 import "./ApplyPage.css"
 
 function EmptyApplicationsDisplay() {
@@ -19,7 +19,7 @@ async function loadApplications(accountId, setApplicationsDisplay) {
         return
     }
 
-	const newApplicationsDisplay = applications.map((applicationData) => <ApplicationTile applicationData={applicationData}/>)
+	const newApplicationsDisplay = applications.map((applicationData) => createApplicationTile(applicationData))
     setApplicationsDisplay(newApplicationsDisplay)
 }
 

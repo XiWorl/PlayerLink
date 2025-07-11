@@ -1,7 +1,7 @@
 import { getProfileData } from "../../api"
 import { AccountType } from "../../utils/globalUtils"
 
-export async function ApplicationTile({ applicationData }) {
+export async function createApplicationTile(applicationData) {
 	const profileInformation = await getProfileData(AccountType.TEAM, applicationData.teamAccountId)
 
 	return (

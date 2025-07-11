@@ -1,39 +1,43 @@
-import "./Navbar.css"
-import { AccountType, getAccountDataFromLocalStorage } from "../../utils/globalUtils"
-import { ACCOUNT_INFORMATION_KEY } from "../../utils/globalUtils"
+import { getAccountDataFromLocalStorage, AccountType } from "../../utils/globalUtils"
+import { useState, useEffect, createContext, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import "./Navbar.css"
+
+export const NavbarContext = createContext()
 
 export default function Navbar() {
+	const navigate = useNavigate()
+	const [accountData, setAccountData] = useState(null)
+
+	useEffect(() => {
+		const accountData = getAccountDataFromLocalStorage()
+		if (accountData === null) {
+			navigate("/")
+			return
+		}
+		setAccountData(accountData)
+	}, [])
+
 	return (
-		<div className="navbar">
-			<div className="navbar-contents">
-				<div className="tournament">
-					<TournamentsButton />
-				</div>
-				<div className="apply">
-					<ApplyButton />
-				</div>
-				<div className="connect">
-					<ConnectButton />
-				</div>
-				<div className="profile">
-					<ProfileButton />
+		<NavbarContext.Provider value={{ accountData, navigate }}>
+			<div className="navbar">
+				<div className="navbar-contents">
+					<div className="tournament">
+						<TournamentsButton />
+					</div>
+					<div className="apply">
+						<ApplyButton />
+					</div>
+					<div className="connect">
+						<ConnectButton />
+					</div>
+					<div className="profile">
+						<ProfileButton />
+					</div>
 				</div>
 			</div>
-		</div>
+		</NavbarContext.Provider>
 	)
-}
-
-function navigateToUserProfile(navigate) {
-	const accountData = getAccountDataFromLocalStorage()
-	if (accountData === null) {
-		navigate("/")
-		return
-	}
-
-	const navigationPath =
-		accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
-	navigate(`/${navigationPath}/${accountData.id}`)
 }
 
 function ConnectButton() {
@@ -47,12 +51,17 @@ function ConnectButton() {
 }
 
 function ProfileButton() {
-	const navigate = useNavigate()
+	const { accountData, navigate } = useContext(NavbarContext)
+	if (accountData === null) return
+
+	const navigationPath =
+		accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
+
 	return (
 		<button
 			className="profile-btn"
 			onClick={() => {
-				navigateToUserProfile(navigate)
+				navigate(`/${navigationPath}/${accountData.id}`)
 			}}
 		>
 			<h3>My Profile</h3>
@@ -69,8 +78,14 @@ function TournamentsButton() {
 }
 
 function ApplyButton() {
+	const { accountData, navigate } = useContext(NavbarContext)
+	if (accountData === null) return
+
 	return (
-		<button className="apply-btn">
+		<button
+			onClick={() => navigate(`/apply/${accountData.id}`)}
+			className="apply-btn"
+		>
 			<h3>Apply</h3>
 		</button>
 	)
