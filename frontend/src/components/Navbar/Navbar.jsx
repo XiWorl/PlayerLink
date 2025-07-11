@@ -10,7 +10,7 @@ export default function Navbar() {
 	const [accountData, setAccountData] = useState(null)
 
 	useEffect(() => {
-		const accountData = getAccountDataFromLocalStorage()
+		const accountData = getAccountDataFromSessionStorage()
 		if (accountData === null) {
 			navigate("/")
 			return
