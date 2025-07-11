@@ -7,8 +7,8 @@ import Navbar from "../components/Navbar/Navbar"
 import UserProfile from "../components/Profile/UserProfile"
 import "../components/Profile/ProfilePage.css"
 
-const INITIAL_DISPLAY_ID = -1
-let currentAccountIdDisplayed = INITIAL_DISPLAY_ID
+const INITIAL_ACCOUNT_DISPLAY_ID = -1
+let currentAccountIdDisplayed = INITIAL_ACCOUNT_DISPLAY_ID
 
 async function displayProfileData(accountType, id, setAccountData, setIsLoading) {
 	const data = await getProfileData(accountType, id)
