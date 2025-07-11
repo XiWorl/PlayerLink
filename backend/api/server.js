@@ -83,7 +83,7 @@ server.get("/api/login/", async (req, res, next) => {
 
 		const jwtToken = await registerSessionToken(accountData)
 		const clientAccountInformation = formatClientAccountInformation(
-			createdAccount,
+			accountData,
 			jwtToken
 		)
 		return res.status(200).json(clientAccountInformation)
