@@ -3,7 +3,7 @@ import { ConnectPageContext } from "../../pages/ConnectPage"
 import { useContext } from "react"
 import { redirectToAccountProfile } from "./utils"
 
-export default function AccountTile(accountInformation) {
+export default function AccountTile({ accountInformation }) {
 	const { selectedAccountType, navigate } = useContext(ConnectPageContext)
 	const selectedHiringClassName = accountInformation.currentlyHiring
 		? "hiring"
