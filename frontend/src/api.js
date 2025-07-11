@@ -34,3 +34,33 @@ export async function getProfileData(accountType, accountId) {
 		console.error("Error retrieving profile data:", error)
 	}
 }
+
+export async function getApplicationsFromAccountId(accountId) {
+	try {
+		const response = await fetch(`${BASEURL}/account/applications/${accountId}`)
+		const applicationsData = await response.json()
+		return applicationsData
+	} catch (error) {
+		return null
+	}
+}
+
+export async function createTeamApplication(playerAccountId, teamAccountId) {
+	try {
+		const response = await fetch(`${BASEURL}/account/application`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				teamAccountId: teamAccountId,
+				playerAccountId: playerAccountId,
+				status: PENDING_APPLICATION_STATUS
+			}),
+		})
+		const teamApplication = await response.json()
+		return teamApplication
+	} catch (error) {
+		console.error("Error creating application:", error)
+	}
+}
