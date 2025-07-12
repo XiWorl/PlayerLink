@@ -3,7 +3,6 @@ import { CustomizableModal } from "../CustomizableModal/CustomizableModal"
 import { ModalTextBox } from "../CustomizableModal/utils"
 import { modalSubmitHelper } from "./EditButtonUtils"
 import { useState, useContext } from "react"
-import { useParams } from "react-router-dom"
 import { UserProfileContext } from "./UserProfile"
 export const TypeOfEditButton = {
 	BIO: "bio",
@@ -11,8 +10,7 @@ export const TypeOfEditButton = {
 }
 
 function onAboutModalSubmitButtonClicked(textValue) {
-	const { id } = useParams()
-	const { setAbout } = useContext(UserProfileContext)
+	const { setAbout, id } = useContext(UserProfileContext)
 	return async function () {
 		const updatedAboutObject = await modalSubmitHelper(
 			textValue,
@@ -24,9 +22,9 @@ function onAboutModalSubmitButtonClicked(textValue) {
 			setAbout(updatedAboutObject.updatedValue)
 	}
 }
+
 function onBioModalSubmitButtonClicked(textValue) {
-	const { id } = useParams()
-	const { setBio } = useContext(UserProfileContext)
+	const { setBio, id } = useContext(UserProfileContext)
 	return async function () {
 		const updatedBioObject = await modalSubmitHelper(
 			textValue,
@@ -69,15 +67,9 @@ export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
 	)
 }
 
-function verifyUserOwnsProfile(id) {
-	const accountData = getAccountDataFromSessionStorage()
-	if (!accountData || id != getAccountDataFromSessionStorage().id) return false
-	return true
-}
-
 export function AboutEditButton() {
-	const { id } = useParams()
-	if (!verifyUserOwnsProfile(id)) return null
+	const { loggedInAccountData } = useContext(UserProfileContext)
+	if (!loggedInAccountData) return null
 
 	return (
 		<EditButtonTemplate
@@ -88,8 +80,8 @@ export function AboutEditButton() {
 }
 
 export function BioEditButton() {
-	const { id } = useParams()
-	if (!verifyUserOwnsProfile(id)) return null
+	const { loggedInAccountData } = useContext(UserProfileContext)
+	if (!loggedInAccountData) return null
 
 	return (
 		<EditButtonTemplate

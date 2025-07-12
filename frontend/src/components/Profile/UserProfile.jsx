@@ -1,5 +1,7 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
-import { createContext, useState } from "react"
+import { getAccountDataFromSessionStorage } from "../../utils/globalUtils"
+import { useParams } from "react-router-dom"
+import { createContext, useState, useEffect } from "react"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
 
@@ -10,11 +12,19 @@ export default function UserProfile({ isLoading, accountData }) {
 		return <h1>Loading...</h1>
 	}
 
+	useEffect(() => {
+		setLoggedInAccountData(getAccountDataFromSessionStorage())
+	}, [])
+
 	const [bio, setBio] = useState(accountData.bio || defaultProfileInfo)
 	const [about, setAbout] = useState(accountData.about || defaultProfileInfo)
+	const [loggedInAccountData, setLoggedInAccountData] = useState(null)
+	const { id } = useParams()
 
 	return (
-		<UserProfileContext.Provider value={{ setAbout, setBio }}>
+		<UserProfileContext.Provider
+			value={{ setAbout, setBio, loggedInAccountData, id }}
+		>
 			<div className="profile-page">
 				<div className="profile-banner">
 					<div className="profile-picture">
