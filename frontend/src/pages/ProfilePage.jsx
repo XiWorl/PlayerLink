@@ -25,11 +25,11 @@ export default function ProfilePage({ accountType }) {
 		setIsLoading(true)
 		displayProfileData(accountType, id, setAccountData, setIsLoading)
 	}
+	currentAccountIdDisplayed = id
 
 	useEffect(() => {
 		displayProfileData(accountType, id, setAccountData, setIsLoading)
 	}, [])
-	currentAccountIdDisplayed = id
 
 	return accountType == AccountType.PLAYER ? (
 		<>
