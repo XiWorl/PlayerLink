@@ -1,5 +1,5 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
-import { getAccountDataFromSessionStorage } from "../../utils/globalUtils"
+import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
 import { useParams } from "react-router-dom"
 import { createContext, useState, useEffect } from "react"
 import "./ProfilePage.css"
@@ -7,8 +7,9 @@ const defaultProfileInfo = ""
 
 export const UserProfileContext = createContext()
 
-export default function UserProfile({ isLoading, accountData }) {
-	if (isLoading) {
+export default function UserProfile({ isLoading, accountData, setIsLoading }) {
+	if (isLoading || accountData.teamId != null) {
+		setIsLoading(true)
 		return <h1>Loading...</h1>
 	}
 
