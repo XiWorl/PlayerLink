@@ -1,19 +1,16 @@
-import { translateExperience, YearsOfExperienceOptions } from "./utils.js"
-const GameOptions = {
-	VALORANT: "Valorant",
-	FORTNITE: "Fortnite",
-	APEX_LEGENDS: "Apex Legends",
-}
-const PlaystyleOptions = {
-	AGGRESSIVE: "Aggressive",
-	DEFENSIVE: "Defensive",
-	ADAPTIVE: "Adaptive",
-}
-const SkillLevelOptions = {
-	SEMI_PRO: "Semi-Pro",
-	PRO: "Pro",
-	ELITE: "Elite",
-}
+const {
+	translateExperience,
+	calculateLocationScore,
+	calculateSkillLevelScore,
+	YearsOfExperienceOptions,
+	calculatePlaystyleScore,
+} = require("./utils.js")
+const {
+	GameOptions,
+	PlaystyleOptions,
+	SkillLevelOptions,
+} = require("../ServerUtils.js")
+
 const generatedTeamInfo1 = {
 	name: "Unlimited Range Gaming",
 	location: "US",
@@ -57,7 +54,7 @@ const generatedPlayerInfo1 = {
 	playstyle: PlaystyleOptions.ADAPTIVE,
 	gameUsernames: { Valorant: "username here for val" },
 }
-export const LOCATION_OPTIONS = {
+const LOCATION_OPTIONS = {
 	USA: "USA",
 	CANADA: "Canada",
 	MEXICO: "Mexico",
@@ -100,36 +97,17 @@ function filterIneligibleTeams(playerInfo, teams) {
 			return false
 		}
 
+		if (
+			playerInfo.willingToRelocate == false &&
+			team.location !== playerInfo.location
+		) {
+			return false
+		}
+
 		return true
 	})
 
 	return eligibleTeams
-}
-
-function calculateLocationScore(playerLocation, teamLocation) {
-	if (playerLocation === teamLocation) {
-		return 1
-	} else if (nearbyLocationScores[playerLocation].has(teamLocation)) {
-		return 0.5
-	} else {
-		return 0
-	}
-}
-
-function calculateSkillLevelScore(playerSkillLevel, teamSkillLevel) {
-	if (playerSkillLevel === teamSkillLevel) {
-		return 1
-	} else {
-		return 0
-	}
-}
-
-function calculatePlaystyleScore(playerPlaystyle, teamPlaystyles) {
-	if (teamPlaystyles.includes(playerPlaystyle)) {
-		return 1
-	} else {
-		return 0
-	}
 }
 
 function calculateTeamScore(playerInfo, eligibleTeam) {
@@ -147,7 +125,7 @@ function calculateTeamScore(playerInfo, eligibleTeam) {
 	return finalScore
 }
 
-function reccommendationAlgorithm(playerInfo, teams) {
+function recommendationAlgorithm(playerInfo, teams) {
 	const eligibleTeams = filterIneligibleTeams(playerInfo, teams)
 	let teamScores = []
 	for (const team of eligibleTeams) {
@@ -158,4 +136,7 @@ function reccommendationAlgorithm(playerInfo, teams) {
 	return teamScores
 }
 
-const rankedTeams = reccommendationAlgorithm(generatedPlayerInfo1, teams)
+const rankedTeams = recommendationAlgorithm(generatedPlayerInfo1, teams)
+const firstTenRankedTeams = rankedTeams.slice(0, 10)
+
+console.log(firstTenRankedTeams)
