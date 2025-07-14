@@ -9,11 +9,12 @@ const {
 	GameOptions,
 	PlaystyleOptions,
 	SkillLevelOptions,
+	LOCATION_OPTIONS
 } = require("../ServerUtils.js")
 
 const generatedTeamInfo1 = {
 	name: "Unlimited Range Gaming",
-	location: "US",
+	location: "USA",
 	description: "FPS focused e-sports Team",
 	overview:
 		"We are a team of FPS players looking to expand our reach and grow our community.",
@@ -24,7 +25,7 @@ const generatedTeamInfo1 = {
 }
 const generatedTeamInfo2 = {
 	name: "Unlimited Range Gaming2",
-	location: "US",
+	location: "USA",
 	description: "FPS focused e-sports Team",
 	overview:
 		"We are a team of FPS players looking to expand our reach and grow our community.",
@@ -46,7 +47,7 @@ const generatedPlayerInfo1 = {
 	firstName: "Billy",
 	lastName: "Bob",
 	yearsOfExperience: YearsOfExperienceOptions.ZERO_TO_ONE,
-	location: "US",
+	location: "USA",
 	willingToRelocate: false,
 	bio: "#1 ranked player in the US | FPS certified | Full-time",
 	about: "Hello!, I'm a FPS player looking to expand my reach and grow my community. I'm currently looking for a team to join and help me achieve my goals.",
@@ -54,29 +55,11 @@ const generatedPlayerInfo1 = {
 	playstyle: PlaystyleOptions.ADAPTIVE,
 	gameUsernames: { Valorant: "username here for val" },
 }
-const LOCATION_OPTIONS = {
-	USA: "USA",
-	CANADA: "Canada",
-	MEXICO: "Mexico",
-	SOUTH_AMERICA: "South America",
-	EUROPE: "Europe",
-	AFRICA: "Africa",
-	ASIA: "Asia",
-	OCEANIA: "Oceania",
-}
+
 
 const teams = [generatedTeamInfo1, generatedTeamInfo2]
 
-const nearbyLocationScores = {
-	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
-	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
-	[LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
-	[LOCATION_OPTIONS.SOUTH_AMERICA]: new Set([LOCATION_OPTIONS.MEXICO]),
-	[LOCATION_OPTIONS.EUROPE]: new Set([LOCATION_OPTIONS.ASIA]),
-	[LOCATION_OPTIONS.AFRICA]: new Set(),
-	[LOCATION_OPTIONS.ASIA]: new Set([LOCATION_OPTIONS.EUROPE]),
-	[LOCATION_OPTIONS.OCEANIA]: new Set(),
-}
+
 
 const weights = {
 	location: 2,

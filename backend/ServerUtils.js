@@ -1,3 +1,14 @@
+export const LOCATION_OPTIONS = {
+	USA: "USA",
+	CANADA: "Canada",
+	MEXICO: "Mexico",
+	SOUTH_AMERICA: "South America",
+	EUROPE: "Europe",
+	AFRICA: "Africa",
+	ASIA: "Asia",
+	OCEANIA: "Oceania",
+}
+
 export const EditType = {
 	ABOUT: "about",
 	BIO: "bio",
