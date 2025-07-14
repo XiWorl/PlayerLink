@@ -1,94 +1,141 @@
-//This file is used to seed the database with initial data for testing purposes. Will be removed in production.
-
 const { PrismaClient } = require("../generated/prisma")
 const prisma = new PrismaClient()
 
 const generatedTeamInfo = {
-	name: "Unlimited Range Gaming",
-	location: "US",
-	description: "FPS focused e-sports Team",
-	overview:
-		"We are a team of FPS players looking to expand our reach and grow our community.",
-	yearEstablished: "2022",
-	currentlyHiring: true,
+    name: "Unlimited Range Gaming",
+    location: "US",
+    description: "FPS focused e-sports Team",
+    overview:
+        "We are a team of FPS players looking to expand our reach and grow our community.",
+    yearEstablished: "2022",
+    currentlyHiring: true,
 }
 
 const generatedPlayerInfo = {
-	firstName: "Billy",
-	lastName: "Bob",
-	yearsOfExperience: "0",
-	location: "US",
-	willingToRelocate: false,
-	bio: "#1 ranked player in the US | FPS certified | Full-time",
-	about: "Hello!, I'm a FPS player looking to expand my reach and grow my community. I'm currently looking for a team to join and help me achieve my goals.",
+    firstName: "Billy",
+    lastName: "Bob",
+    yearsOfExperience: "0",
+    location: "US",
+    willingToRelocate: false,
+    bio: "#1 ranked player in the US | FPS certified | Full-time",
+    about: "Hello!, I'm a FPS player looking to expand my reach and grow my community. I'm currently looking for a team to join and help me achieve my goals.",
+}
+
+const YearsOfExperienceOptions = Object.freeze({
+    ZERO_TO_ONE: "0-1",
+    TWO_TO_THREE: "2-3",
+    FOUR_TO_FIVE: "4-5",
+    SIX_TO_TEN: "6-10",
+    TENPLUS: "10+",
+})
+
+const GameOptions = {
+  APEX_LEGENDS: "Apex Legends",
+  FORTNITE: "Fortnite",
+  VALORANT: "Valorant",
+};
+const SkillLevelOptions = {
+  SEMI_PRO: "Semi-Pro",
+  PRO: "Pro",
+  CASUAL: "Casual",
+};
+const PlaystyleOptions = {
+  ADAPTIVE: "Adaptive",
+  DEFENSIVE: "Defensive",
+  AGGRESSIVE: "Aggressive",
+};
+function generateRandomTeamInfo(index) {
+    const gameOptions = Object.values(GameOptions)
+    const skillLevelOptions = Object.values(SkillLevelOptions)
+    const playstyleOptions = Object.values(PlaystyleOptions)
+    return {
+        name: `Unlimited Range Gaming${index}`,
+        location: ["USA", "Europe", "Asia"][Math.floor(Math.random() * 3)],
+        rosterAccountIds: [],
+        description: [
+            "FPS focused e-sports Team",
+            "Championship focused e-sports Team",
+            "Strategy focused e-sports Team",
+        ][Math.floor(Math.random() * 3)],
+        overview: [
+            "We are a team of FPS players looking to expand our reach and grow our community.",
+            "We are a team of esports players looking to expand our reach and grow our community.",
+            "We are a team of Strategy players looking to expand our reach and grow our community.",
+        ][Math.floor(Math.random() * 3)],
+        currentlyHiring: Math.random() < 0.5,
+        supportedGames: Array.from(
+            { length: Math.floor(Math.random() * 3) + 1 },
+            () => gameOptions[Math.floor(Math.random() * gameOptions.length)]
+        ),
+        desiredSkillLevel:
+            skillLevelOptions[Math.floor(Math.random() * skillLevelOptions.length)],
+        desiredPlaystyle: Array.from(
+            { length: Math.floor(Math.random() * 3) + 1 },
+            () => playstyleOptions[Math.floor(Math.random() * playstyleOptions.length)]
+        ),
+    }
+}
+
+function generateRandomPlayerInfo(index) {
+  const gameOptions = Object.values(GameOptions);
+  const yearsOfExperienceOptions = Object.values(YearsOfExperienceOptions);
+  const playstyleOptions = Object.values(PlaystyleOptions);
+  const firstNames = ["John", "Jane", "Bob", "Alice", "Mike", "Emily", "Tom", "Sarah", "David", "Jessica"];
+  const lastNames = ["Doe", "Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson", "Moore"];
+  return {
+    firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+    lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
+    yearsOfExperience: yearsOfExperienceOptions[Math.floor(Math.random() * yearsOfExperienceOptions.length)],
+    location: ["USA", "Europe", "Asia"][Math.floor(Math.random() * 3)],
+    willingToRelocate: Math.random() < 0.5,
+    bio: `#${index} ranked player in the ${["USA", "Europe", "Asia"][Math.floor(Math.random() * 3)]} | ${gameOptions[Math.floor(Math.random() * gameOptions.length)]} certified | ${["Full-time", "Part-time"][Math.floor(Math.random() * 2)]}`,
+    about: `Hello!, I'm a ${gameOptions[Math.floor(Math.random() * gameOptions.length)]} player looking to expand my reach and grow my community. I'm currently looking for a team to join and help me achieve my goals.`,
+    gamingExperience: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => gameOptions[Math.floor(Math.random() * gameOptions.length)]),
+    playstyle: playstyleOptions[Math.floor(Math.random() * playstyleOptions.length)],
+    gameUsernames: {
+      [GameOptions.VALORANT]: `valorantusername${index}`,
+      [GameOptions.APEX_LEGENDS]: `apexusername${index}`,
+      [GameOptions.FORTNITE]: `fortniteusername${index}`,
+    },
+  };
 }
 
 async function main() {
-	// await prisma.account.create({
-	// 	data: {
-	// 		accountType: "player",
-	// 		email: "billybob@bob.com",
-	// 		player: {
-	// 			create: generatedPlayerInfo,
-	// 		},
-	// 	},
-	// })
-
-	// for (let i = 0; i < 10; i++) {
-	// 	await prisma.account.create({
-	// 		data: {
-	// 			accountType: "player",
-	// 			email: `player${i}@gmail.com`,
-	// 			player: {
-	// 				create: {
-	// 					firstName: `Player`,
-	// 					lastName: `${i}`,
-	// 					yearsOfExperience: "0",
-	// 					location: "US",
-	// 					willingToRelocate: false,
-	// 					bio: `#${i} ranked player on valorant`,
-	// 					about: "This is my about section!",
-	// 				},
-	// 			},
-	// 		},
-	// 	})
-	// }
-
-	// await prisma.account.create({
-	// 	data: {
-	// 		accountType: "team",
-	// 		email: "URG@gmail.com",
-	// 		team: {
-	// 			create: generatedTeamInfo,
-	// 		},
-	// 	},
-	// })
-
-	// for (let i = 0; i < 10; i++) {
-	// 	await prisma.account.create({
-	// 		data: {
-	// 			accountType: "team",
-	// 			email: `team${i}@gmail.com`,
-	// 			team: {
-	// 				create: {
-	// 					name: `Team${i}`,
-	// 					location: "Asia",
-	// 					description: `This is team ${i}'s description`,
-	// 					overview: `This is team ${i}'s overview`,
-	// 					yearEstablished: "2022",
-	// 					currentlyHiring: true,
-	// 				},
-	// 			},
-	// 		},
-	// 	})
-	// }
+    const generatedTeamInfos = []
+    const generatedPlayerInfos = []
+    for (let i = 1; i <= 15; i++) {
+        generatedTeamInfos.push(generateRandomTeamInfo(i))
+        generatedPlayerInfos.push(generateRandomPlayerInfo(i))
+        await prisma.account.create({
+            data: {
+                accountType: "team",
+                email: `team${i}@gmail.com`,
+                team: {
+                    create:
+                        generateRandomTeamInfo(i)
+                    ,
+                },
+            },
+        })
+        await prisma.account.create({
+            data: {
+                accountType: "player",
+                email: `player${i}@gmail.com`,
+                player: {
+                    create:
+                        generateRandomPlayerInfo(i)
+                    ,
+                },
+            },
+        })
+    }
 }
 
 main()
-	.catch((e) => {
-		console.error(e)
-		process.exit(1)
-	})
-	.finally(async () => {
-		await prisma.$disconnect()
-	})
+    .catch((e) => {
+        console.error(e)
+        process.exit(1)
+    })
+    .finally(async () => {
+        await prisma.$disconnect()
+    })
