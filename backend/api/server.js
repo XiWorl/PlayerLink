@@ -235,7 +235,7 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 
 		const updatedAccount = await editPlayerProfileInformation(
 			prisma,
-			authorization.id,
+			verifiedAuthorization.id,
 			req.body
 		)
 		if (!updatedAccount) {

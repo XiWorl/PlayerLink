@@ -19,18 +19,27 @@ export default function ProfilePage({ accountType }) {
 	const { id } = useParams()
 
 	useEffect(() => {
+		setIsLoading(true)
 		displayProfileData(accountType, id, setAccountData, setIsLoading)
-	}, [])
+	}, [id])
 
 	return accountType == AccountType.PLAYER ? (
 		<>
 			<Navbar />
-			<UserProfile isLoading={isLoading} accountData={accountData} />
+			<UserProfile
+				isLoading={isLoading}
+				accountData={accountData}
+				setIsLoading={setIsLoading}
+			/>
 		</>
 	) : (
 		<>
 			<Navbar />
-			<TeamProfile isLoading={isLoading} accountData={accountData} />
+			<TeamProfile
+				isLoading={isLoading}
+				accountData={accountData}
+				setIsLoading={setIsLoading}
+			/>
 		</>
 	)
 }
