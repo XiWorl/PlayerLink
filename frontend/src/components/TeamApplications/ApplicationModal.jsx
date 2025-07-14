@@ -19,11 +19,11 @@ function viewProfile(profileInformation, navigate) {
 	navigate(`/profiles/${profileInformation.playerId}`)
 }
 
-async function submitApplication(playerAccountId, teamAccountId, statusValue) {
+async function submitApplication(playerAccountId, teamAccountId, statusValue, setApplicationStatus) {
 	if (statusValue === DEFAULT_SELECT_VALUE) {
 		return
 	}
-	console.log("submitting application", playerAccountId, teamAccountId, statusValue)
+
 	const token = sessionStorage.getItem(TOKEN_STORAGE_KEY)
 	try {
 		const response = await fetch(`${BASEURL}/applications/status/update`, {
@@ -38,8 +38,14 @@ async function submitApplication(playerAccountId, teamAccountId, statusValue) {
 				status: statusValue,
 			}),
 		})
-		const data = await response.json()
+
+		const applicationData = await response.json()
 		console.log(response, data)
+
+		setApplicationStatus(applicationData.status)
+		if (applicationData.status === AppicationStatusOptions.ACCEPTED) {
+			// viewProfile(profileInformation, navigate)
+		}
 	} catch (error) {
 		console.error("Error trying to login:", error)
 	}
@@ -48,7 +54,7 @@ async function submitApplication(playerAccountId, teamAccountId, statusValue) {
 export function ApplicationModal() {
 	const navigate = useNavigate()
 	const [statusValue, setStatusValue] = useState(DEFAULT_SELECT_VALUE)
-	const { profileInformation, setIsApplicationModalOpen, applicationStatus } =
+	const { profileInformation, setIsApplicationModalOpen, applicationStatus, setApplicationStatus } =
 	useContext(ApplicationTileContext)
 	const teamAccountId = getAccountDataFromSessionStorage().id
 

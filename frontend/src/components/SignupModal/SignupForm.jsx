@@ -21,6 +21,7 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 	}
 
 	try {
+		console.log("Creating account:")
 		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
 			method: "POST",
 			headers: {
@@ -28,7 +29,9 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 			},
 			body: JSON.stringify(body),
 		})
+		console.log("Response:", response)
 		const accountData = await response.json()
+		console.log("Account data:", accountData)
 		if (!response.ok) throw new Error()
 
 			sessionStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)

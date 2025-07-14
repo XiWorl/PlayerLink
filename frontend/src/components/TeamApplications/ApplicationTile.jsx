@@ -32,8 +32,8 @@ function getPostContent(
 export function ApplicationTile({ applicationData }) {
 	const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false)
 	const [profileInformation, setProfileInformation] = useState(null)
+	const [applicationStatus, setApplicationStatus] = useState(applicationData.status)
 	const accountData = getAccountDataFromSessionStorage()
-	const applicationStatus = applicationData.status
 
 	const oppositeAccountTypeOfAccount =
 		accountData.accountType === AccountType.PLAYER
@@ -85,7 +85,7 @@ export function ApplicationTile({ applicationData }) {
 
 	return (
 		<ApplicationTileContext.Provider
-			value={{ profileInformation, setIsApplicationModalOpen, applicationStatus }}
+			value={{ profileInformation, setIsApplicationModalOpen, applicationStatus, setApplicationStatus }}
 		>
 			{isApplicationModalOpen && (
 				<ApplicationModal

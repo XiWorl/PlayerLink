@@ -281,7 +281,7 @@ server.patch("/applications/status/update", async (req, res, next) => {
 			const updatedTeamData = await prisma.team.update({
 				where: { accountId: req.body.teamAccountId },
 				data: {
-					roster: {
+					rosterAccountIds: {
 						push: req.body.playerAccountId,
 					},
 				},
