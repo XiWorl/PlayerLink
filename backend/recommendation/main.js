@@ -1,0 +1,72 @@
+const {
+	translateExperience,
+	calculateLocationScore,
+	calculateSkillLevelScore,
+	calculatePlaystyleScore,
+} = require("./utils.js")
+
+
+const weights = {
+	location: 2,
+	skillLevel: 1.2,
+	playstyle: 0.8,
+}
+
+function filterIneligibleTeams(playerInfo, teams) {
+	const eligibleTeams = teams.filter((team) => {
+		if (!team.currentlyHiring) {
+			return false
+		}
+
+		const hasMatchingGame = playerInfo.gamingExperience.some((game) =>
+			team.supportedGames.includes(game)
+		)
+		if (!hasMatchingGame) {
+			return false
+		}
+
+		if (
+			playerInfo.willingToRelocate == false &&
+			team.location !== playerInfo.location
+		) {
+			return false
+		}
+
+		return true
+	})
+
+	return eligibleTeams
+}
+
+function calculateTeamScore(playerInfo, eligibleTeam) {
+	let finalScore = 0
+	const playerSkillLevel = translateExperience(playerInfo.yearsOfExperience)
+	finalScore +=
+		calculateLocationScore(playerInfo.location, eligibleTeam.location) *
+		weights.location
+	finalScore +=
+		calculateSkillLevelScore(playerSkillLevel, eligibleTeam.desiredSkillLevel) *
+		weights.skillLevel
+	finalScore +=
+		calculatePlaystyleScore(playerInfo.playstyle, eligibleTeam.desiredPlaystyle) *
+		weights.playstyle
+	return finalScore
+}
+
+function recommendationAlgorithm(playerInfo, teams) {
+	const eligibleTeams = filterIneligibleTeams(playerInfo, teams)
+	let teamScores = []
+	for (const team of eligibleTeams) {
+		const score = calculateTeamScore(playerInfo, team)
+		teamScores.push({ team: team, score: score })
+	}
+	teamScores.sort((a, b) => b.score - a.score)
+	return teamScores
+}
+
+export function getTeamRecommendations(playerInfo, teams) {
+    console.log("playerInfo", playerInfo)
+	const rankedTeams = recommendationAlgorithm(generatedPlayerInfo1, teams)
+	const firstTenRankedTeams = rankedTeams.slice(0, 10)
+	return firstTenRankedTeams
+}

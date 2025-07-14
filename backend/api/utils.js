@@ -5,7 +5,6 @@ export const EditType = {
 	OVERVIEW: "overview",
 	DESCRIPTION: "description",
 }
-export const AccountType = { PLAYER: "player", TEAM: "team" }
 import dotenv from "dotenv"
 
 dotenv.config()
