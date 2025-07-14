@@ -115,15 +115,14 @@ server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) 
 		const playerData = await prisma.player.findUnique({
 			where: { accountId: playerAccountId },
 		})
-		const allTeams = await prisma.team.findMany()
-
 		if (playerData == null) {
 			return res.status(404).json({ error: "Player not found in database" })
 		}
 
-		getTeamRecommendations(playerData, allTeams)
+		const allTeamsInDatabase = await prisma.team.findMany()
+		const teamRecommendations = getTeamRecommendations(playerData, allTeamsInDatabase)
 
-		return res.status(200).json(userApplications)
+		return res.status(200).json(teamRecommendations)
 	} catch (error) {
 		next(error)
 	}
