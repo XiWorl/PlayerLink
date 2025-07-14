@@ -71,25 +71,23 @@ export const LOCATION_OPTIONS = {
 const teams = [generatedTeamInfo1, generatedTeamInfo2]
 
 const nearbyLocationScores = {
-    [LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
-    [LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
-    [LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
-    [LOCATION_OPTIONS.SOUTH_AMERICA]: new Set([LOCATION_OPTIONS.MEXICO]),
-    [LOCATION_OPTIONS.EUROPE]: new Set([LOCATION_OPTIONS.ASIA]),
-    [LOCATION_OPTIONS.AFRICA]: new Set(),
-    [LOCATION_OPTIONS.ASIA]: new Set([LOCATION_OPTIONS.EUROPE]),
-    [LOCATION_OPTIONS.OCEANIA]: new Set(),
+	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
+	[LOCATION_OPTIONS.SOUTH_AMERICA]: new Set([LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.EUROPE]: new Set([LOCATION_OPTIONS.ASIA]),
+	[LOCATION_OPTIONS.AFRICA]: new Set(),
+	[LOCATION_OPTIONS.ASIA]: new Set([LOCATION_OPTIONS.EUROPE]),
+	[LOCATION_OPTIONS.OCEANIA]: new Set(),
 }
 
 const weights = {
-    location: 2,
-    skillLevel: 1.2,
-    playstyle: 0.8,
+	location: 2,
+	skillLevel: 1.2,
+	playstyle: 0.8,
 }
 
 function filterIneligibleTeams(playerInfo, teams) {
-	const playerSkillLevel = translateExperience(playerInfo.yearsOfExperience)
-
 	const eligibleTeams = teams.filter((team) => {
 		if (!team.currentlyHiring) {
 			return false
@@ -109,50 +107,55 @@ function filterIneligibleTeams(playerInfo, teams) {
 }
 
 function calculateLocationScore(playerLocation, teamLocation) {
-    if (playerLocation === teamLocation) {
-        return 1
-    } else if (nearbyLocationScores[playerLocation].has(teamLocation)) {
-        return 0.5
-    } else {
-        return 0
-    }
+	if (playerLocation === teamLocation) {
+		return 1
+	} else if (nearbyLocationScores[playerLocation].has(teamLocation)) {
+		return 0.5
+	} else {
+		return 0
+	}
 }
 
 function calculateSkillLevelScore(playerSkillLevel, teamSkillLevel) {
-    if (playerSkillLevel === teamSkillLevel) {
-        return 1
-    } else {
-        return 0
-    }
+	if (playerSkillLevel === teamSkillLevel) {
+		return 1
+	} else {
+		return 0
+	}
 }
 
 function calculatePlaystyleScore(playerPlaystyle, teamPlaystyles) {
-    if (teamPlaystyles.includes(playerPlaystyle)) {
-        return 1
-    } else {
-        return 0
-    }
+	if (teamPlaystyles.includes(playerPlaystyle)) {
+		return 1
+	} else {
+		return 0
+	}
 }
 
 function calculateTeamScore(playerInfo, eligibleTeam) {
-    let finalScore = 0
-    const playerSkillLevel = translateExperience(playerInfo.yearsOfExperience)
-    finalScore += calculateLocationScore(playerInfo.location, eligibleTeam.location) * weights.location
-    finalScore += calculateSkillLevelScore(playerSkillLevel, eligibleTeam.desiredSkillLevel) * weights.skillLevel
-    finalScore += calculatePlaystyleScore(playerInfo.playstyle, eligibleTeam.desiredPlaystyle) * weights.playstyle
-    return finalScore
+	let finalScore = 0
+	const playerSkillLevel = translateExperience(playerInfo.yearsOfExperience)
+	finalScore +=
+		calculateLocationScore(playerInfo.location, eligibleTeam.location) *
+		weights.location
+	finalScore +=
+		calculateSkillLevelScore(playerSkillLevel, eligibleTeam.desiredSkillLevel) *
+		weights.skillLevel
+	finalScore +=
+		calculatePlaystyleScore(playerInfo.playstyle, eligibleTeam.desiredPlaystyle) *
+		weights.playstyle
+	return finalScore
 }
 
 function reccommendationAlgorithm(playerInfo, teams) {
-    const eligibleTeams = filterIneligibleTeams(playerInfo, teams)
-    let teamScores = []
-    for (const team of eligibleTeams) {
-        const score = calculateTeamScore(playerInfo, team)
-        teamScores.push({ team: team, score: score })
-    }
-    teamScores.sort((a, b) => b.score - a.score)
-    return teamScores
+	const eligibleTeams = filterIneligibleTeams(playerInfo, teams)
+	let teamScores = []
+	for (const team of eligibleTeams) {
+		const score = calculateTeamScore(playerInfo, team)
+		teamScores.push({ team: team, score: score })
+	}
+	teamScores.sort((a, b) => b.score - a.score)
+	return teamScores
 }
-
 
 const rankedTeams = reccommendationAlgorithm(generatedPlayerInfo1, teams)
