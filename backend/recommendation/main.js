@@ -1,9 +1,4 @@
-const {
-	translateExperience,
-	calculateLocationScore,
-	calculateSkillLevelScore,
-	calculatePlaystyleScore,
-} = require("./utils.js")
+import { translateExperience, calculateLocationScore, calculateSkillLevelScore, calculatePlaystyleScore } from "./utils.js"
 
 
 const weights = {
