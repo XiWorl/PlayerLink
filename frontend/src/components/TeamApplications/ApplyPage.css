@@ -169,6 +169,10 @@
   background-color: #b11200;
 }
 
+.post-information-status.accepted {
+  background-color: #0ce600;
+}
+
 .post-information button:hover {
   background-color: #005885;
 }

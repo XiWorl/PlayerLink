@@ -116,11 +116,20 @@ server.post("/account/application", async (req, res, next) => {
 			},
 		})
 
+		const playerAccountData = await prisma.player.findUnique({
+			where: { accountId: req.body.playerAccountId },
+		})
+
 		if (playerApplicationToTeam != null) {
 			res.status(400).json({
 				error: "Cannot create application, player has already applied",
 			})
 			return
+		}
+		if (playerAccountData.rosterAccountId != null) {
+			return res.status(400).json({
+				error: "Cannot create application, player is already on a team",
+			})
 		}
 
 		const createdApplication = await prisma.application.create({
@@ -245,6 +254,11 @@ server.patch("/applications/status/update", async (req, res, next) => {
 				error: "Cannot update application, application does not exist in database",
 			})
 		}
+		if (playerApplicationToTeam.status != "pending") {
+			return res.status(400).json({
+				error: "Cannot update application, application has already been modified in the past",
+			})
+		}
 		const updatedApplication = await prisma.application.update({
 			where: {
 				playerAccountId_teamAccountId: {
@@ -256,6 +270,33 @@ server.patch("/applications/status/update", async (req, res, next) => {
 				status: req.body.status,
 			},
 		})
+		if (updatedApplication.status == "accepted") {
+			const updatedPlayerData = await prisma.player.update({
+				where: { accountId: req.body.playerAccountId },
+				data: {
+					rosterAccountId: req.body.teamAccountId,
+				},
+			})
+			console.log(updatedPlayerData)
+			const updatedTeamData = await prisma.team.update({
+				where: { accountId: req.body.teamAccountId },
+				data: {
+					roster: {
+						push: req.body.playerAccountId,
+					},
+				},
+			})
+			console.log(updatedTeamData)
+
+			// const updateTeamData = await prisma.team.update({
+			// 	where: { accountId: req.body.teamAccountId },
+
+			// 	data: {
+			// 		rosterAccountId: req.body.teamAccountId,
+			// 	},
+			// })
+			// console.log(updatedTeamData)
+		}
 		console.log(updatedApplication)
 		return res.status(200).json(updatedApplication)
 	} catch (error) {

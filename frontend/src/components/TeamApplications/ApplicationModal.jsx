@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect, use } from "react"
 import { useNavigate } from "react-router-dom"
 import { ApplicationTileContext } from "./ApplicationTile"
 import { BASEURL, TOKEN_STORAGE_KEY, getAccountDataFromSessionStorage } from "../../utils/globalUtils"
@@ -46,11 +46,19 @@ async function submitApplication(playerAccountId, teamAccountId, statusValue) {
 }
 
 export function ApplicationModal() {
-	const [statusValue, setStatusValue] = useState(DEFAULT_SELECT_VALUE)
 	const navigate = useNavigate()
-	const { profileInformation, setIsApplicationModalOpen } =
+	const [statusValue, setStatusValue] = useState(DEFAULT_SELECT_VALUE)
+	const { profileInformation, setIsApplicationModalOpen, applicationStatus } =
 	useContext(ApplicationTileContext)
 	const teamAccountId = getAccountDataFromSessionStorage().id
+
+	useEffect(() => {
+		if (profileInformation.rosterAccountId != null || applicationStatus != AppicationStatusOptions.PENDING) {
+			viewProfile(profileInformation, navigate)
+			return
+		}
+	}, [profileInformation, applicationStatus])
+
 
 	function handleInputChange(event) {
 		setStatusValue(event.target.value)

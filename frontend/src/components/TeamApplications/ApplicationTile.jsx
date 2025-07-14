@@ -85,7 +85,7 @@ export function ApplicationTile({ applicationData }) {
 
 	return (
 		<ApplicationTileContext.Provider
-			value={{ profileInformation, setIsApplicationModalOpen }}
+			value={{ profileInformation, setIsApplicationModalOpen, applicationStatus }}
 		>
 			{isApplicationModalOpen && (
 				<ApplicationModal
