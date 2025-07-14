@@ -12,6 +12,7 @@ async function onLoginSuccess(setSignupModalVisible, credentialResponse, navigat
 	sessionStorage.setItem(GOOGLE_EMAIL_KEY, token.email)
 
 	const loginResult = await onLoginAttempt(token.email)
+	console.log(loginResult)
 	if (loginResult === LOGIN_FAILURE) {
 		setSignupModalVisible(true)
 		return

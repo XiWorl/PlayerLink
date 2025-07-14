@@ -30,7 +30,6 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		delete body.teamName
 	}
 	delete body.playerId
-	delete body.accountId
 	body.accountType = selectedAccountType
 
 	try {
@@ -43,7 +42,7 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 			body: JSON.stringify(body),
 		})
 		await response.json()
-		// navigate(0)
+		navigate(0)
 	} catch (error) {
 	}
 }

@@ -319,6 +319,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 	}
 
 	try {
+		console.log("-1")
 		if (req.body == null) {
 			res.status(400).json({
 				error: "Invalid request body: JSON payload is incomplete or malformed",
@@ -331,10 +332,14 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		// delete req.body.email
 		// delete req.body.accountId
 		const accountType = req.body.accountType
+		const accountId = req.body.accountId
 		delete req.body.accountType
+		delete req.body.accountId
+
+		console.log(accountType, accountType)
 
 		const existingPlayer = await prisma[accountType].findUnique({
-			where: { accountId: 1 },
+			where: { accountId: accountId },
 		})
 
 		if (!existingPlayer) {
@@ -343,7 +348,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		}
 
 		const updatedPlayerData = await prisma[accountType].update({
-			where: { accountId: 1 },
+			where: { accountId: accountId },
 			data: req.body,
 		})
 

@@ -1,5 +1,4 @@
 import { AboutEditButton, BioEditButton } from "./EditButton"
-// import { EditProfileButton } from "./EditProfile"
 import EditProfileButton from "./EditProfile"
 import { createContext, useState } from "react"
 import { AccountType } from "../../utils/globalUtils"

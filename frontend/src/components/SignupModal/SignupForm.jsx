@@ -15,6 +15,7 @@ import { DEFAULT_FORM_VALUE } from "./utils.jsx"
 const optionalSignupInformation = ["lastName"]
 
 async function onFormValid(formData, selectedAccountType, navigate) {
+	console.log("Form data:", formData)
 	const body = {
 		...formData[selectedAccountType],
 		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),

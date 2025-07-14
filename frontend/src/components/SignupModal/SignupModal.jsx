@@ -1,7 +1,13 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { createContext } from "react"
-import { AccountType, GOOGLE_EMAIL_KEY, BASEURL, TOKEN_STORAGE_KEY } from "../../utils/globalUtils"
+import {
+	AccountType,
+	GOOGLE_EMAIL_KEY,
+	BASEURL,
+	TOKEN_STORAGE_KEY,
+	ACCOUNT_INFORMATION_KEY,
+} from "../../utils/globalUtils"
 import ModalBody from "../TheModal/ModalBody"
 import "./SignupModal.css"
 export const SignupModalContext = createContext()
@@ -21,12 +27,16 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 			body: JSON.stringify(body),
 		})
 
-		const data = await response.json()
-		sessionStorage.setItem(TOKEN_STORAGE_KEY, data.token)
+		const accountData = await response.json()
+		console.log("Signup response:", accountData)
+
+		sessionStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
+		sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 
 		const navigationURL =
-			data.accountType === AccountType.PLAYER ? "/profiles/" : "/teams/"
-		navigate(`${navigationURL}${data.id}`)
+			accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
+		console.log("navigationURL", navigationURL, accountData.id)
+		navigate(`/${navigationURL}/${accountData.id}`)
 	} catch (error) {
 		console.error("Error while trying to create account:", error)
 	}
@@ -38,6 +48,7 @@ export default function SignupModal({ onClose }) {
 	const [isModalOpen, setIsModalOpen] = useState(true)
 
 	const handleSubmit = (formData, accountType) => {
+		console.log("Submitting form data:", formData)
 		onFormValid(formData, accountType, navigate)
 	}
 
