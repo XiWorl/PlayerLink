@@ -1,5 +1,5 @@
 import { LOCATION_OPTIONS } from "../ServerUtils.js"
-const NearbyLocationScores = {
+const NearbyLocations = {
 	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
 	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
 	[LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
@@ -37,7 +37,7 @@ export function translateExperience(yearsOfExperience) {
 export function calculateLocationScore(playerLocation, teamLocation) {
 	if (playerLocation === teamLocation) {
 		return 1
-	} else if (NearbyLocationScores[playerLocation].has(teamLocation)) {
+	} else if (NearbyLocations[playerLocation].has(teamLocation)) {
 		return 0.5
 	} else {
 		return 0
