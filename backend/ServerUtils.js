@@ -26,7 +26,10 @@ export const GameOptions = {
 export const PlaystyleOptions = {
 	AGGRESSIVE: "Aggressive",
 	DEFENSIVE: "Defensive",
-	ADAPTIVE: "Adaptive",
+	ADAPTABLE: "Adaptable",
+	TACTICAL: "Tactical",
+	BALANCED: "Balanced",
+	SUPPORTIVE: "Supportive",
 }
 export const SkillLevelOptions = {
 	SEMI_PRO: "Semi-Pro",
