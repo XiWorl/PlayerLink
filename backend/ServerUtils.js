@@ -10,12 +10,6 @@ export const LOCATION_OPTIONS = {
 	OCEANIA: "Oceania",
 }
 
-export const EditType = {
-	ABOUT: "about",
-	BIO: "bio",
-	OVERVIEW: "overview",
-	DESCRIPTION: "description",
-}
 export const YearsOfExperienceOptions = Object.freeze({
 	ZERO_TO_ONE: "0-1",
 	TWO_TO_THREE: "2-3",

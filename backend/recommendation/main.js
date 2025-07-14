@@ -5,10 +5,10 @@ import {
 	calculatePlaystyleScore,
 } from "./utils.js"
 
-const weights = {
-	location: 2,
-	skillLevel: 1.2,
-	playstyle: 0.8,
+const Weights = {
+	LOCATION: 2,
+	SKILL_LEVEL: 1.2,
+	PLAYSTYLE: 0.8,
 }
 
 function filterIneligibleTeams(playerInfo, teams) {
@@ -39,22 +39,25 @@ function filterIneligibleTeams(playerInfo, teams) {
 
 function calculateTeamScore(playerInfo, eligibleTeam) {
 	let finalScore = 0
+
 	const playerSkillLevel = translateExperience(playerInfo.yearsOfExperience)
 	finalScore +=
 		calculateLocationScore(playerInfo.location, eligibleTeam.location) *
-		weights.location
+		Weights.LOCATION
 	finalScore +=
 		calculateSkillLevelScore(playerSkillLevel, eligibleTeam.desiredSkillLevel) *
-		weights.skillLevel
+		Weights.SKILL_LEVEL
 	finalScore +=
 		calculatePlaystyleScore(playerInfo.playstyle, eligibleTeam.desiredPlaystyle) *
-		weights.playstyle
+		Weights.PLAYSTYLE
+
 	return finalScore
 }
 
 function recommendationAlgorithm(playerInfo, teams) {
 	const eligibleTeams = filterIneligibleTeams(playerInfo, teams)
 	let teamScores = []
+
 	for (const team of eligibleTeams) {
 		const score = calculateTeamScore(playerInfo, team)
 		teamScores.push({ team: team, score: score })
