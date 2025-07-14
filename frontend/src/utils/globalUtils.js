@@ -50,7 +50,7 @@ export function isLoggedIn() {
 	)
 }
 
-export function getAccountDataFromLocalStorage() {
+export function getAccountDataFromSessionStorage() {
 	const accountInformation = sessionStorage.getItem(ACCOUNT_INFORMATION_KEY)
 	const parsedAccountInformation = accountInformation && JSON.parse(accountInformation)
 

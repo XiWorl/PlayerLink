@@ -11,9 +11,7 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		...formData,
 		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),
 	}
-	console.log(formData)
 
-	console.log("Body:", body)
 	try {
 		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
 			method: "POST",
@@ -40,15 +38,12 @@ export default function SignupModal({ onClose }) {
 	const [isModalOpen, setIsModalOpen] = useState(true)
 
 	const handleSubmit = (formData, accountType) => {
-		console.log("User data:", formData)
-		console.log("Account type:", accountType)
 		onFormValid(formData, accountType, navigate)
 	}
 
 	const handleClose = () => {
 		setIsModalOpen(false)
 		onClose()
-		console.log("Closing signup modal")
 	}
 
 	const title = "Sign Up"

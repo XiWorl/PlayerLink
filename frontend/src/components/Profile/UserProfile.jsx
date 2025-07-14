@@ -9,32 +9,6 @@ import ModalBody from "../TheModal/ModalBody"
 
 export const UserProfileContext = createContext()
 
-function MyComponent({ title }) {
-	const [isModalOpen, setIsModalOpen] = useState(false)
-
-	const handleSubmit = (formData) => {
-		console.log("User data:", formData)
-	}
-
-	const handleClose = () => {
-		setIsModalOpen(false)
-	}
-
-	return (
-		<div>
-			<button onClick={() => setIsModalOpen(true)}>Open User Info Modal</button>
-
-			<ModalBody
-				isOpen={isModalOpen}
-				onClose={handleClose}
-				onSubmit={handleSubmit}
-				title={title}
-				accountType="team"
-			/>
-		</div>
-	)
-}
-
 export default function UserProfile({ isLoading, accountData }) {
 	if (isLoading) {
 		return <h1>Loading...</h1>

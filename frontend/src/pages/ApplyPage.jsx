@@ -1,11 +1,11 @@
-import { getAccountDataFromLocalStorage } from "../utils/globalUtils"
+import { getAccountDataFromSessionStorage } from "../utils/globalUtils"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { Applications } from "../components/TeamApplications/Applications"
 import Navbar from "../components/Navbar/Navbar"
 
 async function validateUserPermissionToViewPage(setAccountData, id) {
-    const accountData = getAccountDataFromLocalStorage()
+    const accountData = getAccountDataFromSessionStorage()
     if (accountData === null) {
         return false
     }

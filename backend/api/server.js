@@ -204,8 +204,6 @@ server.post("/api/signup/team", async (req, res, next) => {
 			},
 		})
 
-		console.log(createdAccount)
-
 		const jwtToken = await registerSessionToken(createdAccount)
 		const clientAccountInformation = formatClientAccountInformation(
 			createdAccount,
@@ -245,13 +243,11 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		// delete req.body.accountId
 		const accountType = req.body.accountType
 		delete req.body.accountType
-		console.log(req.body)
 
 
 		const existingPlayer = await prisma[accountType].findUnique({
 			where: { accountId: 1 },
 		})
-		console.log(existingPlayer)
 
 		if (!existingPlayer) {
 			res.status(404).json({ error: "Player record not found for this account" })

@@ -6,14 +6,14 @@ import {
 	AccountType,
 	BASEURL,
 	TOKEN_STORAGE_KEY,
-	getAccountDataFromLocalStorage,
+	getAccountDataFromSessionStorage,
 } from "../../utils/globalUtils"
 import ModalBody from "../TheModal/ModalBody"
 import "../SignupModal/SignupModal.css"
 export const SignupModalContext = createContext()
 
 async function onFormValid(formData, selectedAccountType, navigate) {
-	const token = localStorage.getItem(TOKEN_STORAGE_KEY)
+	const token = sessionStorage.getItem(TOKEN_STORAGE_KEY)
 	if (token == null) {
 		return
 	}
@@ -29,7 +29,6 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		body.name = body.teamName
 		delete body.teamName
 	}
-	console.log("We here:", body)
 	delete body.playerId
 	delete body.accountId
 	body.accountType = selectedAccountType
@@ -46,12 +45,11 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		await response.json()
 		// navigate(0)
 	} catch (error) {
-		console.log("Error:", error)
 	}
 }
 
 async function autoPopulateForm(accountType, setAutoPopulatedData) {
-	const accountData = getAccountDataFromLocalStorage()
+	const accountData = getAccountDataFromSessionStorage()
 	const profileData = await getProfileData(accountType, accountData.id)
 	setAutoPopulatedData(profileData)
 }
@@ -73,7 +71,6 @@ export default function EditProfileButton({ accountType }) {
 	}, [])
 
 	const handleSubmit = (formData, accountType) => {
-		console.log("User data:", formData)
 		onFormValid(formData, accountType, navigate)
 	}
 

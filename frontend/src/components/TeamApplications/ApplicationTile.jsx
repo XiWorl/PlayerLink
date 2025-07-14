@@ -1,5 +1,5 @@
 import { AccountType } from "../../utils/globalUtils"
-import { getAccountDataFromLocalStorage } from "../../utils/globalUtils"
+import { getAccountDataFromSessionStorage } from "../../utils/globalUtils"
 import { ApplicationModal } from "./ApplicationModal"
 import { useEffect, useState, createContext } from "react"
 import { fetchProfileInformation } from "./Utils"
@@ -32,7 +32,7 @@ function getPostContent(
 export function ApplicationTile({ applicationData }) {
 	const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false)
 	const [profileInformation, setProfileInformation] = useState(null)
-	const accountData = getAccountDataFromLocalStorage()
+	const accountData = getAccountDataFromSessionStorage()
 	const applicationStatus = applicationData.status
 
 	const oppositeAccountTypeOfAccount =
