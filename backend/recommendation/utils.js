@@ -19,37 +19,43 @@ export const YearsOfExperienceOptions = Object.freeze({
 })
 
 export function translateExperience(yearsOfExperience) {
-    if (yearsOfExperience === YearsOfExperienceOptions.ZERO_TO_ONE || yearsOfExperience === YearsOfExperienceOptions.TWO_TO_THREE) {
-        return "Semi-Pro"
-    } else if (yearsOfExperience === YearsOfExperienceOptions.FOUR_TO_FIVE || yearsOfExperience === YearsOfExperienceOptions.SIX_TO_TEN) {
-        return "Pro"
-    } else if (yearsOfExperience === YearsOfExperienceOptions.TENPLUS) {
-        return "Elite"
-    }
+	if (
+		yearsOfExperience === YearsOfExperienceOptions.ZERO_TO_ONE ||
+		yearsOfExperience === YearsOfExperienceOptions.TWO_TO_THREE
+	) {
+		return "Semi-Pro"
+	} else if (
+		yearsOfExperience === YearsOfExperienceOptions.FOUR_TO_FIVE ||
+		yearsOfExperience === YearsOfExperienceOptions.SIX_TO_TEN
+	) {
+		return "Pro"
+	} else if (yearsOfExperience === YearsOfExperienceOptions.TENPLUS) {
+		return "Elite"
+	}
 }
 
 export function calculateLocationScore(playerLocation, teamLocation) {
-    if (playerLocation === teamLocation) {
-        return 1
-    } else if (nearbyLocationScores[playerLocation].has(teamLocation)) {
-        return 0.5
-    } else {
-        return 0
-    }
+	if (playerLocation === teamLocation) {
+		return 1
+	} else if (nearbyLocationScores[playerLocation].has(teamLocation)) {
+		return 0.5
+	} else {
+		return 0
+	}
 }
 
 export function calculateSkillLevelScore(playerSkillLevel, teamSkillLevel) {
-    if (playerSkillLevel === teamSkillLevel) {
-        return 1
-    } else {
-        return 0
-    }
+	if (playerSkillLevel === teamSkillLevel) {
+		return 1
+	} else {
+		return 0
+	}
 }
 
 export function calculatePlaystyleScore(playerPlaystyle, teamPlaystyles) {
-    if (teamPlaystyles.includes(playerPlaystyle)) {
-        return 1
-    } else {
-        return 0
-    }
+	if (teamPlaystyles.includes(playerPlaystyle)) {
+		return 1
+	} else {
+		return 0
+	}
 }

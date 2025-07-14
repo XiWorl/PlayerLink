@@ -1,5 +1,9 @@
-import { translateExperience, calculateLocationScore, calculateSkillLevelScore, calculatePlaystyleScore } from "./utils.js"
-
+import {
+	translateExperience,
+	calculateLocationScore,
+	calculateSkillLevelScore,
+	calculatePlaystyleScore,
+} from "./utils.js"
 
 const weights = {
 	location: 2,
@@ -60,8 +64,7 @@ function recommendationAlgorithm(playerInfo, teams) {
 }
 
 export function getTeamRecommendations(playerInfo, teams) {
-    console.log("playerInfo", playerInfo)
-	const rankedTeams = recommendationAlgorithm(generatedPlayerInfo1, teams)
+	const rankedTeams = recommendationAlgorithm(playerInfo, teams)
 	const firstTenRankedTeams = rankedTeams.slice(0, 10)
 	return firstTenRankedTeams
 }

@@ -112,7 +112,6 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
 	try {
 		const playerAccountId = parseInt(req.params.playerAccountId)
-		console.log(playerAccountId)
 		const playerData = await prisma.player.findUnique({
 			where: { accountId: playerAccountId },
 		})
