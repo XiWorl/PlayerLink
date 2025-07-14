@@ -27,7 +27,6 @@ function convertToBoolean(value) {
 }
 
 server.get("/teams/:teamId", async (req, res, next) => {
-	console.log(req.params.teamId)
 	try {
 		const teamId = parseInt(req.params.teamId)
 		const teamData = await prisma.team.findUnique({ where: { accountId: teamId } })
@@ -215,6 +214,55 @@ server.post("/api/signup/team", async (req, res, next) => {
 		next(error)
 	}
 })
+
+server.patch("/applications/status/update", async (req, res, next) => {
+	const authorizationHeader = req.headers.authorization
+	const token = authorizationHeader.replace("Bearer ", "")
+	const verifiedAuthorization = await verifySessionToken(token)
+
+	if (
+		verifiedAuthorization == null ||
+		!verifiedAuthorization ||
+		!verifiedAuthorization.id
+	) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+
+	console.log(req.body)
+	try {
+		const playerApplicationToTeam = await prisma.application.findUnique({
+			where: {
+				playerAccountId_teamAccountId: {
+					playerAccountId: req.body.playerAccountId,
+					teamAccountId: req.body.teamAccountId,
+				},
+			},
+		})
+		//TODO: change this error code
+		if (playerApplicationToTeam == null) {
+			return res.status(400).json({
+				error: "Cannot update application, application does not exist in database",
+			})
+		}
+		const updatedApplication = await prisma.application.update({
+			where: {
+				playerAccountId_teamAccountId: {
+					playerAccountId: req.body.playerAccountId,
+					teamAccountId: req.body.teamAccountId,
+				},
+			},
+			data: {
+				status: req.body.status,
+			},
+		})
+		console.log(updatedApplication)
+		return res.status(200).json(updatedApplication)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.patch("/api/profiles/edit/account", async (req, res, next) => {
 	const authorizationHeader = req.headers.authorization
 	const token = authorizationHeader.replace("Bearer ", "")
@@ -230,7 +278,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 	}
 
 	try {
-		if (req.body == null ) {
+		if (req.body == null) {
 			res.status(400).json({
 				error: "Invalid request body: JSON payload is incomplete or malformed",
 			})
@@ -243,7 +291,6 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		// delete req.body.accountId
 		const accountType = req.body.accountType
 		delete req.body.accountType
-
 
 		const existingPlayer = await prisma[accountType].findUnique({
 			where: { accountId: 1 },
