@@ -68,8 +68,8 @@ export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
 }
 
 export function AboutEditButton() {
-	const { loggedInAccountData } = useContext(UserProfileContext)
-	if (!loggedInAccountData) return null
+	const { loggedInAccountData, id } = useContext(UserProfileContext)
+	if (!loggedInAccountData || loggedInAccountData.id != id) return null
 
 	return (
 		<EditButtonTemplate
@@ -80,8 +80,8 @@ export function AboutEditButton() {
 }
 
 export function BioEditButton() {
-	const { loggedInAccountData } = useContext(UserProfileContext)
-	if (!loggedInAccountData) return null
+	const { loggedInAccountData, id } = useContext(UserProfileContext)
+	if (!loggedInAccountData || loggedInAccountData.id != id) return null
 
 	return (
 		<EditButtonTemplate
