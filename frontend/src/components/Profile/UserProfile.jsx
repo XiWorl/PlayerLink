@@ -1,8 +1,6 @@
-import { EditProfileTextButton } from "./EditButton"
-import {
-	onBioModalSubmitButtonClicked,
-	onAboutModalSubmitButtonClicked,
-} from "./EditButtonUtils"
+import { EditProfileTextButton, TypeOfEditButton } from "./EditButton"
+import { AccountType } from "../../utils/globalUtils"
+import { modalSubmitHelper } from "./EditButtonUtils"
 import { useParams } from "react-router-dom"
 import { createContext, useState } from "react"
 import "./ProfilePage.css"
@@ -36,7 +34,15 @@ export default function UserProfile({ isLoading, accountData }) {
 							<p className="profile-title-text">{`${bio}`}</p>
 							<EditProfileTextButton
 								modalTitle={"Edit Bio"}
-								onSubmitButtonClicked={onBioModalSubmitButtonClicked}
+								onSubmitButtonClicked={(textValue) =>
+									modalSubmitHelper(
+										textValue,
+										TypeOfEditButton.BIO,
+										AccountType.PLAYER,
+										id,
+										setBio
+									)
+								}
 								profileId={id}
 							/>
 						</div>
@@ -48,7 +54,15 @@ export default function UserProfile({ isLoading, accountData }) {
 						<h3>About</h3>
 						<EditProfileTextButton
 							modalTitle={"Edit About"}
-							onSubmitButtonClicked={onAboutModalSubmitButtonClicked}
+							onSubmitButtonClicked={(textValue) =>
+								modalSubmitHelper(
+									textValue,
+									TypeOfEditButton.ABOUT,
+									AccountType.PLAYER,
+									id,
+									setAbout
+								)
+							}
 							profileId={id}
 						/>
 					</div>

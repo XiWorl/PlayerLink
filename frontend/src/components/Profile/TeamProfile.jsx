@@ -1,8 +1,5 @@
-import { EditProfileTextButton } from "./EditButton"
-import {
-	onDescriptionModalSubmitButtonClicked,
-	onOverviewModalSubmitButtonClicked,
-} from "./EditButtonUtils"
+import { EditProfileTextButton, TypeOfEditButton } from "./EditButton"
+import { modalSubmitHelper } from "./EditButtonUtils"
 import { createContext, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
@@ -43,8 +40,14 @@ export default function TeamProfile({ isLoading, accountData }) {
 							}`}</p>
 							<EditProfileTextButton
 								modalTitle={"Edit Description"}
-								onSubmitButtonClicked={
-									onDescriptionModalSubmitButtonClicked
+								onSubmitButtonClicked={(textValue) =>
+									modalSubmitHelper(
+										textValue,
+										TypeOfEditButton.DESCRIPTION,
+										AccountType.TEAM,
+										id,
+										setDescription
+									)
 								}
 								profileId={id}
 							/>
@@ -73,7 +76,15 @@ export default function TeamProfile({ isLoading, accountData }) {
 						<h3>Overview</h3>
 						<EditProfileTextButton
 							modalTitle={"Edit Overview"}
-							onSubmitButtonClicked={onOverviewModalSubmitButtonClicked}
+							onSubmitButtonClicked={(textValue) =>
+								modalSubmitHelper(
+										textValue,
+										TypeOfEditButton.OVERVIEW,
+										AccountType.TEAM,
+										id,
+										setOverview
+									)
+							}
 							profileId={id}
 						/>
 					</div>
