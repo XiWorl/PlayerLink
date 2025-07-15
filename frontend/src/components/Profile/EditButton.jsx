@@ -38,12 +38,6 @@ function EditButtonTemplate({ onSubmitButtonClicked, modalTitle }) {
 	)
 }
 
-function verifyUserOwnsProfile(id) {
-	const accountData = getAccountDataFromSessionStorage()
-	if (!accountData || id != getAccountDataFromSessionStorage().id) return false
-	return true
-}
-
 export function EditProfileTextButton({ modalTitle, onSubmitButtonClicked, profileId }) {
 	if (!verifyUserOwnsProfile(profileId)) return null
 

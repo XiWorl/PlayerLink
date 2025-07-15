@@ -9,8 +9,9 @@ import "./ProfilePage.css"
 const defaultProfileInfo = ""
 export const TeamProfileContext = createContext()
 
-export default function TeamProfile({ isLoading, accountData }) {
-	if (isLoading) {
+export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
+	if (isLoading || accountData.playerId != null) {
+		setIsLoading(true)
 		return <h1>Loading...</h1>
 	}
 
