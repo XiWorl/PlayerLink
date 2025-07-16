@@ -7,6 +7,7 @@ const {
 	formatClientAccountInformation,
 	AccountType,
 	dataPagination,
+	updatePlayerGamingPerformance
 } = require("./utils")
 const { getFornitePlayerData } = require("../externalApi/main")
 const express = require("express")
@@ -182,6 +183,8 @@ server.post("/api/signup/player", async (req, res, next) => {
 			jwtToken
 		)
 
+		updatePlayerGamingPerformance(req.body.gameUsernames)
+		
 		return res.status(200).json(clientAccountInformation)
 	} catch (error) {
 		next(error)

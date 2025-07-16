@@ -57,7 +57,27 @@ export async function createTeamApplication(playerAccountId, teamAccountId) {
 			body: JSON.stringify({
 				teamAccountId: teamAccountId,
 				playerAccountId: playerAccountId,
-				status: PENDING_APPLICATION_STATUS
+				status: PENDING_APPLICATION_STATUS,
+			}),
+		})
+		const data = await response.json()
+		return data
+	} catch (error) {
+		console.error("Error creating application:", error)
+	}
+}
+
+export async function updateGamingUsernames(playerAccountId, gameUsernames) {
+	console.log(gamingUsernames)
+	try {
+		const response = await fetch(`${BASEURL}/profiles/games/update`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				playerAccountId: playerAccountId,
+				gameUsernames: gameUsernames,
 			}),
 		})
 		const data = await response.json()

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken"
+import { getFortnitePlayerData, getApexPlayerData } from "../externalApi/main.js"
 export const EditType = { ABOUT: "about", BIO: "bio", OVERVIEW: "overview" }
 export const AccountType = { PLAYER: "player", TEAM: "team" }
 import dotenv from "dotenv"
@@ -89,5 +90,29 @@ export async function dataPagination(prisma, accountType, query) {
 		data: accountsInPage,
 		totalPages: totalPages,
 		currentPage: page,
+	}
+}
+
+export async function updatePlayerGamingPerformance(gameUsernames) {
+	let gamePerformance = {}
+
+	if (gameUsernames["Fortnite"] != null) {
+		const fortnitePlayerData = await getFortnitePlayerData(
+			gameUsernames["Fortnite"]
+		)
+		if (fortnitePlayerData != null) {
+			gamePerformance["Fortnite"] = fortnitePlayerData
+		}
+		console.log(fortnitePlayerData)
+	}
+	
+	if (gameUsernames["Apex Legends"] != null) {
+		const apexPlayerData = await getApexPlayerData(
+			gameUsernames["Apex Legends"]
+		)
+		if (apexPlayerData != null) {
+			gamePerformance["Apex Legends"] = apexPlayerData
+		}
+		console.log(apexPlayerData)
 	}
 }

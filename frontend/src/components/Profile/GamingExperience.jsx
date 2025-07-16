@@ -1,3 +1,5 @@
+import { updateGamingUsernames } from "../../api"
+
 function GameInformation({ accountData }) {
     console.log(accountData)
 	return (
@@ -17,6 +19,7 @@ function GameInformation({ accountData }) {
 }
 
 export default function GamingExperience({ accountData }) {
+    console.log(accountData)
 	return (
 		<div className="profile-gaming-container">
 			<div className="profile-gaming-game">
