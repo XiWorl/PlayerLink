@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { GameOptions } from "../../utils/globalUtils"
+
 function GameInformation({ gameName, gamePerformanceData }) {
 	const performanceMetric = gameName == GameOptions.FORTNITE ? "K/D" : "Elo"
 
@@ -24,14 +25,8 @@ export default function GamingExperience({ accountData }) {
 	const [displayedGames, setDisplayedGames] = useState([])
 
 	useEffect(() => {
-		for (const game in accountData.games) {
-			setDisplayedGames([
-				...displayedGames,
-				<GameInformation
-					gameName={game}
-					gamePerformanceData={accountData.games[game]}
-				/>,
-			])
+        for (const game in accountData.games) {
+            setDisplayedGames([...displayedGames, <GameInformation gameName={game} gamePerformanceData={accountData.games[game]} />])
 		}
 	}, [])
 	return <div className="profile-gaming-container">{displayedGames}</div>
