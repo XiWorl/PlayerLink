@@ -1,17 +1,16 @@
 import { TOKEN_SESSION_KEY, BASEURL, AccountType } from "../../utils/globalUtils"
 import { LOGIN_FAILURE } from "../../api"
 
-export async function modalSubmitHelper(textValue, detailType, accountType, id) {
+export async function modalSubmitHelper(textValue, detailType, accountType, id, setButtonText) {
 	const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
 	if (token == null) {
 		return
 	}
 
-	const profileType = accountType === AccountType.PLAYER ? "profiles" : "teams"
 	detailType = detailType.toUpperCase()
 
 	try {
-		const response = await fetch(`${BASEURL}/api/${profileType}/edit`, {
+		const response = await fetch(`${BASEURL}/api/profiles/edit`, {
 			method: "PATCH",
 			headers: {
 				"Content-Type": "application/json",
@@ -21,12 +20,14 @@ export async function modalSubmitHelper(textValue, detailType, accountType, id) 
 				accountId: id,
 				editType: detailType,
 				value: textValue,
+				accountType: accountType,
 			}),
 		})
 
 		if (response.ok === true) {
-			const data = await response.json()
-			return data
+			const profileTextInformation = await response.json()
+			setButtonText(profileTextInformation.updatedValue)
+			return profileTextInformation
 		} else {
 			return LOGIN_FAILURE
 		}

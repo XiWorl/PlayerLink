@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken"
-export const EditType = { ABOUT: "about", BIO: "bio", OVERVIEW: "overview" }
-export const AccountType = { PLAYER: "player", TEAM: "team" }
+export const EditType = {
+	ABOUT: "about",
+	BIO: "bio",
+	OVERVIEW: "overview",
+	DESCRIPTION: "description",
+}
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -39,17 +43,16 @@ export function formatClientAccountInformation(accountInformation, jwtToken) {
 	return clientResponseInformation
 }
 
-export async function editPlayerProfileInformation(prisma, loggedInUserId, body) {
+export async function editProfileInformation(prisma, loggedInUserId, body) {
 	if (body.editType == null || body.value == null || EditType[body.editType] == null) {
-		return false
+		return null
 	}
-	if (body.accountId == null || loggedInUserId != body.accountId) {
-		return false
+	if (body.accountId == null || loggedInUserId != body.accountId || !body.accountType) {
+		return null
 	}
 
-	const accountType = "player"
 	const sectionOfProfileToEdit = EditType[body.editType]
-	const updatedPlayerData = await prisma[accountType].update({
+	const updatedPlayerData = await prisma[body.accountType].update({
 		where: { accountId: loggedInUserId },
 		data: {
 			[sectionOfProfileToEdit]: body.value,
@@ -70,6 +73,20 @@ export async function verifySessionToken(token) {
 	} catch (err) {
 		return null
 	}
+}
+
+export async function verifyUserAuthorization(authorizationHeader) {
+	const token = authorizationHeader.replace("Bearer ", "")
+	const verifiedAuthorization = await verifySessionToken(token)
+
+	if (
+		verifiedAuthorization == null ||
+		!verifiedAuthorization ||
+		!verifiedAuthorization.id
+	) {
+		return null
+	}
+	return verifiedAuthorization
 }
 
 export async function dataPagination(prisma, accountType, query) {

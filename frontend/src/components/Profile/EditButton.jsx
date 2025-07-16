@@ -1,45 +1,16 @@
-import { AccountType, getAccountDataFromSessionStorage } from "../../utils/globalUtils"
+import { getAccountDataFromSessionStorage } from "../../utils/globalUtils"
 import { CustomizableModal } from "../CustomizableModal/CustomizableModal"
 import { ModalTextBox } from "../CustomizableModal/utils"
-import { modalSubmitHelper } from "./EditButtonUtils"
-import { useState, useContext } from "react"
-import { UserProfileContext } from "./UserProfile"
+import { useState } from "react"
 export const TypeOfEditButton = {
 	BIO: "bio",
 	ABOUT: "about",
+	OVERVIEW: "overview",
+	DESCRIPTION: "description",
 }
 
-function onAboutModalSubmitButtonClicked(textValue) {
-	const { setAbout, id } = useContext(UserProfileContext)
-	return async function () {
-		const updatedAboutObject = await modalSubmitHelper(
-			textValue,
-			TypeOfEditButton.ABOUT,
-			AccountType.PLAYER,
-			id
-		)
-		if (updatedAboutObject.updatedValue != null)
-			setAbout(updatedAboutObject.updatedValue)
-	}
-}
-
-function onBioModalSubmitButtonClicked(textValue) {
-	const { setBio, id } = useContext(UserProfileContext)
-	return async function () {
-		const updatedBioObject = await modalSubmitHelper(
-			textValue,
-			TypeOfEditButton.BIO,
-			AccountType.PLAYER,
-			id
-		)
-		if (updatedBioObject.updatedValue != null) setBio(updatedBioObject.updatedValue)
-	}
-}
-
-export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
+function EditButtonTemplate({ onSubmitButtonClicked, modalTitle }) {
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	const modalTitle =
-		detailType === TypeOfEditButton.BIO ? "Edit Your Bio" : "Edit Your About"
 
 	const textBox = (
 		<ModalTextBox
@@ -67,26 +38,13 @@ export function EditButtonTemplate({ detailType, onSubmitButtonClicked }) {
 	)
 }
 
-export function AboutEditButton() {
-	const { loggedInAccountData, id } = useContext(UserProfileContext)
-	if (!loggedInAccountData || loggedInAccountData.id != id) return null
+export function EditProfileTextButton({ modalTitle, onSubmitButtonClicked, profileId }) {
+	if (!verifyUserOwnsProfile(profileId)) return null
 
 	return (
 		<EditButtonTemplate
-			detailType={TypeOfEditButton.ABOUT}
-			onSubmitButtonClicked={onAboutModalSubmitButtonClicked}
-		/>
-	)
-}
-
-export function BioEditButton() {
-	const { loggedInAccountData, id } = useContext(UserProfileContext)
-	if (!loggedInAccountData || loggedInAccountData.id != id) return null
-
-	return (
-		<EditButtonTemplate
-			detailType={TypeOfEditButton.BIO}
-			onSubmitButtonClicked={onBioModalSubmitButtonClicked}
+			onSubmitButtonClicked={onSubmitButtonClicked}
+			modalTitle={modalTitle}
 		/>
 	)
 }

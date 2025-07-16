@@ -1,13 +1,16 @@
 const {
-	editPlayerProfileInformation,
+	editProfileInformation,
 	registerSessionToken,
 	verifySessionToken,
 	verifyPlayerSignupInformation,
 	verifyTeamSignupInformation,
 	formatClientAccountInformation,
-	AccountType,
 	dataPagination,
+	verifyUserAuthorization,
 } = require("./utils")
+const { AccountType } = require("../ServerUtils")
+const { getTeamRecommendations } = require("../recommendation/main")
+
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -101,6 +104,25 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 			},
 		})
 		return res.status(200).json(userApplications)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
+	try {
+		const playerAccountId = parseInt(req.params.playerAccountId)
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: playerAccountId },
+		})
+		if (playerData == null) {
+			return res.status(404).json({ error: "Player not found in database" })
+		}
+
+		const allTeamsInDatabase = await prisma.team.findMany()
+		const teamRecommendations = getTeamRecommendations(playerData, allTeamsInDatabase)
+
+		return res.status(200).json(teamRecommendations)
 	} catch (error) {
 		next(error)
 	}
@@ -212,28 +234,21 @@ server.post("/api/signup/team", async (req, res, next) => {
 })
 
 server.patch("/api/profiles/edit", async (req, res, next) => {
-	const authorizationHeader = req.headers.authorization
-	const token = authorizationHeader.replace("Bearer ", "")
-	const verifiedAuthorization = await verifySessionToken(token)
+	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
 
-	if (
-		verifiedAuthorization == null ||
-		!verifiedAuthorization ||
-		!verifiedAuthorization.id
-	) {
+	if (!verifiedAuthorization) {
 		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+	if (req.body == null || req.body.accountId == null || req.body.accountType == null) {
+		res.status(400).json({
+			error: "Invalid request body: JSON payload is incomplete or malformed",
+		})
 		return
 	}
 
 	try {
-		if (req.body == null || req.body.accountId == null) {
-			res.status(400).json({
-				error: "Invalid request body: JSON payload is incomplete or malformed",
-			})
-			return
-		}
-
-		const updatedAccount = await editPlayerProfileInformation(
+		const updatedAccount = await editProfileInformation(
 			prisma,
 			verifiedAuthorization.id,
 			req.body

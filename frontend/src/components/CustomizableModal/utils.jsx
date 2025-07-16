@@ -15,7 +15,13 @@ export function ModalTextBox({ setIsModalOpen, onSubmitButtonClicked }) {
 				onChange={(event) => onTextFieldValueChange(event, setText)}
 			></textarea>
 			<div className="modal-buttons">
-				<button className="submit-btn" onClick={onSubmitButtonClicked(text)}>
+				<button
+					className="submit-btn"
+					onClick={() => {
+						onSubmitButtonClicked(text)
+						setIsModalOpen(false)
+					}}
+				>
 					Submit
 				</button>
 				<button className="cancel-btn" onClick={() => setIsModalOpen(false)}>
