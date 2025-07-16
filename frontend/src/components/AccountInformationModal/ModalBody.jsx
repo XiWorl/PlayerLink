@@ -94,7 +94,7 @@ export default function ModalBody({
 						</div>
 					)}
 
-					{/* TODO: Add the modal form fields here for the team information and the player information */}
+					{/* TODO: Implement various user input fields for player and team accounts (e.g., first name, location) */}
 				</div>
 			</div>
 		</ModalBodyContext.Provider>

@@ -87,7 +87,6 @@ export function handleGameSelectionLogic(
 				: GAMING_EXPERIENCE_FIELD
 
 		const isSelectedGameAlreadyIncluded = formData[gamesListField].includes(game)
-
 		const updatedGameUsernames = { ...formData.gameUsernames }
 
 		if (isSelectedGameAlreadyIncluded) {
@@ -154,6 +153,7 @@ export function handlePlaystyleSelectionLogic(
 		const formData = previousFormData[selectedAccountType]
 		const desiredPlaystyles = formData[DESIRED_PLAYSTYLE_FIELD]
 		const isPlaystyleSelected = desiredPlaystyles.includes(playstyle)
+
 		const updatedPlaystyles = isPlaystyleSelected
 			? selectedPlaystyles.filter(
 					(existingPlaystyle) => existingPlaystyle !== playstyle

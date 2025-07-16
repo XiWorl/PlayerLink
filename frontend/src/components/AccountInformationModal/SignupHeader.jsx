@@ -33,7 +33,7 @@ export default function SignupHeader({ setSelectedAccountType, onClose, title })
 				>
 					Team
 				</button>
-			</div>{" "}
+			</div>
 		</>
 	)
 }
