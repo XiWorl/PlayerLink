@@ -1,12 +1,12 @@
-import { EditProfileTextButton, TypeOfEditButton } from "./EditButton"
+import { EditProfileTextButton, TypeOfEditButton } from "../ProfileUtils/EditButton"
 import { AccountType } from "../../utils/globalUtils"
-import { modalSubmitHelper } from "./EditButtonUtils"
+import { modalSubmitHelper } from "../ProfileUtils/EditButtonUtils"
 import { useParams } from "react-router-dom"
 import { useState } from "react"
-import "./ProfilePage.css"
+import "../ProfileUtils/ProfilePage.css"
 const defaultProfileInfo = ""
 
-export default function UserProfile({ isLoading, accountData, setIsLoading }) {
+export default function PlayerProfile({ isLoading, accountData, setIsLoading }) {
 	if (isLoading || accountData.teamId != null) {
 		setIsLoading(true)
 		return <h1>Loading...</h1>
