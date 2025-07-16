@@ -79,7 +79,7 @@ export function handleGameSelectionLogic(
 	setFormErrors,
 	selectedAccountType
 ) {
-	setFormData((previousFormData) => {
+	setFormData(function (previousFormData) {
 		const formData = previousFormData[selectedAccountType]
 		const gamesListField =
 			selectedAccountType === AccountType.TEAM
@@ -149,7 +149,7 @@ export function handlePlaystyleSelectionLogic(
 	setFormErrors,
 	selectedAccountType
 ) {
-	setFormData((previousFormData) => {
+	setFormData(function (previousFormData) {
 		const formData = previousFormData[selectedAccountType]
 		const desiredPlaystyles = formData[DESIRED_PLAYSTYLE_FIELD]
 		const isPlaystyleSelected = desiredPlaystyles.includes(playstyle)
