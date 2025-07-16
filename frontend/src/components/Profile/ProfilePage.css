@@ -144,6 +144,39 @@
   white-space: pre-line;
 }
 
+.profile-gaming-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.profile-gaming-game {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-gaming-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+}
+
+.profile-gaming-information {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+}
+
+.profile-gaming-performance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0px;
+  margin-left: 4px;
+}
+
 @media (max-width: 768px) {
   .profile-page {
     padding: 10px;
