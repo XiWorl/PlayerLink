@@ -238,7 +238,6 @@ server.patch("/applications/status/update", async (req, res, next) => {
 		return
 	}
 
-	console.log(req.body)
 	try {
 		const playerApplicationToTeam = await prisma.application.findUnique({
 			where: {
@@ -277,7 +276,6 @@ server.patch("/applications/status/update", async (req, res, next) => {
 					rosterAccountId: req.body.teamAccountId,
 				},
 			})
-			console.log(updatedPlayerData)
 			const updatedTeamData = await prisma.team.update({
 				where: { accountId: req.body.teamAccountId },
 				data: {
@@ -286,18 +284,7 @@ server.patch("/applications/status/update", async (req, res, next) => {
 					},
 				},
 			})
-			console.log(updatedTeamData)
-
-			// const updateTeamData = await prisma.team.update({
-			// 	where: { accountId: req.body.teamAccountId },
-
-			// 	data: {
-			// 		rosterAccountId: req.body.teamAccountId,
-			// 	},
-			// })
-			// console.log(updatedTeamData)
 		}
-		console.log(updatedApplication)
 		return res.status(200).json(updatedApplication)
 	} catch (error) {
 		next(error)
@@ -319,7 +306,6 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 	}
 
 	try {
-		console.log("-1")
 		if (req.body == null) {
 			res.status(400).json({
 				error: "Invalid request body: JSON payload is incomplete or malformed",
@@ -335,8 +321,6 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		const accountId = req.body.accountId
 		delete req.body.accountType
 		delete req.body.accountId
-
-		console.log(accountType, accountType)
 
 		const existingPlayer = await prisma[accountType].findUnique({
 			where: { accountId: accountId },

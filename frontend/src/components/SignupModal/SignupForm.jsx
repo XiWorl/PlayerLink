@@ -15,14 +15,12 @@ import { DEFAULT_FORM_VALUE } from "./utils.jsx"
 const optionalSignupInformation = ["lastName"]
 
 async function onFormValid(formData, selectedAccountType, navigate) {
-	console.log("Form data:", formData)
 	const body = {
 		...formData[selectedAccountType],
 		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),
 	}
 
 	try {
-		console.log("Creating account:")
 		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
 			method: "POST",
 			headers: {
@@ -30,9 +28,7 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 			},
 			body: JSON.stringify(body),
 		})
-		console.log("Response:", response)
 		const accountData = await response.json()
-		console.log("Account data:", accountData)
 		if (!response.ok) throw new Error()
 
 			sessionStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)

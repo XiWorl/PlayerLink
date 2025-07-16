@@ -40,7 +40,6 @@ async function submitApplication(playerAccountId, teamAccountId, statusValue, se
 		})
 
 		const applicationData = await response.json()
-		console.log(response, data)
 
 		setApplicationStatus(applicationData.status)
 		if (applicationData.status === AppicationStatusOptions.ACCEPTED) {

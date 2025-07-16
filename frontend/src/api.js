@@ -15,7 +15,6 @@ export async function onLoginAttempt(email) {
 		if (response.ok === true) {
 			const accountData = await response.json()
 
-			console.log("OK", accountData)
 			sessionStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
 			sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 			return accountData

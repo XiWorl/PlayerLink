@@ -56,7 +56,6 @@ export default function ModalBody({
 				autoPopulatedData.currentlyHiring = convertBooleanToYesOrNo(autoPopulatedData.currentlyHiring)
 				autoPopulatedData.teamName = autoPopulatedData.name
 			}
-			console.log(autoPopulatedData)
 			setFormData(function (prevFormData) {
 				return {
 					...prevFormData,

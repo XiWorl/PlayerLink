@@ -28,14 +28,12 @@ async function onFormValid(formData, selectedAccountType, navigate) {
 		})
 
 		const accountData = await response.json()
-		console.log("Signup response:", accountData)
 
 		sessionStorage.setItem(TOKEN_STORAGE_KEY, accountData.token)
 		sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
 
 		const navigationURL =
 			accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
-		console.log("navigationURL", navigationURL, accountData.id)
 		navigate(`/${navigationURL}/${accountData.id}`)
 	} catch (error) {
 		console.error("Error while trying to create account:", error)
@@ -48,7 +46,6 @@ export default function SignupModal({ onClose }) {
 	const [isModalOpen, setIsModalOpen] = useState(true)
 
 	const handleSubmit = (formData, accountType) => {
-		console.log("Submitting form data:", formData)
 		onFormValid(formData, accountType, navigate)
 	}
 

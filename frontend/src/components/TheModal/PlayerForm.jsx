@@ -20,7 +20,6 @@ function validateForm(
 	selectedAccountType
 ) {
 	return function (event) {
-		console.log("validating form")
 		event.preventDefault()
 
 		let isFormValid = true
@@ -48,10 +47,8 @@ function validateForm(
 		}
 
 		setFormErrors(newErrors)
-		console.log("isFormValid", isFormValid)
 
 		if (isFormValid) {
-			console.log("form is valid, submitting")
 			onSubmit(currentFormData, selectedAccountType)
 			handleClose()
 		}
