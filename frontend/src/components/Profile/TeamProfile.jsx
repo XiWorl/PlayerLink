@@ -43,14 +43,16 @@ export default function TeamProfile({ isLoading, accountData }) {
 							<button>Home</button>
 							<button>Roster</button>
 							{sessionStorageAccountData &&
-								sessionStorageAccountData.accountType != AccountType.TEAM &&
-								sessionStorageAccountData.id !== accountData.accountId && (
+								sessionStorageAccountData.accountType !=
+									AccountType.TEAM &&
+								sessionStorageAccountData.id !==
+									accountData.accountId && (
 									<ApplyButton
 										playerAccountId={sessionStorageAccountData.id}
 										teamAccountId={accountData.accountId}
 									/>
 								)}
-							<EditProfileButton accountType={AccountType.TEAM}/>
+							<EditProfileButton accountType={AccountType.TEAM} />
 						</div>
 					</div>
 				</div>

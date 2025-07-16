@@ -50,7 +50,7 @@ export default function UserProfile({ isLoading, accountData }) {
 					<div className="profile-about-header">
 						<h3>Gaming Experience</h3>
 					</div>
-					<GamingExperience accountData={accountData}/>
+					<GamingExperience accountData={accountData} />
 				</div>
 			</div>
 		</UserProfileContext.Provider>

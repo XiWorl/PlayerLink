@@ -3,10 +3,11 @@ import { GameOptions } from "../../utils/globalUtils"
 
 function GameInformation({ gameName, gamePerformanceData }) {
 	const performanceMetric = gameName == GameOptions.FORTNITE ? "K/D" : "Elo"
+	const iconSource = `/public/${gameName}_Icon.png`
 
 	return (
 		<div className="profile-gaming-game">
-			<img src="#" className="profile-gaming-icon" />
+			<img src={iconSource} className="profile-gaming-icon" />
 			<div className="profile-gaming-information">
 				<h4>{gameName}</h4>
 				<div className="profile-gaming-performance">
