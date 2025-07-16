@@ -7,7 +7,8 @@ const {
 	formatClientAccountInformation,
 	AccountType,
 	dataPagination,
-	updatePlayerGamingPerformance
+	updatePlayerGamingPerformance,
+	getPlayerGamingPerformance
 } = require("./utils")
 const { getFornitePlayerData } = require("../externalApi/main")
 const express = require("express")
@@ -183,8 +184,9 @@ server.post("/api/signup/player", async (req, res, next) => {
 			jwtToken
 		)
 
-		updatePlayerGamingPerformance(req.body.gameUsernames)
-		
+		const playerGamesJson = await getPlayerGamingPerformance(req.body.gameUsernames)
+		await updatePlayerGamingPerformance(prisma, createdAccount.id, playerGamesJson)
+
 		return res.status(200).json(clientAccountInformation)
 	} catch (error) {
 		next(error)

@@ -20,13 +20,12 @@ export async function getFortnitePlayerData(username) {
 
 		const fortnitePlayerData = await response.json()
 		const performanceData = {
-			wins: fortnitePlayerData.stats.all.wins,
-			kills: fortnitePlayerData.stats.all.kills,
-			elo: fortnitePlayerData.stats.all.elo,
+			wins: fortnitePlayerData.data.stats.all.overall.wins,
+			kills: fortnitePlayerData.data.stats.all.overall.kills,
+			elo: fortnitePlayerData.data.stats.all.overall.kd,
 		}
 		return performanceData
 	} catch (error) {
-		console.log(error)
 		return null
 	}
 }
@@ -53,7 +52,6 @@ export async function getApexPlayerData(username) {
 				wins: apexPlayerData.total.career_wins.value,
 				kills: apexPlayerData.total.career_kills.value,
 				elo: apexPlayerData.global.rank.rankName,
-				//rankScore
 			}
 			return performanceData
 		} catch (error) {
@@ -82,11 +80,12 @@ export async function getValorantPlayerData(username, tagline) {
 			const valorantPlayerData = await response.json()
 			if (valorantPlayerData.data.length == 0) continue
 
-
-            const peakSeason = valorantPlayerData.data.highest_rank.season
+			const peakSeason = valorantPlayerData.data.highest_rank.season
 			const performanceData = {
 				wins: valorantPlayerData.data.by_season[peakSeason].wins,
-				kills: valorantPlayerData.data.by_season[peakSeason].number_of_games * AVERAGE_KILLS_PER_VALORANT_GAME,
+				kills:
+					valorantPlayerData.data.by_season[peakSeason].number_of_games *
+					AVERAGE_KILLS_PER_VALORANT_GAME,
 				elo: valorantPlayerData.data.highest_rank.patched_tier,
 			}
 			return performanceData

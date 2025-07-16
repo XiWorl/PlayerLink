@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken"
-import { getFortnitePlayerData, getApexPlayerData } from "../externalApi/main.js"
+import {
+	getFortnitePlayerData,
+	getApexPlayerData,
+	getValorantPlayerData,
+} from "../externalApi/main.js"
 export const EditType = { ABOUT: "about", BIO: "bio", OVERVIEW: "overview" }
 export const AccountType = { PLAYER: "player", TEAM: "team" }
 import dotenv from "dotenv"
@@ -93,26 +97,43 @@ export async function dataPagination(prisma, accountType, query) {
 	}
 }
 
-export async function updatePlayerGamingPerformance(gameUsernames) {
+export async function getPlayerGamingPerformance(gameUsernames) {
 	let gamePerformance = {}
 
 	if (gameUsernames["Fortnite"] != null) {
-		const fortnitePlayerData = await getFortnitePlayerData(
-			gameUsernames["Fortnite"]
-		)
+		console.log("in c1")
+		const fortnitePlayerData = await getFortnitePlayerData(gameUsernames["Fortnite"])
 		if (fortnitePlayerData != null) {
 			gamePerformance["Fortnite"] = fortnitePlayerData
 		}
-		console.log(fortnitePlayerData)
+		console.log("past c1")
 	}
-	
+
 	if (gameUsernames["Apex Legends"] != null) {
-		const apexPlayerData = await getApexPlayerData(
-			gameUsernames["Apex Legends"]
-		)
+		const apexPlayerData = await getApexPlayerData(gameUsernames["Apex Legends"])
 		if (apexPlayerData != null) {
 			gamePerformance["Apex Legends"] = apexPlayerData
 		}
-		console.log(apexPlayerData)
 	}
+
+	if (gameUsernames["Valorant"] != null) {
+		if (gameUsernames["Valorant"].indexOf("#") != -1) {
+			const splitUsername = gameUsernames["Valorant"].split("#")
+			const username = splitUsername[0]
+			const tagline = splitUsername[1]
+			const valorantPlayerData = await getValorantPlayerData(username, tagline)
+			gamePerformance["Valorant"] = valorantPlayerData
+		}
+	}
+	return gamePerformance
+}
+
+export async function updatePlayerGamingPerformance(prisma, accountId, gamePerformance) {
+	const updatedPlayerData = await prisma[AccountType.PLAYER].update({
+		where: { accountId: accountId },
+		data: {
+			games: gamePerformance,
+		},
+	})
+	return updatedPlayerData
 }

@@ -1,17 +1,19 @@
-import { updateGamingUsernames } from "../../api"
+import { useState, useEffect } from "react"
+import { GameOptions } from "../../utils/globalUtils"
+function GameInformation({ gameName, gamePerformanceData }) {
+	const performanceMetric = gameName == GameOptions.FORTNITE ? "K/D" : "Elo"
 
-function GameInformation({ accountData }) {
-    console.log(accountData)
 	return (
 		<div className="profile-gaming-game">
 			<img src="#" className="profile-gaming-icon" />
 			<div className="profile-gaming-information">
-				<h4>Game Name</h4>
+				<h4>{gameName}</h4>
 				<div className="profile-gaming-performance">
-					<p>Performance1</p>
-					<p>Performance2</p>
-					<p>Performance3</p>
-					<p>Performance4</p>
+					<p>
+						{performanceMetric}: {gamePerformanceData.elo}
+					</p>
+					<p>Kills: {gamePerformanceData.kills}</p>
+					<p>Wins: {gamePerformanceData.wins}</p>
 				</div>
 			</div>
 		</div>
@@ -19,21 +21,18 @@ function GameInformation({ accountData }) {
 }
 
 export default function GamingExperience({ accountData }) {
-    console.log(accountData)
-	return (
-		<div className="profile-gaming-container">
-			<div className="profile-gaming-game">
-				<img src="#" className="profile-gaming-icon" />
-				<div className="profile-gaming-information">
-					<h4>Game Name</h4>
-					<div className="profile-gaming-performance">
-						<p>Performance1</p>
-						<p>Performance2</p>
-						<p>Performance3</p>
-						<p>Performance4</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	)
+	const [displayedGames, setDisplayedGames] = useState([])
+
+	useEffect(() => {
+		for (const game in accountData.games) {
+			setDisplayedGames([
+				...displayedGames,
+				<GameInformation
+					gameName={game}
+					gamePerformanceData={accountData.games[game]}
+				/>,
+			])
+		}
+	}, [])
+	return <div className="profile-gaming-container">{displayedGames}</div>
 }

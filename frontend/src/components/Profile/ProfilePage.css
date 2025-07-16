@@ -170,11 +170,9 @@
 }
 
 .profile-gaming-performance {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 0px;
-  margin-left: 4px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 3fr;
 }
 
 @media (max-width: 768px) {
