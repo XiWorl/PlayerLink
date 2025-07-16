@@ -5,10 +5,12 @@ const {
 	verifyPlayerSignupInformation,
 	verifyTeamSignupInformation,
 	formatClientAccountInformation,
-	AccountType,
 	dataPagination,
-	verifyUserAuthorization
+	verifyUserAuthorization,
 } = require("./utils")
+const { AccountType } = require("../ServerUtils")
+const { getTeamRecommendations } = require("../recommendation/main")
+
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -102,6 +104,25 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 			},
 		})
 		return res.status(200).json(userApplications)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
+	try {
+		const playerAccountId = parseInt(req.params.playerAccountId)
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: playerAccountId },
+		})
+		if (playerData == null) {
+			return res.status(404).json({ error: "Player not found in database" })
+		}
+
+		const allTeamsInDatabase = await prisma.team.findMany()
+		const teamRecommendations = getTeamRecommendations(playerData, allTeamsInDatabase)
+
+		return res.status(200).json(teamRecommendations)
 	} catch (error) {
 		next(error)
 	}
