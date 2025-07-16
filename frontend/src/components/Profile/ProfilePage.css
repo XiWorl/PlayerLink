@@ -156,18 +156,19 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 30px;
+  align-items: center;
 }
 
 .profile-gaming-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
+  width: 84px;
+  height: 84px;
+  border-radius: 15px;
 }
 
 .profile-gaming-information {
   display: flex;
   flex-direction: column;
-  margin-left: 8px;
+  margin-left: 20px;
   width: 100%;
 }
 

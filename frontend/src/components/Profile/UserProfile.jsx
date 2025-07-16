@@ -46,12 +46,14 @@ export default function UserProfile({ isLoading, accountData }) {
 					</div>
 					<p className="profile-about-text">{`${about}`}</p>
 				</div>
-				<div className="profile-about">
-					<div className="profile-about-header">
-						<h3>Gaming Experience</h3>
+				{Object.keys(accountData.games).length > 0 && (
+					<div className="profile-about">
+						<div className="profile-about-header">
+							<h3>Gaming Experience</h3>
+						</div>
+						<GamingExperience accountData={accountData} />
 					</div>
-					<GamingExperience accountData={accountData} />
-				</div>
+				)}
 			</div>
 		</UserProfileContext.Provider>
 	)
