@@ -39,6 +39,7 @@ model Player {
   willingToRelocate Boolean
   playstyle String
   gamingExperience String[]
+  games Json
   gameUsernames Json
   bio         String?
   about      String?

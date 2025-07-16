@@ -2,6 +2,7 @@ import { AboutEditButton, BioEditButton } from "./EditButton"
 import EditProfileButton from "./EditProfile"
 import { createContext, useState } from "react"
 import { AccountType } from "../../utils/globalUtils"
+import GamingExperience from "./GamingExperience"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
 import ModalBody from "../TheModal/ModalBody"
@@ -49,20 +50,7 @@ export default function UserProfile({ isLoading, accountData }) {
 					<div className="profile-about-header">
 						<h3>Gaming Experience</h3>
 					</div>
-					<div className="profile-gaming-container">
-						<div className="profile-gaming-game">
-							<img src="#" className="profile-gaming-icon" />
-							<div className="profile-gaming-information">
-								<h4>Game Name</h4>
-								<div className="profile-gaming-performance">
-									<p>Performance1</p>
-									<p>Performance2</p>
-									<p>Performance3</p>
-									<p>Performance4</p>
-								</div>
-							</div>
-						</div>
-					</div>
+					<GamingExperience accountData={accountData}/>
 				</div>
 			</div>
 		</UserProfileContext.Provider>

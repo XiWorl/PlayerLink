@@ -8,6 +8,7 @@ const {
 	AccountType,
 	dataPagination,
 } = require("./utils")
+const { getFornitePlayerData } = require("../externalApi/main")
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -166,6 +167,7 @@ server.post("/api/signup/player", async (req, res, next) => {
 						yearsOfExperience: req.body.yearsOfExperience,
 						playstyle: req.body.playstyle,
 						gamingExperience: req.body.gamingExperience,
+						games: {},
 						gameUsernames: req.body.gameUsernames,
 						location: req.body.location,
 						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
@@ -222,6 +224,19 @@ server.post("/api/signup/team", async (req, res, next) => {
 	} catch (error) {
 		next(error)
 	}
+})
+
+server.patch("/profiles/games/update", async (req, res, next) => {
+	console.log(req.body)
+	if (req.body == null || req.body.accountId == null || req.body.gameUsernames == null) {
+		return res.status(400).json({ error: "Invalid request body" })
+	}
+
+	if (req.body.gameUsernames["Fortnite"] != null) {
+		const fortnitePlayerData = await getFornitePlayerData(req.body.gameUsernames["Fortnite"])
+		console.log(fortnitePlayerData)
+	}
+
 })
 
 server.patch("/applications/status/update", async (req, res, next) => {

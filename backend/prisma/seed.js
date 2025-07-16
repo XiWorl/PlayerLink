@@ -83,6 +83,7 @@ function generateRandomPlayerInfo(index) {
   const firstNames = ["John", "Jane", "Bob", "Alice", "Mike", "Emily", "Tom", "Sarah", "David", "Jessica"];
   const lastNames = ["Doe", "Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson", "Moore"];
   return {
+    games: {},
     firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
     lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
     yearsOfExperience: yearsOfExperienceOptions[Math.floor(Math.random() * yearsOfExperienceOptions.length)],
