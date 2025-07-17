@@ -2,10 +2,10 @@ import { getProfileData } from "../api"
 import { useEffect, useState } from "react"
 import { AccountType } from "../utils/globalUtils"
 import { useParams } from "react-router-dom"
-import TeamProfile from "../components/Profile/TeamProfile"
+import TeamProfile from "../components/TeamProfile/TeamProfile"
 import Navbar from "../components/Navbar/Navbar"
-import UserProfile from "../components/Profile/UserProfile"
-import "../components/Profile/ProfilePage.css"
+import PlayerProfile from "../components/PlayerProfile/PlayerProfile"
+import "../components/ProfileUtils/ProfilePage.css"
 
 async function displayProfileData(accountType, id, setAccountData, setIsLoading) {
 	const data = await getProfileData(accountType, id)
@@ -26,7 +26,7 @@ export default function ProfilePage({ accountType }) {
 	return accountType == AccountType.PLAYER ? (
 		<>
 			<Navbar />
-			<UserProfile
+			<PlayerProfile
 				isLoading={isLoading}
 				accountData={accountData}
 				setIsLoading={setIsLoading}

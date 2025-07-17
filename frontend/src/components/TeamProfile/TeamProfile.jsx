@@ -1,10 +1,10 @@
-import { EditProfileTextButton, TypeOfEditButton } from "./EditButton"
-import { modalSubmitHelper } from "./EditButtonUtils"
+import { EditProfileTextButton, TypeOfEditButton } from "../ProfileUtils/EditButton"
+import { modalSubmitHelper } from "../ProfileUtils/EditButtonUtils"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
 import ApplyButton from "./ApplyButton"
-import "./ProfilePage.css"
+import "../ProfileUtils/ProfilePage.css"
 
 const defaultProfileInfo = ""
 
