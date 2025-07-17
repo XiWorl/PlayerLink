@@ -3,10 +3,6 @@ import {
 	DEFAULT_FORM_DATA,
 	DEFAULT_ERRORS_VALUE,
 	autoPopulateData,
-	handleUsernameChangeLogic,
-	handleGameSelectionLogic,
-	handlePlaystyleSelectionLogic,
-	updateFormState,
 } from "./FunctionUtils"
 import SignupHeader from "./SignupHeader"
 import { AccountType } from "../../utils/globalUtils"
@@ -30,27 +26,6 @@ export default function ModalBody({
 		autoPopulateData(accountType, setFormData, autoPopulatedData)
 	}, [autoPopulatedData])
 
-	function handleInputChange(event) {
-		updateFormState(event, setFormData, setFormErrors, selectedAccountType)
-	}
-
-	function handleGameSelection(game) {
-		handleGameSelectionLogic(game, setFormData, setFormErrors, selectedAccountType)
-	}
-
-	function handleUsernameChange(game, username) {
-		handleUsernameChangeLogic(game, username, setFormData, selectedAccountType)
-	}
-
-	function handlePlaystyleSelection(playstyle) {
-		handlePlaystyleSelectionLogic(
-			playstyle,
-			setFormData,
-			setFormErrors,
-			selectedAccountType
-		)
-	}
-
 	function handleClose() {
 		setFormData(DEFAULT_FORM_DATA)
 		setFormErrors(DEFAULT_ERRORS_VALUE)
@@ -62,10 +37,6 @@ export default function ModalBody({
 			value={{
 				formData,
 				formErrors,
-				handleInputChange,
-				handleGameSelection,
-				handleUsernameChange,
-				handlePlaystyleSelection,
 				setFormErrors,
 				setFormData,
 				handleClose,
