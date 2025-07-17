@@ -139,7 +139,7 @@ export function YesOrNoDropdown({ title, elementName }) {
 			options={yesNoOptions}
 			defaultOptionText="Select an option"
 			optionDisplayTransform={(option) =>
-				option === YesOrNoEnum.YES ? "Yes" : "No"
+				option === YesOrNoEnum.YES ? YesOrNoEnum.YES : YesOrNoEnum.NO
 			}
 		/>
 	)
