@@ -5,8 +5,6 @@ import {
 	autoPopulateData,
 } from "./UserInputUtils"
 import { AccountType } from "../../utils/globalUtils"
-import PlayerForm from "./PlayerForm"
-import TeamForm from "./TeamForm"
 import SignupHeader from "./SignupHeader"
 import "../SignupModal/SignupModal.css"
 
@@ -67,11 +65,7 @@ export default function ModalBody({
 						</div>
 					)}
 
-					{selectedAccountType === AccountType.PLAYER ? (
-						<PlayerForm onClose={onClose} onSubmit={onSubmit} />
-					) : (
-						<TeamForm onClose={onClose} onSubmit={onSubmit} />
-					)}
+					{/* TODO: Implement various user input fields for player and team accounts (e.g., first name, location) */}
 				</div>
 			</div>
 		</ModalBodyContext.Provider>
