@@ -24,64 +24,6 @@ const generatedPlayerInfo = {
 }
 
 async function main() {
-	await prisma.account.create({
-		data: {
-			accountType: "player",
-			email: "billybob@bob.com",
-			player: {
-				create: generatedPlayerInfo,
-			},
-		},
-	})
-
-	for (let i = 0; i < 10; i++) {
-		await prisma.account.create({
-			data: {
-				accountType: "player",
-				email: `player${i}@gmail.com`,
-				player: {
-					create: {
-						firstName: `Player`,
-						lastName: `${i}`,
-						yearsOfExperience: "0",
-						location: "US",
-						willingToRelocate: false,
-						bio: `#${i} ranked player on valorant`,
-						about: "This is my about section!",
-					},
-				},
-			},
-		})
-	}
-
-	await prisma.account.create({
-		data: {
-			accountType: "team",
-			email: "URG@gmail.com",
-			team: {
-				create: generatedTeamInfo,
-			},
-		},
-	})
-
-	for (let i = 0; i < 10; i++) {
-		await prisma.account.create({
-			data: {
-				accountType: "team",
-				email: `team${i}@gmail.com`,
-				team: {
-					create: {
-						name: `Team${i}`,
-						location: "Asia",
-						description: `This is team ${i}'s description`,
-						overview: `This is team ${i}'s overview`,
-						yearEstablished: "2022",
-						currentlyHiring: true,
-					},
-				},
-			},
-		})
-	}
 }
 
 main()

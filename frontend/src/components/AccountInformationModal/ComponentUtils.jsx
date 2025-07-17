@@ -2,7 +2,7 @@ import { useContext } from "react"
 import { ModalBodyContext } from "./ModalBody.jsx"
 import { AccountType } from "../../utils/globalUtils.js"
 import {
-	LocationOptions,
+	LOCATION_OPTIONS,
 	YearsOfExperienceOptions,
 	GameOptions,
 	PlaystyleOptions,
@@ -13,7 +13,7 @@ import {
 	DEFAULT_FORM_VALUE,
 	SUPPORTED_GAMES_FIELD,
 	GAMING_EXPERIENCE_FIELD,
-} from "./FunctionUtils.jsx"
+} from "./UserInputUtils.jsx"
 import {
 	handlePlaystyleSelectionLogic,
 	handleUsernameChangeLogic,
@@ -124,7 +124,7 @@ export function LocationDropdown() {
 		<Dropdown
 			title="Location"
 			elementName="location"
-			options={LocationOptions}
+			options={LOCATION_OPTIONS}
 			defaultOptionText="Select your location"
 		/>
 	)
@@ -139,7 +139,7 @@ export function YesOrNoDropdown({ title, elementName }) {
 			options={yesNoOptions}
 			defaultOptionText="Select an option"
 			optionDisplayTransform={(option) =>
-				option === YesOrNoEnum.YES ? YesOrNoEnum.YES : YesOrNoEnum.NO
+				option === YesOrNoEnum.YES ? "Yes" : "No"
 			}
 		/>
 	)

@@ -1,7 +1,8 @@
+import { AccountType } from "../../utils/globalUtils"
 const ACTIVE_CLASS_NAME = "active"
 const INACTIVE_CLASS_NAME = ""
 
-export default function SignupHeader({ setSelectedAccountType, onClose, title }) {
+export default function SignupHeader({ setSelectedAccountType, selectedAccountType, onClose, title }) {
 	return (
 		<>
 			<div className="signup-modal-header">

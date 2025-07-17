@@ -4,6 +4,7 @@ export const DEFAULT_FORM_VALUE = ""
 export const SUPPORTED_GAMES_FIELD = "supportedGames"
 export const GAMING_EXPERIENCE_FIELD = "gamingExperience"
 const DESIRED_PLAYSTYLE_FIELD = "desiredPlaystyle"
+export const DEFAULT_ERRORS_VALUE = Object.freeze({ player: {}, team: {} })
 
 export const DEFAULT_FORM_DATA = {
 	player: {
