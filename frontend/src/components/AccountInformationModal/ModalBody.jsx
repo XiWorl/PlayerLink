@@ -4,7 +4,9 @@ import {
 	DEFAULT_ERRORS_VALUE,
 	autoPopulateData,
 } from "./UserInputUtils"
+import { PlayerForm } from "./PlayerForm"
 import { AccountType } from "../../utils/globalUtils"
+import TeamForm from "./TeamForm"
 import SignupHeader from "./SignupHeader"
 import "../SignupModal/SignupModal.css"
 
@@ -65,7 +67,11 @@ export default function ModalBody({
 						</div>
 					)}
 
-					{/* TODO: Implement various user input fields for player and team accounts (e.g., first name, location) */}
+					{selectedAccountType === AccountType.PLAYER ? (
+						<PlayerForm onClose={onClose} onSubmit={onSubmit} />
+					) : (
+						<TeamForm onClose={onClose} onSubmit={onSubmit} />
+					)}
 				</div>
 			</div>
 		</ModalBodyContext.Provider>
