@@ -3,7 +3,7 @@ import {
 	DEFAULT_FORM_DATA,
 	DEFAULT_ERRORS_VALUE,
 	autoPopulateData,
-} from "./FunctionUtils"
+} from "./UserInputUtils"
 import SignupHeader from "./SignupHeader"
 import { AccountType } from "../../utils/globalUtils"
 import "../SignupModal/SignupModal.css"
