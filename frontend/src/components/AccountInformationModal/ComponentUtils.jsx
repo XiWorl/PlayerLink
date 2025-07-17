@@ -187,6 +187,31 @@ export function PlayStyleDropdown() {
 	)
 }
 
+function UsernameInputTextField({ gameName }) {
+	const { formData, selectedAccountType, setFormData } = useContext(ModalBodyContext)
+	return (
+		<input
+			type="text"
+			placeholder={
+				Placeholders[gameName] || `Enter your ${GameOptions[gameName]} username`
+			}
+			value={
+				formData[selectedAccountType].gameUsernames[GameOptions[gameName]] ||
+				DEFAULT_FORM_VALUE
+			}
+			onChange={(event) =>
+				handleUsernameChangeLogic(
+					GameOptions[gameName],
+					event.target.value,
+					setFormData,
+					selectedAccountType
+				)
+			}
+			className="game-username-input"
+		/>
+	)
+}
+
 export function GamesSelection({ title }) {
 	const { formData, formErrors, selectedAccountType, setFormData, setFormErrors } =
 		useContext(ModalBodyContext)
@@ -225,27 +250,7 @@ export function GamesSelection({ title }) {
 							selectedAccountType == AccountType.PLAYER &&
 							currentGames.includes(GameOptions[game]) && (
 								<div className="username-input-container">
-									<input
-										type="text"
-										placeholder={
-											Placeholders[game] ||
-											`Enter your ${GameOptions[game]} username`
-										}
-										value={
-											formData[selectedAccountType].gameUsernames[
-												GameOptions[game]
-											] || DEFAULT_FORM_VALUE
-										}
-										onChange={(event) =>
-											handleUsernameChangeLogic(
-												GameOptions[game],
-												event.target.value,
-												setFormData,
-												selectedAccountType
-											)
-										}
-										className="game-username-input"
-									/>
+									<UsernameInputTextField gameName={game} />
 								</div>
 							)}
 					</div>
