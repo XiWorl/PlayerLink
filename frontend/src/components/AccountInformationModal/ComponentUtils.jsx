@@ -69,10 +69,10 @@ export function TextFormField({ title, isRequired, elementName, placeholder }) {
 export function Dropdown({
 	title,
 	elementName,
-	options,
-	defaultOptionText,
-	optionValueTransform,
-	optionDisplayTransform,
+	dropdownOptions,
+	defaultDropdownText,
+	getDropdownOptionValue,
+	getDropdownOptionText,
 }) {
 	const { formData, formErrors, selectedAccountType, setFormData, setFormErrors } =
 		useContext(ModalBodyContext)
@@ -97,18 +97,19 @@ export function Dropdown({
 						: VALID_INPUT_CLASS
 				}
 			>
-				<option value={DEFAULT_FORM_VALUE}>{defaultOptionText}</option>
-				{options.map((option) => {
-					const value = optionValueTransform
-						? optionValueTransform(option)
-						: option
-					const display = optionDisplayTransform
-						? optionDisplayTransform(option)
-						: option
+				<option value={DEFAULT_FORM_VALUE}>{defaultDropdownText}</option>
+				{dropdownOptions.map((dropdownOption) => {
+					
+					const dropdownValue = getDropdownOptionValue
+						? getDropdownOptionValue(dropdownOption)
+						: dropdownOption
+					const dropdownText = getDropdownOptionText
+						? getDropdownOptionText(dropdownOption)
+						: dropdownOption
 
 					return (
-						<option key={value} value={value}>
-							{display}
+						<option key={dropdownValue} value={dropdownValue}>
+							{dropdownText}
 						</option>
 					)
 				})}
@@ -122,8 +123,8 @@ export function LocationDropdown() {
 		<Dropdown
 			title="Location"
 			elementName="location"
-			options={LocationOptions}
-			defaultOptionText="Select your location"
+			dropdownOptions={LocationOptions}
+			defaultDropdownText="Select your location"
 		/>
 	)
 }
@@ -134,10 +135,10 @@ export function YesOrNoDropdown({ title, elementName }) {
 		<Dropdown
 			title={title}
 			elementName={elementName}
-			options={yesNoOptions}
-			defaultOptionText="Select an option"
-			optionDisplayTransform={(option) =>
-				option === YesOrNoEnum.YES ? YesOrNoEnum.YES : YesOrNoEnum.NO
+			dropdownOptions={yesNoOptions}
+			defaultDropdownText="Select an option"
+			getDropdownOptionText={(option) =>
+				option === YesOrNoEnum.YES ? "Yes" : "No"
 			}
 		/>
 	)
@@ -149,10 +150,10 @@ export function ExperienceDropdown() {
 		<Dropdown
 			title="Years of Experience"
 			elementName="yearsOfExperience"
-			options={experienceOptions}
-			defaultOptionText="Select experience level"
-			optionValueTransform={(experience) => YearsOfExperienceOptions[experience]}
-			optionDisplayTransform={(experience) =>
+			dropdownOptions={experienceOptions}
+			defaultDropdownText="Select experience level"
+			getDropdownOptionValue={(experience) => YearsOfExperienceOptions[experience]}
+			getDropdownOptionText={(experience) =>
 				`${YearsOfExperienceOptions[experience]} years`
 			}
 		/>
@@ -165,9 +166,9 @@ export function DesiredSkillLevelDropdown() {
 		<Dropdown
 			title="Desired Skill Level"
 			elementName="desiredSkillLevel"
-			options={skillLevelOptions}
-			defaultOptionText="Select desired skill level"
-			optionValueTransform={(level) => level.toLowerCase()}
+			dropdownOptions={skillLevelOptions}
+			defaultDropdownText="Select desired skill level"
+			getDropdownOptionValue={(level) => level.toLowerCase()}
 		/>
 	)
 }
@@ -179,8 +180,8 @@ export function PlayStyleDropdown() {
 			title="Preferred Playstyle"
 			elementName="playstyle"
 			options={playstyleOptions}
-			defaultOptionText="Select preferred playstyle"
-			optionValueTransform={(level) => level.toLowerCase()}
+			defaultDropdownText="Select preferred playstyle"
+			getDropdownOptionValue={(level) => level.toLowerCase()}
 		/>
 	)
 }
