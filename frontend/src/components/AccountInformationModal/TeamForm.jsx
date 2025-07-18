@@ -1,6 +1,5 @@
 import { useContext } from "react"
 import { ModalBodyContext } from "./ModalBody.jsx"
-import { SUPPORTED_GAMES_FIELD } from "./FunctionUtils.jsx"
 import { validateFormHelper } from "./PlayerForm.jsx"
 import {
 	TextFormField,
@@ -9,12 +8,9 @@ import {
 	PlaystyleSelection,
 	GamesSelection,
 	DesiredSkillLevelDropdown,
-	DEFAULT_FORM_VALUE,
 } from "./ComponentUtils.jsx"
 
 const OPTIONAL_FIELDS = []
-const EMPTY_FORM_FIELD = ""
-const GAME_USERNAMES_FIELD = "gameUsernames"
 
 function validateForm(
 	formData,

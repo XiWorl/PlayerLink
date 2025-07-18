@@ -12,7 +12,7 @@ import "../SignupModal/SignupModal.css"
 
 export const ModalBodyContext = createContext()
 
-export default function ModalBody({
+export function ModalBody({
 	onClose,
 	onSubmit,
 	title,
@@ -25,7 +25,9 @@ export default function ModalBody({
 	const [formErrors, setFormErrors] = useState(DEFAULT_ERRORS_VALUE)
 
 	useEffect(() => {
-		autoPopulateData(accountType, setFormData, autoPopulatedData)
+		if (autoPopulatedData) {
+			autoPopulateData(accountType, setFormData, autoPopulatedData)
+		}
 	}, [autoPopulatedData])
 
 	function handleClose() {
@@ -52,6 +54,7 @@ export default function ModalBody({
 				>
 					{useSignupHeader && (
 						<SignupHeader
+							selectedAccountType={selectedAccountType}
 							title={title}
 							onClose={onClose}
 							setSelectedAccountType={setSelectedAccountType}

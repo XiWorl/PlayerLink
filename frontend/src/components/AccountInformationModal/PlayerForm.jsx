@@ -1,6 +1,5 @@
 import { useContext } from "react"
 import { ModalBodyContext } from "./ModalBody.jsx"
-import { GAMING_EXPERIENCE_FIELD } from "./FunctionUtils.jsx"
 import { AccountType } from "../../utils/globalUtils.js"
 import {
 	TextFormField,
@@ -9,8 +8,8 @@ import {
 	ExperienceDropdown,
 	PlayStyleDropdown,
 	GamesSelection,
-	DEFAULT_FORM_VALUE,
 } from "./ComponentUtils.jsx"
+import { DEFAULT_FORM_VALUE } from "./UserInputUtils.jsx"
 
 const OPTIONAL_FIELDS = ["lastName"]
 const EMPTY_FORM_FIELD = ""
