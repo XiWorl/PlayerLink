@@ -93,31 +93,26 @@ export function PlayerForm({ onClose, onSubmit }) {
 			)}
 			className="signup-form"
 		>
+            
 			<TextFormField
 				title="First Name"
 				isRequired={true}
 				elementName="firstName"
 				placeholder="Enter your first name"
 			/>
-
 			<TextFormField
 				title="Last Name"
 				isRequired={false}
 				elementName="lastName"
 				placeholder="Enter your last name (optional)"
 			/>
-
 			<LocationDropdown />
-
 			<YesOrNoDropdown
 				title="Willing to Relocate"
 				elementName="willingToRelocate"
 			/>
-
 			<ExperienceDropdown />
-
 			<GamesSelection title="Gaming experience" elementName="gamingExperience" />
-
 			<PlayStyleDropdown />
 
 			<div className="form-actions">
