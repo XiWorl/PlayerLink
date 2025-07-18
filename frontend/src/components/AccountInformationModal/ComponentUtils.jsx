@@ -192,15 +192,15 @@ function UsernameInputTextField({ gameName }) {
 		<input
 			type="text"
 			placeholder={
-				Placeholders[gameName] || `Enter your ${GameOptions[gameName]} username`
+				Placeholders[gameName] || `Enter your ${gameName} username`
 			}
 			value={
-				formData[selectedAccountType].gameUsernames[GameOptions[gameName]] ||
+				formData[selectedAccountType].gameUsernames[gameName] ||
 				DEFAULT_FORM_VALUE
 			}
 			onChange={(event) =>
 				handleUsernameChangeLogic(
-					GameOptions[gameName],
+					gameName,
 					event.target.value,
 					setFormData,
 					selectedAccountType
@@ -225,16 +225,16 @@ export function GamesSelection({ title }) {
 		<div className="form-group">
 			<label>{title}* (Select all that apply)</label>
 			<div className="games-selection-list">
-				{Object.keys(GameOptions).map((game) => (
-					<div key={GameOptions[game]} className="game-selection-container">
+				{Object.values(GameOptions).map((gameName) => (
+					<div key={gameName} className="game-selection-container">
 						<div className="game-checkbox-label">
-							<h3>{GameOptions[game]}</h3>
+							<h3>{gameName}</h3>
 							<input
 								type="checkbox"
-								checked={currentSelectedGames.includes(GameOptions[game])}
+								checked={currentSelectedGames.includes(gameName)}
 								onChange={(event) =>
 									handleGameSelectionLogic(
-										GameOptions[game],
+										gameName,
 										event.target.value,
 										setFormData,
 										setFormErrors,
@@ -245,9 +245,9 @@ export function GamesSelection({ title }) {
 							/>
 						</div>
 						{selectedAccountType == AccountType.PLAYER &&
-							currentSelectedGames.includes(GameOptions[game]) && (
+							currentSelectedGames.includes(gameName) && (
 								<div className="username-input-container">
-									<UsernameInputTextField gameName={game} />
+									<UsernameInputTextField gameName={gameName} />
 								</div>
 							)}
 					</div>
