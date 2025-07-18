@@ -4,8 +4,8 @@ import {
 	DEFAULT_ERRORS_VALUE,
 	autoPopulateData,
 } from "./UserInputUtils"
-import { PlayerForm } from "./PlayerForm"
 import { AccountType } from "../../utils/globalUtils"
+import PlayerForm from "./PlayerForm"
 import TeamForm from "./TeamForm"
 import SignupHeader from "./SignupHeader"
 import "../SignupModal/SignupModal.css"

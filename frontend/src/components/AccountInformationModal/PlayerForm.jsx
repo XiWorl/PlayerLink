@@ -48,7 +48,7 @@ function validateForm(
 	}
 }
 
-export function PlayerForm({ onClose, onSubmit }) {
+export default function PlayerForm({ onClose, onSubmit }) {
 	const { formData, setFormErrors, handleClose, selectedAccountType } =
 		useContext(ModalBodyContext)
 
