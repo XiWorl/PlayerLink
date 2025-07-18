@@ -99,7 +99,7 @@ export function Dropdown({
 			>
 				<option value={DEFAULT_FORM_VALUE}>{defaultDropdownText}</option>
 				{dropdownOptions.map((dropdownOption) => {
-					
+
 					const dropdownValue = getDropdownOptionValue
 						? getDropdownOptionValue(dropdownOption)
 						: dropdownOption
@@ -219,7 +219,7 @@ export function GamesSelection({ title }) {
 		selectedAccountType === AccountType.TEAM
 			? SUPPORTED_GAMES_FIELD
 			: GAMING_EXPERIENCE_FIELD
-	const currentGames = formData[selectedAccountType][gamesField]
+	const currentSelectedGames = formData[selectedAccountType][gamesField]
 
 	return (
 		<div className="form-group">
@@ -231,7 +231,7 @@ export function GamesSelection({ title }) {
 							<h3>{GameOptions[game]}</h3>
 							<input
 								type="checkbox"
-								checked={currentGames.includes(GameOptions[game])}
+								checked={currentSelectedGames.includes(GameOptions[game])}
 								onChange={(event) =>
 									handleGameSelectionLogic(
 										GameOptions[game],
@@ -245,7 +245,7 @@ export function GamesSelection({ title }) {
 							/>
 						</div>
 						{selectedAccountType == AccountType.PLAYER &&
-							currentGames.includes(GameOptions[game]) && (
+							currentSelectedGames.includes(GameOptions[game]) && (
 								<div className="username-input-container">
 									<UsernameInputTextField gameName={game} />
 								</div>
