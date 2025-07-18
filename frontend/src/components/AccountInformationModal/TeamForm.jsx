@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { ModalBodyContext } from "./ModalBody.jsx"
-import { validateFormHelper } from "./PlayerForm.jsx"
+import { validateSubmissionFormHelper } from "./UserInputUtils.jsx"
 import {
 	TextFormField,
 	LocationDropdown,
@@ -8,7 +8,7 @@ import {
 	PlaystyleSelection,
 	GamesSelection,
 	DesiredSkillLevelDropdown,
-} from "./ComponentUtils.jsx"
+} from "./FormInputComponents.jsx"
 
 const OPTIONAL_FIELDS = []
 
@@ -24,7 +24,7 @@ function validateForm(
 
 		const newErrors = { [selectedAccountType]: {} }
 		const currentFormData = formData[selectedAccountType]
-		let isFormValid = validateFormHelper(
+		let isFormValid = validateSubmissionFormHelper(
 			selectedAccountType,
 			newErrors,
 			currentFormData,

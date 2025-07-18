@@ -1,6 +1,5 @@
 import { useContext } from "react"
 import { ModalBodyContext } from "./ModalBody.jsx"
-import { AccountType } from "../../utils/globalUtils.js"
 import {
 	TextFormField,
 	LocationDropdown,
@@ -8,39 +7,10 @@ import {
 	ExperienceDropdown,
 	PlayStyleDropdown,
 	GamesSelection,
-} from "./ComponentUtils.jsx"
-import { DEFAULT_FORM_VALUE } from "./UserInputUtils.jsx"
+} from "./FormInputComponents.jsx"
+import { validateSubmissionFormHelper } from "./UserInputUtils.jsx"
 
 const OPTIONAL_FIELDS = ["lastName"]
-const EMPTY_FORM_FIELD = ""
-const GAME_USERNAMES_FIELD = "gameUsernames"
-
-export function validateFormHelper(
-	selectedAccountType,
-	newErrors,
-	currentFormData,
-	optionalFields
-) {
-	let isFormValid = true
-
-	for (const key in currentFormData) {
-		if (key === GAMING_EXPERIENCE_FIELD || key === GAME_USERNAMES_FIELD) continue
-
-		const inputValue =
-			typeof currentFormData[key] === "string"
-				? currentFormData[key].trim()
-				: currentFormData[key]
-
-		if (inputValue === DEFAULT_FORM_VALUE || inputValue === EMPTY_FORM_FIELD) {
-			if (selectedAccountType === AccountType.PLAYER) {
-				if (optionalFields.includes(key)) continue
-			}
-			newErrors[selectedAccountType][key] = `${key} is required`
-			isFormValid = false
-		}
-	}
-	return isFormValid
-}
 
 function validateForm(
 	formData,
@@ -54,7 +24,7 @@ function validateForm(
 
 		const newErrors = { [selectedAccountType]: {} }
 		const currentFormData = formData[selectedAccountType]
-		let isFormValid = validateFormHelper(
+		validateSubmissionFormHelper(
 			selectedAccountType,
 			newErrors,
 			currentFormData,
@@ -93,7 +63,6 @@ export function PlayerForm({ onClose, onSubmit }) {
 			)}
 			className="signup-form"
 		>
-            
 			<TextFormField
 				title="First Name"
 				isRequired={true}

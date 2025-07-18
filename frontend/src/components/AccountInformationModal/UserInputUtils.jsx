@@ -4,6 +4,8 @@ export const DEFAULT_FORM_VALUE = ""
 export const SUPPORTED_GAMES_FIELD = "supportedGames"
 export const GAMING_EXPERIENCE_FIELD = "gamingExperience"
 const DESIRED_PLAYSTYLE_FIELD = "desiredPlaystyle"
+const GAME_USERNAMES_FIELD = "gameUsernames"
+
 
 export const DEFAULT_FORM_DATA = {
 	player: {
@@ -178,6 +180,33 @@ export function handlePlaystyleSelectionLogic(
 			},
 		}
 	})
+}
+
+export function validateSubmissionFormHelper(
+	selectedAccountType,
+	newErrors,
+	currentFormData,
+	optionalFields
+) {
+	let isFormValid = true
+
+	for (const key in currentFormData) {
+		if (key === GAMING_EXPERIENCE_FIELD || key === GAME_USERNAMES_FIELD) continue
+
+		const inputValue =
+			typeof currentFormData[key] === "string"
+				? currentFormData[key].trim()
+				: currentFormData[key]
+
+		if (inputValue === DEFAULT_FORM_VALUE || inputValue === EMPTY_FORM_FIELD) {
+			if (selectedAccountType === AccountType.PLAYER) {
+				if (optionalFields.includes(key)) continue
+			}
+			newErrors[selectedAccountType][key] = `${key} is required`
+			isFormValid = false
+		}
+	}
+	return isFormValid
 }
 
 export function convertBooleanToYesOrNo(value) {
