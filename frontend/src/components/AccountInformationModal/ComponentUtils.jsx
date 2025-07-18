@@ -234,10 +234,9 @@ export function GamesSelection({ title }) {
 							<input
 								type="checkbox"
 								checked={currentGames.includes(GameOptions[game])}
-								onChange={(event) =>
+								onChange={() =>
 									handleGameSelectionLogic(
 										GameOptions[game],
-										event.target.value,
 										setFormData,
 										setFormErrors,
 										selectedAccountType
