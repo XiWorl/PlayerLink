@@ -24,7 +24,7 @@ function validateForm(
 
 		const newErrors = { [selectedAccountType]: {} }
 		const currentFormData = formData[selectedAccountType]
-		validateSubmissionFormHelper(
+		const isFormValid = validateSubmissionFormHelper(
 			selectedAccountType,
 			newErrors,
 			currentFormData,

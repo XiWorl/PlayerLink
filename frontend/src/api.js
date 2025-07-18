@@ -10,6 +10,7 @@ const PENDING_APPLICATION_STATUS = "pending"
 
 export async function onLoginAttempt(email) {
 	try {
+		console.log("Trying to login with", email)
 		const response = await fetch(`${BASEURL}/api/login/?email=${email}`)
 
 		if (response.ok === true) {

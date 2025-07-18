@@ -2,7 +2,7 @@ import { useContext } from "react"
 import { ModalBodyContext } from "./ModalBody.jsx"
 import { AccountType } from "../../utils/globalUtils.js"
 import {
-	LocationOptions,
+	LOCATION_OPTIONS,
 	YearsOfExperienceOptions,
 	GameOptions,
 	PlaystyleOptions,
@@ -99,7 +99,6 @@ export function Dropdown({
 			>
 				<option value={DEFAULT_FORM_VALUE}>{defaultDropdownText}</option>
 				{dropdownOptions.map((dropdownOption) => {
-
 					const dropdownValue = getDropdownOptionValue
 						? getDropdownOptionValue(dropdownOption)
 						: dropdownOption
@@ -123,7 +122,7 @@ export function LocationDropdown() {
 		<Dropdown
 			title="Location"
 			elementName="location"
-			dropdownOptions={LocationOptions}
+			dropdownOptions={LOCATION_OPTIONS}
 			defaultDropdownText="Select your location"
 		/>
 	)
@@ -179,7 +178,7 @@ export function PlayStyleDropdown() {
 		<Dropdown
 			title="Preferred Playstyle"
 			elementName="playstyle"
-			options={playstyleOptions}
+			dropdownOptions={playstyleOptions}
 			defaultDropdownText="Select preferred playstyle"
 			getDropdownOptionValue={(level) => level.toLowerCase()}
 		/>
@@ -191,9 +190,7 @@ function UsernameInputTextField({ gameName }) {
 	return (
 		<input
 			type="text"
-			placeholder={
-				Placeholders[gameName] || `Enter your ${gameName} username`
-			}
+			placeholder={Placeholders[gameName] || `Enter your ${gameName} username`}
 			value={
 				formData[selectedAccountType].gameUsernames[gameName] ||
 				DEFAULT_FORM_VALUE
@@ -232,10 +229,9 @@ export function GamesSelection({ title }) {
 							<input
 								type="checkbox"
 								checked={currentSelectedGames.includes(gameName)}
-								onChange={(event) =>
+								onChange={() =>
 									handleGameSelectionLogic(
 										gameName,
-										event.target.value,
 										setFormData,
 										setFormErrors,
 										selectedAccountType
