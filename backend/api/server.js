@@ -179,6 +179,9 @@ server.post("/api/signup/player", async (req, res, next) => {
 						lastName: req.body.lastName,
 						yearsOfExperience: req.body.yearsOfExperience,
 						location: req.body.location,
+						playstyle: req.body.playstyle,
+						gamingExperience: req.body.gamingExperience,
+						gameUsernames: req.body.gameUsernames,
 						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
 					},
 				},
@@ -213,9 +216,11 @@ server.post("/api/signup/team", async (req, res, next) => {
 				team: {
 					create: {
 						name: req.body.teamName,
-						yearEstablished: req.body.yearEstablished,
 						location: req.body.location,
-						currentlyHiring: convertToBoolean(req.body.hiring),
+						desiredPlaystyle: req.body.desiredPlaystyle,
+						desiredSkillLevel: req.body.desiredSkillLevel,
+						supportedGames: req.body.supportedGames,
+						currentlyHiring: convertToBoolean(req.body.currentlyHiring),
 					},
 				},
 			},
