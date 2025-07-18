@@ -14,7 +14,6 @@ export const YearsOfExperienceOptions = Object.freeze({
 	SIX_TO_TEN: "6-10",
 	TENPLUS: "10+",
 })
-
 export const LOCATION_OPTIONS = [
 	"USA",
 	"Canada",
@@ -25,6 +24,24 @@ export const LOCATION_OPTIONS = [
 	"Asia",
 	"Oceania",
 ]
+export const GameOptions = Object.freeze({
+	VALORANT: "Valorant",
+	APEX_LEGENDS: "Apex Legends",
+	FORTNITE: "Fortnite",
+})
+export const PlaystyleOptions = {
+	TACTICAL: "Tactical",
+	AGGRESSIVE: "Aggressive",
+	DEFENSIVE: "Defensive",
+	BALANCED: "Balanced",
+	SUPPORTIVE: "Supportive",
+	ADAPTABLE: "Adaptable",
+}
+export const SkillLevelOptions = Object.freeze({
+	SEMI_PRO: "Semi-Pro",
+	PRO: "Pro",
+	ELITE: "Elite",
+})
 
 export function isLoggedIn() {
 	return (

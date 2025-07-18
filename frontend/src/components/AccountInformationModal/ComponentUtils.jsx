@@ -9,16 +9,14 @@ import {
 	SkillLevelOptions,
 } from "../../utils/globalUtils.js"
 import {
-	VALID_INPUT_CLASS,
-	DEFAULT_FORM_VALUE,
-	SUPPORTED_GAMES_FIELD,
-	GAMING_EXPERIENCE_FIELD,
-} from "./FunctionUtils.jsx"
-import {
 	handlePlaystyleSelectionLogic,
 	handleUsernameChangeLogic,
 	handleGameSelectionLogic,
 	updateFormState,
+	VALID_INPUT_CLASS,
+	DEFAULT_FORM_VALUE,
+	SUPPORTED_GAMES_FIELD,
+	GAMING_EXPERIENCE_FIELD,
 } from "./UserInputUtils.jsx"
 
 const INVALID_INPUT_CLASS = "error"
@@ -221,7 +219,6 @@ export function GamesSelection({ title }) {
 			? SUPPORTED_GAMES_FIELD
 			: GAMING_EXPERIENCE_FIELD
 	const currentGames = formData[selectedAccountType][gamesField]
-	const showUsernames = selectedAccountType === AccountType.PLAYER
 
 	return (
 		<div className="form-group">
@@ -246,8 +243,7 @@ export function GamesSelection({ title }) {
 								className="game-checkbox"
 							/>
 						</div>
-						{showUsernames &&
-							selectedAccountType == AccountType.PLAYER &&
+						{selectedAccountType == AccountType.PLAYER &&
 							currentGames.includes(GameOptions[game]) && (
 								<div className="username-input-container">
 									<UsernameInputTextField gameName={game} />
