@@ -1,5 +1,10 @@
 import jwt from "jsonwebtoken"
-import { getFortniteAccountData, getApexAccountData, getValorantAccountData } from "../externalApi/main.js"
+import { GameOptions } from "../ServerUtils.js"
+import {
+	getFortniteAccountData,
+	getApexAccountData,
+	getValorantAccountData,
+} from "../externalApi/main.js"
 export const EditType = {
 	ABOUT: "about",
 	BIO: "bio",
@@ -9,6 +14,7 @@ export const EditType = {
 import dotenv from "dotenv"
 
 dotenv.config()
+const VALORANT_TAGLINE_SEPARATOR = "#"
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 const PAGE_SIZE = 10
 const START_PAGE = 1
@@ -117,28 +123,36 @@ export async function dataPagination(prisma, accountType, query) {
 export async function getPlayerGamingPerformance(gameUsernames) {
 	let gamePerformance = {}
 
-	if (gameUsernames["Fortnite"] != null) {
-		const fortniteAccountData = await getFortniteAccountData(gameUsernames["Fortnite"])
+	if (gameUsernames[GameOptions.FORTNITE] != null) {
+		const fortniteAccountData = await getFortniteAccountData(
+			gameUsernames[GameOptions.FORTNITE]
+		)
 		if (fortniteAccountData != null) {
-			gamePerformance["Fortnite"] = fortniteAccountData
+			gamePerformance[GameOptions.FORTNITE] = fortniteAccountData
 		}
 	}
 
-	if (gameUsernames["Apex Legends"] != null) {
-		const apexAccountData = await getApexAccountData(gameUsernames["Apex Legends"])
+	if (gameUsernames[GameOptions.APEX_LEGENDS] != null) {
+		const apexAccountData = await getApexAccountData(
+			gameUsernames[GameOptions.APEX_LEGENDS]
+		)
 		if (apexAccountData != null) {
-			gamePerformance["Apex Legends"] = apexAccountData
+			gamePerformance[GameOptions.APEX_LEGENDS] = apexAccountData
 		}
 	}
 
-	if (gameUsernames["Valorant"] != null) {
-		if (gameUsernames["Valorant"].indexOf("#") != -1) {
-			const splitUsername = gameUsernames["Valorant"].split("#")
+	if (gameUsernames[GameOptions.VALORANT] != null) {
+		if (
+			gameUsernames[GameOptions.VALORANT].indexOf(VALORANT_TAGLINE_SEPARATOR) != -1
+		) {
+			const splitUsername = gameUsernames[GameOptions.VALORANT].split(
+				VALORANT_TAGLINE_SEPARATOR
+			)
 			const username = splitUsername[0]
 			const tagline = splitUsername[1]
 
 			const valorantAccountData = await getValorantAccountData(username, tagline)
-			gamePerformance["Valorant"] = valorantAccountData
+			gamePerformance[GameOptions.VALORANT] = valorantAccountData
 		}
 	}
 	return gamePerformance
