@@ -2,7 +2,12 @@ import { useState } from "react"
 import { AccountType } from "../../utils/globalUtils"
 import { useNavigate } from "react-router-dom"
 import { ModalBody } from "../AccountInformationModal/ModalBody"
-import { BASEURL, GOOGLE_EMAIL_KEY, TOKEN_SESSION_KEY, ACCOUNT_INFORMATION_KEY } from "../../utils/globalUtils"
+import {
+	BASEURL,
+	GOOGLE_EMAIL_KEY,
+	TOKEN_SESSION_KEY,
+	ACCOUNT_INFORMATION_KEY,
+} from "../../utils/globalUtils"
 import "./SignupModal.css"
 
 const MODAL_TITLE = "Create Your Account"
@@ -52,7 +57,9 @@ export default function SignupModal({ onClose }) {
 			<ModalBody
 				isOpen={isModalOpen}
 				onClose={handleClose}
-				onSubmit={(submissionFormData, accountType) => onSubmissionFormValid(submissionFormData, accountType, navigate)}
+				onSubmit={(submissionFormData, accountType) =>
+					onSubmissionFormValid(submissionFormData, accountType, navigate)
+				}
 				title={MODAL_TITLE}
 				accountType={selectedAccountType}
 				useSignupHeader={true}

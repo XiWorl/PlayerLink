@@ -20,7 +20,7 @@ export function verifyPlayerSignupInformation(requestBody) {
 		requestBody.location !== undefined &&
 		requestBody.willingToRelocate !== undefined &&
 		requestBody.yearsOfExperience !== undefined
-		requestBody.playstyle !== undefined &&
+	requestBody.playstyle !== undefined &&
 		requestBody.gameUsernames !== undefined &&
 		requestBody.gamingExperience !== undefined
 	return isDataValid
