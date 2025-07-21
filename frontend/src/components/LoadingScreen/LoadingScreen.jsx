@@ -1,6 +1,6 @@
 import "./LoadingScreen.css"
 
-export function LoadingScreen({ message = "Loading your Experience..." }) {
+export function LoadingScreen({ message = "Loading Your Experience..." }) {
 	return (
 		<div className="loading-screen">
 			<div className="loading-content">
