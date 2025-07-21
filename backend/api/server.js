@@ -8,14 +8,20 @@ const {
 	AccountType,
 	dataPagination,
 	updatePlayerGamingPerformance,
-	getPlayerGamingPerformance
+	getPlayerGamingPerformance,
+	TOURNAMENT_NAME,
 } = require("./utils")
+const {
+	createRoundsJson,
+	MININUM_NUMBER_OF_TEAMS,
+} = require("../tournamentScheduling/utils")
 const { getFornitePlayerData } = require("../externalApi/main")
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
 const { PrismaClient } = require("../generated/prisma")
 const prisma = new PrismaClient()
+let GLOBAL_TOURNAMENT_ID = -1
 
 const server = express()
 server.use(helmet())
@@ -27,6 +33,16 @@ function convertToBoolean(value) {
 	if (value.toLowerCase() == YES_VALUE) {
 		return true
 	} else return false
+}
+
+async function initializeTournaments() {
+	const createdGlobalTournament = await prisma.tournaments.create({
+		data: {
+			tournamentIds: [],
+		},
+	})
+	GLOBAL_TOURNAMENT_ID = createdGlobalTournament.id
+	return GLOBAL_TOURNAMENT_ID
 }
 
 server.get("/teams/:teamId", async (req, res, next) => {
@@ -240,17 +256,62 @@ server.post("/api/signup/team", async (req, res, next) => {
 	}
 })
 
+server.post("/api/tournaments/create", async (req, res, next) => {
+	try {
+		const roundsJson = createRoundsJson(MININUM_NUMBER_OF_TEAMS)
+
+		const createdTournament = await prisma.tournament.create({
+			data: {
+				creatorAccountId: req.body.teamAccountId,
+				name: TOURNAMENT_NAME,
+				rounds: roundsJson,
+				allTournaments: {
+					connect: { id: GLOBAL_TOURNAMENT_ID },
+				},
+			},
+		})
+		console.log("TOURNAMENT ID: ", createdTournament)
+		const tournamentId = createdTournament.tournamentId
+		const updatedTournament = await prisma.tournament.update({
+			where: { tournamentId: tournamentId },
+			data: {
+				name: TOURNAMENT_NAME + " " + tournamentId,
+			},
+		})
+
+		const updatedGlobalTournaments = await prisma.tournaments.update({
+			where: { id: GLOBAL_TOURNAMENT_ID },
+			data: {
+				tournamentIds: {
+					push: tournamentId,
+				},
+			},
+		})
+
+		console.log(updatedGlobalTournaments)
+
+		return res.status(200).json(updatedTournament)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.patch("/profiles/games/update", async (req, res, next) => {
 	console.log(req.body)
-	if (req.body == null || req.body.accountId == null || req.body.gameUsernames == null) {
+	if (
+		req.body == null ||
+		req.body.accountId == null ||
+		req.body.gameUsernames == null
+	) {
 		return res.status(400).json({ error: "Invalid request body" })
 	}
 
 	if (req.body.gameUsernames["Fortnite"] != null) {
-		const fortnitePlayerData = await getFornitePlayerData(req.body.gameUsernames["Fortnite"])
+		const fortnitePlayerData = await getFornitePlayerData(
+			req.body.gameUsernames["Fortnite"]
+		)
 		console.log(fortnitePlayerData)
 	}
-
 })
 
 server.patch("/applications/status/update", async (req, res, next) => {
@@ -418,5 +479,8 @@ server.use((err, res) => {
 	const { message, status = 500 } = err
 	res.status(status).json({ message })
 })
+
+initializeTournaments()
+console.log("HEE",GLOBAL_TOURNAMENT_ID)
 
 module.exports = server

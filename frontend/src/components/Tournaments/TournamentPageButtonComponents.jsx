@@ -1,7 +1,12 @@
-export function CreateTournamentButton() {
+import { createNewTournament } from "../../api"
+
+export function CreateTournamentButton({ teamAccountId }) {
 	return (
-        <div className="button-holder">
-			<button className="create-tournament-btn" onClick={() => {}}>
+		<div className="button-holder">
+			<button
+				className="create-tournament-btn"
+				onClick={() => createNewTournament(teamAccountId)}
+			>
 				Create Tournament
 			</button>
 		</div>

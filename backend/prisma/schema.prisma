@@ -85,9 +85,10 @@ model Tournaments {
 model Tournament {
   tournamentId Int @id @default(autoincrement())
   name String
-  allParticipants Team[] @relation("TournamentParticipants")
   rounds Json
   createdAt DateTime @default(now())
-  allTournamentsId Int @unique
+  creatorAccountId Int
+  allTournamentsId Int
+  allParticipants Team[] @relation("TournamentParticipants")
   allTournaments Tournaments @relation("TournamentsList", fields: [allTournamentsId], references: [id])
 }

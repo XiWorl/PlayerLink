@@ -95,3 +95,23 @@ export async function getAllTournaments() {
 		console.error(`Error while trying to login with ${email}, redirecting to signup`)
 	}
 }
+
+export async function createNewTournament(teamAccountId) {
+	console.log("Creating new tournament")
+	try {
+		const response = await fetch(`${BASEURL}/api/tournaments/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				teamAccountId: teamAccountId,
+			}),
+		})
+		const data = await response.json()
+		console.log(data)
+		return data
+	} catch (error) {
+		console.error("Error creating application:", error)
+	}
+}

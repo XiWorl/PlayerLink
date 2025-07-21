@@ -6,6 +6,8 @@ import {
 } from "../externalApi/main.js"
 export const EditType = { ABOUT: "about", BIO: "bio", OVERVIEW: "overview" }
 export const AccountType = { PLAYER: "player", TEAM: "team" }
+export const TOURNAMENT_NAME = "Tournament"
+export let GLOBAL_TOURNAMENT_ID = {id: -1}
 import dotenv from "dotenv"
 
 dotenv.config()
