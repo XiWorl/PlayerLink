@@ -59,7 +59,7 @@ export async function getApexAccountData(username) {
 	return null
 }
 
-export async function getValorantPlayerData(username, tagline) {
+export async function getValorantAccountData(username, tagline) {
 	for (const region of REGIONS) {
 		try {
 			const URL = `https://api.henrikdev.xyz/valorant/v2/mmr/${region}/${username}/${tagline}`

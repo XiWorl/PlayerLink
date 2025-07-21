@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken"
+import { getFortniteAccountData, getApexAccountData, getValorantAccountData } from "../externalApi/main.js"
 export const EditType = {
 	ABOUT: "about",
 	BIO: "bio",
@@ -111,4 +112,44 @@ export async function dataPagination(prisma, accountType, query) {
 		totalPages: totalPages,
 		currentPage: page,
 	}
+}
+
+export async function getPlayerGamingPerformance(gameUsernames) {
+	let gamePerformance = {}
+
+	if (gameUsernames["Fortnite"] != null) {
+		const fortniteAccountData = await getFortniteAccountData(gameUsernames["Fortnite"])
+		if (fortniteAccountData != null) {
+			gamePerformance["Fortnite"] = fortniteAccountData
+		}
+	}
+
+	if (gameUsernames["Apex Legends"] != null) {
+		const apexAccountData = await getApexAccountData(gameUsernames["Apex Legends"])
+		if (apexAccountData != null) {
+			gamePerformance["Apex Legends"] = apexAccountData
+		}
+	}
+
+	if (gameUsernames["Valorant"] != null) {
+		if (gameUsernames["Valorant"].indexOf("#") != -1) {
+			const splitUsername = gameUsernames["Valorant"].split("#")
+			const username = splitUsername[0]
+			const tagline = splitUsername[1]
+
+			const valorantAccountData = await getValorantAccountData(username, tagline)
+			gamePerformance["Valorant"] = valorantAccountData
+		}
+	}
+	return gamePerformance
+}
+
+export async function updatePlayerGamingPerformance(prisma, accountId, gamePerformance) {
+	const updatedPlayerData = await prisma[AccountType.PLAYER].update({
+		where: { accountId: accountId },
+		data: {
+			games: gamePerformance,
+		},
+	})
+	return updatedPlayerData
 }
