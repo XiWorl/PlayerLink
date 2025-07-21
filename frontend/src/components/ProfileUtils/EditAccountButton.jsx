@@ -29,8 +29,10 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 		requestBody.currentlyHiring = convertYesOrNoToBoolean(formData.currentlyHiring)
 		requestBody.name = formData.teamName
 	} else {
-        requestBody.willingToRelocate = convertYesOrNoToBoolean(formData.willingToRelocate)
-    }
+		requestBody.willingToRelocate = convertYesOrNoToBoolean(
+			formData.willingToRelocate
+		)
+	}
 
 	try {
 		const response = await fetch(`${BASEURL}/api/profiles/edit/account`, {

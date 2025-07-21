@@ -93,7 +93,9 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 						profileId={id}
 					/>
 				</div>
-				<p className="profile-about-text">{`${overview || DEFAULT_PROFILE_INFO}`}</p>
+				<p className="profile-about-text">{`${
+					overview || DEFAULT_PROFILE_INFO
+				}`}</p>
 			</div>
 		</div>
 	)
