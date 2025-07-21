@@ -61,6 +61,7 @@ model Team {
   overview   String?
   accountId  Int @unique
   account     Account @relation(fields: [accountId], references: [id])
+  tournaments Tournament[] @relation("TournamentParticipants")
 }
 
 model Application {
@@ -73,4 +74,20 @@ model Application {
   teamAccount      Account @relation(fields: [teamAccountId], references: [id], name: "TeamApplications")
 
   @@unique([playerAccountId, teamAccountId])
+}
+
+model Tournaments {
+  id Int @id @default(autoincrement())
+  tournamentIds Int[]
+  tournaments Tournament[] @relation("TournamentsList")
+}
+
+model Tournament {
+  tournamentId Int @id @default(autoincrement())
+  name String
+  allParticipants Team[] @relation("TournamentParticipants")
+  rounds Json
+  createdAt DateTime @default(now())
+  allTournamentsId Int @unique
+  allTournaments Tournaments @relation("TournamentsList", fields: [allTournamentsId], references: [id])
 }

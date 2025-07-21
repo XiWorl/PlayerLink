@@ -63,7 +63,7 @@ function ProfileButton() {
 function TournamentsButton() {
 	return (
 		<Link to="/tournaments">
-			<button className="tournament-btn">
+			<button className="tournament-navbar">
 				<h3>Tournaments</h3>
 			</button>
 		</Link>
