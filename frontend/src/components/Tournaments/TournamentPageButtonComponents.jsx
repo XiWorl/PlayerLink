@@ -1,7 +1,7 @@
-export function CreateTournament() {
+export function CreateTournamentButton() {
 	return (
-		<div className="view-teams">
-			<button className="tournament-btn" onClick={() => {}}>
+        <div className="button-holder">
+			<button className="create-tournament-btn" onClick={() => {}}>
 				Create Tournament
 			</button>
 		</div>

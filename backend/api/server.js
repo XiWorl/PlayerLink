@@ -108,6 +108,15 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 	}
 })
 
+server.get("/api/tournaments/", async (req, res, next) => {
+	try {
+		const tournaments = await prisma.tournament.findMany()
+		return res.status(200).json(tournaments)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.post("/account/application", async (req, res, next) => {
 	try {
 		const playerApplicationToTeam = await prisma.application.findUnique({

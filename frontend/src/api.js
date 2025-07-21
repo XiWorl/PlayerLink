@@ -68,7 +68,6 @@ export async function createTeamApplication(playerAccountId, teamAccountId) {
 }
 
 export async function updateGamingUsernames(playerAccountId, gameUsernames) {
-	console.log(gamingUsernames)
 	try {
 		const response = await fetch(`${BASEURL}/profiles/games/update`, {
 			method: "PATCH",
@@ -84,5 +83,15 @@ export async function updateGamingUsernames(playerAccountId, gameUsernames) {
 		return data
 	} catch (error) {
 		console.error("Error creating application:", error)
+	}
+}
+
+export async function getAllTournaments() {
+	try {
+		const response = await fetch(`${BASEURL}/api/tournaments`)
+		const tournamentsData = await response.json()
+		return tournamentsData
+	} catch {
+		console.error(`Error while trying to login with ${email}, redirecting to signup`)
 	}
 }
