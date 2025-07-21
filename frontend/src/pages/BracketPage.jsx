@@ -17,14 +17,34 @@ function AdvanceButton() {
 	)
 }
 
+function MatchupTile({matchup}) {
+	console.log(matchup)
+	return (
+		<div className="matchup-tile">
+			<div className="teams">
+				<div className="team 1">
+					<h2>Team1 Name</h2>
+				</div>
+				<div className="versus">
+					<h2>VS</h2>
+				</div>
+				<div className="team 2">
+					<h2>Team2 Name</h2>
+				</div>
+			</div>
+		</div>
+	)
+}
+
 async function loadTournamentInformation(setTournamentInformation, id) {
 	const tournamentInformation = await getTournament(id)
 	setTournamentInformation(tournamentInformation)
-    console.log(tournamentInformation)
+	console.log(tournamentInformation)
 }
 
 export default function BracketPage() {
 	const [tournamentInformation, setTournamentInformation] = useState(null)
+	const [displayedMatchups, setDisplayedMatchups] = useState([])
 	const [rounds, setRounds] = useState({})
 	const { id } = useParams()
 
@@ -32,7 +52,7 @@ export default function BracketPage() {
 		loadTournamentInformation(setTournamentInformation, id)
 	}, [])
 
-	return <TournamentLoading tournamentInformation={tournamentInformation}/>
+	// return <TournamentLoading tournamentInformation={tournamentInformation}/>
 
 	return (
 		<>
@@ -45,32 +65,9 @@ export default function BracketPage() {
 				</div>
 
 				<div className="matchups">
-					<div className="matchup-tile">
-						<div className="teams">
-							<div className="team 1">
-								<h2>Team1 Name</h2>
-							</div>
-							<div className="versus">
-								<h2>VS</h2>
-							</div>
-							<div className="team 2">
-								<h2>Team2 Name</h2>
-							</div>
-						</div>
-					</div>
-					<div className="matchup-tile">
-						<div className="teams">
-							<div className="team 1">
-								<h2>Team1 Name</h2>
-							</div>
-							<div className="versus">
-								<h2>VS</h2>
-							</div>
-							<div className="team 2">
-								<h2>Team2 Name</h2>
-							</div>
-						</div>
-					</div>
+					{displayedMatchups.map((matchup, index) => {
+						return <MatchupTile key={index} matchup={matchup}/>
+					})}
 				</div>
 			</div>
 		</>
