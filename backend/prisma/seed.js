@@ -116,7 +116,7 @@ async function main() {
         })
     }
 
-    for (let i = 1; i <= 1; i++) {
+    for (let i = 1; i <= 3; i++) {
         for (let j = 0; j <= generatedTeamInfos.length; j++) {
             const randomNum = Math.random() * generatedPlayerInfos.length
             const allPlayers = await prisma.player.findMany()

@@ -5,12 +5,12 @@ import { getProfileData } from "../../api"
 
 async function addProfileToRoster(id, setRoster, roster) {
 	const profileInformation = await getProfileData(AccountType.PLAYER, id)
-	setRoster([...roster, profileInformation])
+        setRoster(prevRoster => [...prevRoster, profileInformation])
 }
 
-function createRosterTile() {}
 
 export function Roster({ accountRosterIds }) {
+    console.log(accountRosterIds)
 	const navigate = useNavigate()
 	const [roster, setRoster] = useState([])
 
@@ -18,8 +18,9 @@ export function Roster({ accountRosterIds }) {
 		for (const id of accountRosterIds) {
 			addProfileToRoster(id, setRoster, roster)
 		}
-	}, [accountRosterIds])
+	}, [])
 
+    console.log(roster)
 	return (
 		<div className="profile-about">
 			<div className="profile-about-header">
@@ -28,7 +29,7 @@ export function Roster({ accountRosterIds }) {
 			<div className="roster-container">
 				{roster.map((profileInformation, index) => {
 					return (
-						<div className="roster-tile" onClick={() => {navigate(`/profiles/${profileInformation.accountId}`)}}>
+						<div className="roster-tile" key={index} onClick={() => {navigate(`/profiles/${profileInformation.accountId}`)}}>
 							<div className="apply-profile-picture"></div>
 							<div className="roster-tile-information">
 								<h4>{profileInformation.firstName || ""} {profileInformation.lastName || ""}</h4>
