@@ -1,119 +1,137 @@
-const sampleTeams = [
-	{
-		name: "Alpha Squad",
-		players: ["player1", "player2", "player3", "player4", "player5"],
-		location: "New York",
-		supportedGames: ["League of Legends", "Valorant"],
-		skillLevel: 85,
-	},
-	{
-		name: "Beta Bombers",
-		players: ["player6", "player7", "player8", "player9", "player10"],
-		location: "Los Angeles",
-		supportedGames: ["League of Legends", "Dota 2"],
-		skillLevel: 82,
-	},
-	{
-		name: "Gamma Gladiators",
-		players: ["player11", "player12", "player13", "player14", "player15"],
-		location: "Chicago",
-		supportedGames: ["Valorant", "Counter-Strike"],
-		skillLevel: 78,
-	},
-	{
-		name: "Delta Destroyers",
-		players: ["player16", "player17", "player18", "player19", "player20"],
-		location: "Miami",
-		supportedGames: ["Fortnite", "Apex Legends"],
-		skillLevel: 90,
-	},
-	{
-		name: "Epsilon Elite",
-		players: ["player21", "player22", "player23", "player24", "player25"],
-		location: "Seattle",
-		supportedGames: ["League of Legends", "Valorant", "Counter-Strike"],
-		skillLevel: 88,
-	},
-	{
-		name: "Zeta Zealots",
-		players: ["player26", "player27", "player28", "player29", "player30"],
-		location: "Boston",
-		supportedGames: ["Dota 2", "Counter-Strike"],
-		skillLevel: 75,
-	},
-	{
-		name: "Eta Enforcers",
-		players: ["player31", "player32", "player33", "player34", "player5"],
-		location: "New York",
-		supportedGames: ["League of Legends", "Valorant"],
-		skillLevel: 83,
-	},
-	{
-		name: "Theta Thrashers",
-		players: ["player35", "player36", "player37", "player38", "player39"],
-		location: "San Francisco",
-		supportedGames: ["Fortnite", "Apex Legends", "Call of Duty"],
-		skillLevel: 79,
-	},
-	{
-		name: "Iota Immortals",
-		players: ["player40", "player41", "player42", "player43", "player44"],
-		location: "Austin",
-		supportedGames: ["League of Legends", "Valorant"],
-		skillLevel: 92,
-	},
-	{
-		name: "Kappa Knights",
-		players: ["player45", "player46", "player47", "player48", "player49"],
-		location: "Denver",
-		supportedGames: ["Counter-Strike", "Valorant"],
-		skillLevel: 81,
-	},
-	{
-		name: "Lambda Lords",
-		players: ["player50", "player51", "player52", "player53", "player10"],
-		location: "Los Angeles",
-		supportedGames: ["League of Legends", "Dota 2"],
-		skillLevel: 84,
-	},
-	{
-		name: "Mu Marauders",
-		players: ["player54", "player55", "player56", "player57", "player58"],
-		location: "Philadelphia",
-		supportedGames: ["Rocket League", "Fortnite"],
-		skillLevel: 77,
-	},
-	{
-		name: "Nu Ninjas",
-		players: ["player59", "player60", "player61", "player62", "player63"],
-		location: "Chicago",
-		supportedGames: ["Valorant", "Counter-Strike"],
-		skillLevel: 80,
-	},
-	{
-		name: "Xi Xecutioners",
-		players: ["player64", "player65", "player66", "player67", "player68"],
-		location: "Houston",
-		supportedGames: ["Apex Legends", "Call of Duty"],
-		skillLevel: 86,
-	},
-	{
-		name: "Omicron Overlords",
-		players: ["player69", "player70", "player71", "player72", "player73"],
-		location: "Seattle",
-		supportedGames: ["League of Legends", "Dota 2"],
-		skillLevel: 89,
-	},
-	{
-		name: "Pi Punishers",
-		players: ["player74", "player75", "player76", "player77", "player78"],
-		location: "Atlanta",
-		supportedGames: ["Valorant", "Counter-Strike", "Overwatch"],
-		skillLevel: 76,
-	},
-]
+// const sampleTeams = [
+// 	{
+// 		name: "Alpha Squad",
+// 		players: ["player1", "player2", "player3", "player4", "player5"],
+// 		location: "New York",
+// 		supportedGames: ["League of Legends", "Valorant"],
+// 		skillLevel: 85,
+// 	},
+// 	{
+// 		name: "Beta Bombers",
+// 		players: ["player6", "player7", "player8", "player9", "player10"],
+// 		location: "Los Angeles",
+// 		supportedGames: ["League of Legends", "Dota 2"],
+// 		skillLevel: 82,
+// 	},
+// 	{
+// 		name: "Gamma Gladiators",
+// 		players: ["player11", "player12", "player13", "player14", "player15"],
+// 		location: "Chicago",
+// 		supportedGames: ["Valorant", "Counter-Strike"],
+// 		skillLevel: 78,
+// 	},
+// 	{
+// 		name: "Delta Destroyers",
+// 		players: ["player16", "player17", "player18", "player19", "player20"],
+// 		location: "Miami",
+// 		supportedGames: ["Fortnite", "Apex Legends"],
+// 		skillLevel: 90,
+// 	},
+// 	{
+// 		name: "Epsilon Elite",
+// 		players: ["player21", "player22", "player23", "player24", "player25"],
+// 		location: "Seattle",
+// 		supportedGames: ["League of Legends", "Valorant", "Counter-Strike"],
+// 		skillLevel: 88,
+// 	},
+// 	{
+// 		name: "Zeta Zealots",
+// 		players: ["player26", "player27", "player28", "player29", "player30"],
+// 		location: "Boston",
+// 		supportedGames: ["Dota 2", "Counter-Strike"],
+// 		skillLevel: 75,
+// 	},
+// 	{
+// 		name: "Eta Enforcers",
+// 		players: ["player31", "player32", "player33", "player34", "player5"],
+// 		location: "New York",
+// 		supportedGames: ["League of Legends", "Valorant"],
+// 		skillLevel: 83,
+// 	},
+// 	{
+// 		name: "Theta Thrashers",
+// 		players: ["player35", "player36", "player37", "player38", "player39"],
+// 		location: "San Francisco",
+// 		supportedGames: ["Fortnite", "Apex Legends", "Call of Duty"],
+// 		skillLevel: 79,
+// 	},
+// 	{
+// 		name: "Iota Immortals",
+// 		players: ["player40", "player41", "player42", "player43", "player44"],
+// 		location: "Austin",
+// 		supportedGames: ["League of Legends", "Valorant"],
+// 		skillLevel: 92,
+// 	},
+// 	{
+// 		name: "Kappa Knights",
+// 		players: ["player45", "player46", "player47", "player48", "player49"],
+// 		location: "Denver",
+// 		supportedGames: ["Counter-Strike", "Valorant"],
+// 		skillLevel: 81,
+// 	},
+// 	{
+// 		name: "Lambda Lords",
+// 		players: ["player50", "player51", "player52", "player53", "player10"],
+// 		location: "Los Angeles",
+// 		supportedGames: ["League of Legends", "Dota 2"],
+// 		skillLevel: 84,
+// 	},
+// 	{
+// 		name: "Mu Marauders",
+// 		players: ["player54", "player55", "player56", "player57", "player58"],
+// 		location: "Philadelphia",
+// 		supportedGames: ["Rocket League", "Fortnite"],
+// 		skillLevel: 77,
+// 	},
+// 	{
+// 		name: "Nu Ninjas",
+// 		players: ["player59", "player60", "player61", "player62", "player63"],
+// 		location: "Chicago",
+// 		supportedGames: ["Valorant", "Counter-Strike"],
+// 		skillLevel: 80,
+// 	},
+// 	{
+// 		name: "Xi Xecutioners",
+// 		players: ["player64", "player65", "player66", "player67", "player68"],
+// 		location: "Houston",
+// 		supportedGames: ["Apex Legends", "Call of Duty"],
+// 		skillLevel: 86,
+// 	},
+// 	{
+// 		name: "Omicron Overlords",
+// 		players: ["player69", "player70", "player71", "player72", "player73"],
+// 		location: "Seattle",
+// 		supportedGames: ["League of Legends", "Dota 2"],
+// 		skillLevel: 89,
+// 	},
+// 	{
+// 		name: "Pi Punishers",
+// 		players: ["player74", "player75", "player76", "player77", "player78"],
+// 		location: "Atlanta",
+// 		supportedGames: ["Valorant", "Counter-Strike", "Overwatch"],
+// 		skillLevel: 76,
+// 	},
+// ]
+import { LOCATION_OPTIONS } from "../ServerUtils.js"
+const nearbyLocationScores = {
+	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
+	[LOCATION_OPTIONS.SOUTH_AMERICA]: new Set([LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.EUROPE]: new Set([LOCATION_OPTIONS.ASIA]),
+	[LOCATION_OPTIONS.AFRICA]: new Set(),
+	[LOCATION_OPTIONS.ASIA]: new Set([LOCATION_OPTIONS.EUROPE]),
+	[LOCATION_OPTIONS.OCEANIA]: new Set(),
+}
 
-const teams = []
+const Weights = {
+	LOCATION: 10,
+	GAME: 15,
+	LEVEL: 5,
+	PLAYER: 20,
+}
+
+const SKILL_LEVEL_RANGE = 10
 
 /**
  * Placeholder function for calculating conflict score between two teams
@@ -122,22 +140,34 @@ const teams = []
  * @returns {number} - Conflict score between the teams
  */
 function getConflictScore(team1, team2) {
-    let value = 0;
-    if (team1.location !== team2.location) {
-        value += 10;
-    }
-    if (team1.supportedGames.some(game => team2.supportedGames.includes(game))) {
-        value += 5;
-    }
-    if (team1.skillLevel > team2.skillLevel) {
-        value += 2;
-    } else if (team1.skillLevel < team2.skillLevel) {
-        value -= 2;
-    }
-    if (team1.players.some(player => team2.players.includes(player))) {
-        value -= 10;
-    }
-    return value;
+	let score = 0
+
+	score += Weights.LOCATION
+	if (team1.location === team2.location) {
+		score -= Weights.LOCATION
+	} else if (nearbyLocationScores[team1.location].has(team2.location)) {
+		score -= Weights.LOCATION / 2
+	}
+
+	if (team1.supportedGames.some((game) => team2.supportedGames.includes(game))) {
+		score += 5
+	}
+
+	score += Weights.LEVEL
+	if (Math.abs(team1.skillLevel - team2.skillLevel) <= SKILL_LEVEL_RANGE) {
+		score -= 5
+	}
+
+	score += Weights.GAME
+	if (team1.supportedGames.some((game) => team2.supportedGames.includes(game))) {
+		score -= Weights.GAME
+	}
+
+	const setOfPlayers = new Set(team2.roster)
+	const numberOfSharedPlayers = team1.filter((int) => setOfPlayers.has(int)).length
+	score += Weights.PLAYER * numberOfSharedPlayers
+
+	return score
 }
 
 /**
@@ -232,7 +262,8 @@ function generateTournamentMatchups(teams) {
 	return matchups
 }
 
-console.log(generateTournamentMatchups(sampleTeams))
+// console.log(generateTournamentMatchups(sampleTeams))
+// generateTournamentMatchups(sampleTeams)
 
 module.exports = {
 	sampleTeams,

@@ -1,26 +1,6 @@
 const { PrismaClient } = require("../generated/prisma")
 const prisma = new PrismaClient()
 
-const generatedTeamInfo = {
-    name: "Unlimited Range Gaming",
-    location: "US",
-    description: "FPS focused e-sports Team",
-    overview:
-        "We are a team of FPS players looking to expand our reach and grow our community.",
-    yearEstablished: "2022",
-    currentlyHiring: true,
-}
-
-const generatedPlayerInfo = {
-    firstName: "Billy",
-    lastName: "Bob",
-    yearsOfExperience: "0",
-    location: "US",
-    willingToRelocate: false,
-    bio: "#1 ranked player in the US | FPS certified | Full-time",
-    about: "Hello!, I'm a FPS player looking to expand my reach and grow my community. I'm currently looking for a team to join and help me achieve my goals.",
-}
-
 const YearsOfExperienceOptions = Object.freeze({
     ZERO_TO_ONE: "0-1",
     TWO_TO_THREE: "2-3",
@@ -105,30 +85,63 @@ async function main() {
     const generatedTeamInfos = []
     const generatedPlayerInfos = []
     for (let i = 1; i <= 15; i++) {
-        generatedTeamInfos.push(generateRandomTeamInfo(i))
-        generatedPlayerInfos.push(generateRandomPlayerInfo(i))
-        await prisma.account.create({
+
+        const team = generateRandomTeamInfo(i)
+        generatedTeamInfos.push(team)
+
+        const player = generateRandomPlayerInfo(i)
+        generatedPlayerInfos.push(player)
+
+        const teamAcc = await prisma.account.create({
             data: {
                 accountType: "team",
                 email: `team${i}@gmail.com`,
                 team: {
                     create:
-                        generateRandomTeamInfo(i)
+                    team
                     ,
                 },
             },
         })
-        await prisma.account.create({
+        const playerAcc = await prisma.account.create({
             data: {
                 accountType: "player",
                 email: `player${i}@gmail.com`,
                 player: {
                     create:
-                        generateRandomPlayerInfo(i)
+                    player
                     ,
                 },
             },
         })
+    }
+
+    for (let i = 1; i <= 1; i++) {
+        for (let j = 0; j <= generatedTeamInfos.length; j++) {
+            const randomNum = Math.random() * generatedPlayerInfos.length
+            const allPlayers = await prisma.player.findMany()
+            const allTeams = await prisma.team.findMany()
+
+            const randomPlayer = allPlayers[Math.floor(randomNum)]
+            const randomTeam = allTeams[Math.floor(randomNum)]
+
+            const teamUpdate = await prisma.team.update({
+                where: {
+                    accountId: randomTeam.accountId,
+                },
+                data: {
+                    rosterAccountIds: [...randomTeam.rosterAccountIds, randomPlayer.accountId],
+                },
+            })
+            const playerUpdate = await prisma.player.update({
+                where: {
+                    accountId: randomPlayer.accountId,
+                },
+                data: {
+                    rosterAccountId: randomTeam.teamId,
+                },
+            })
+        }
     }
 }
 
