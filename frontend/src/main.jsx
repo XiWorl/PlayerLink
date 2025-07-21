@@ -9,6 +9,7 @@ import PrivateRoute from "./utils/PrivateRoute.jsx"
 import ConnectPage from "./pages/ConnectPage.jsx"
 import ApplyPage from "./pages/ApplyPage.jsx"
 import TournamentsPage from "./pages/TournamentsPage.jsx"
+import BracketPage from "./pages/BracketPage.jsx"
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
@@ -45,6 +46,10 @@ createRoot(document.getElementById("root")).render(
 					<Route
 						path="/tournaments"
 						element={<PrivateRoute page={<TournamentsPage />} />}
+					/>
+					<Route
+						path="/tournaments/:id"
+						element={<PrivateRoute page={<BracketPage />} />}
 					/>
 				</Routes>
 			</BrowserRouter>
