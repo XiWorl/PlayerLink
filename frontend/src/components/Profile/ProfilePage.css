@@ -206,11 +206,10 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 15px;
-  cursor: pointer;
   transition: all 0.1s ease-in-out;
 }
 
-.roster-tile:hover {
+.roster-tile.pointer:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -221,13 +220,16 @@
 }
 .roster-tile-information h4 {
   align-items: center;
-
   margin: 0;
 }
 .roster-tile-information h5 {
   margin: 0;
   margin-top: 10px;
   font-weight: 400;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

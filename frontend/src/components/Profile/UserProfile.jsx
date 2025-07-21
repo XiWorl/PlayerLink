@@ -5,6 +5,7 @@ import { AccountType } from "../../utils/globalUtils"
 import GamingExperience from "./GamingExperience"
 import "./ProfilePage.css"
 const defaultProfileInfo = ""
+import { TeamExperience } from "./TeamExperience"
 import ModalBody from "../TheModal/ModalBody"
 
 export const UserProfileContext = createContext()
@@ -54,6 +55,12 @@ export default function UserProfile({ isLoading, accountData }) {
 						<GamingExperience accountData={accountData} />
 					</div>
 				)}
+				<div className="profile-about">
+					<div className="profile-about-header">
+						<h3>Current Teams</h3>
+					</div>
+					<TeamExperience rosterAccountIds={accountData.rosterAccountIds} />
+				</div>
 			</div>
 		</UserProfileContext.Provider>
 	)

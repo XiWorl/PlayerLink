@@ -11,13 +11,12 @@ async function addProfileToRoster(id, setRoster) {
 }
 
 export function Roster({ accountRosterIds }) {
-    console.log(accountRosterIds)
 	const navigate = useNavigate()
 	const [roster, setRoster] = useState([])
 
 	useEffect(() => {
 		for (const id of accountRosterIds) {
-			addProfileToRoster(id, setRoster, roster)
+			addProfileToRoster(id, setRoster)
 		}
 	}, [])
 
@@ -30,7 +29,7 @@ export function Roster({ accountRosterIds }) {
 				{roster.map((profileInformation, index) => {
 					return (
 						<div
-							className="roster-tile"
+							className="roster-tile pointer"
 							key={index}
 							onClick={() => {
 								navigate(`/profiles/${profileInformation.accountId}`)

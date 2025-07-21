@@ -180,7 +180,7 @@ async function main() {
 					accountId: randomPlayer.accountId,
 				},
 				data: {
-					rosterAccountIds: [...randomPlayer.rosterAccountIds, randomTeam.teamId]
+					rosterAccountIds: [...randomPlayer.rosterAccountIds, randomTeam.accountId]
 				},
 			})
 		}
