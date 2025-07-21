@@ -6,6 +6,7 @@ import { AccountType } from "../../utils/globalUtils"
 import { modalSubmitHelper } from "../ProfileUtils/EditProfileButtonUtils"
 import { useParams } from "react-router-dom"
 import { useState } from "react"
+import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import EditAccountButton from "../ProfileUtils/EditAccountButton"
 import "../ProfileUtils/ProfilePage.css"
 
@@ -14,7 +15,7 @@ const DEFAULT_PROFILE_INFO = ""
 export default function PlayerProfile({ isLoading, accountData, setIsLoading }) {
 	if (isLoading || accountData.teamId != null) {
 		setIsLoading(true)
-		return <h1>Loading...</h1>
+		return <LoadingScreen message={"Loading Profile..."} />
 	}
 
 	const [bio, setBio] = useState(accountData.bio || DEFAULT_PROFILE_INFO)

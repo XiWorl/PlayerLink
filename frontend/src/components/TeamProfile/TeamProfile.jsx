@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
 import EditAccountButton from "../ProfileUtils/EditAccountButton"
 import ApplyButton from "./ApplyButton"
+import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import "../ProfileUtils/ProfilePage.css"
 
 const DEFAULT_PROFILE_INFO = ""
@@ -15,7 +16,7 @@ const DEFAULT_PROFILE_INFO = ""
 export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 	if (isLoading || accountData.playerId != null) {
 		setIsLoading(true)
-		return <h1>Loading...</h1>
+		return <LoadingScreen message={"Loading Profile..."} />
 	}
 
 	const { id } = useParams()
