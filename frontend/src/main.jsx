@@ -14,45 +14,43 @@ import BracketPage from "./pages/BracketPage.jsx"
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 createRoot(document.getElementById("root")).render(
-	<StrictMode>
-		<GoogleOAuthProvider clientId={CLIENT_ID}>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<App />} />
-					<Route
-						path="/profiles/:id"
-						element={
-							<PrivateRoute
-								page={<ProfilePage accountType={AccountType.PLAYER} />}
-							/>
-						}
-					/>
-					<Route
-						path="/teams/:id"
-						element={
-							<PrivateRoute
-								page={<ProfilePage accountType={AccountType.TEAM} />}
-							/>
-						}
-					/>
-					<Route
-						path="/connect"
-						element={<PrivateRoute page={<ConnectPage />} />}
-					/>
-					<Route
-						path="/apply/:id"
-						element={<PrivateRoute page={<ApplyPage />} />}
-					/>
-					<Route
-						path="/tournaments"
-						element={<PrivateRoute page={<TournamentsPage />} />}
-					/>
-					<Route
-						path="/tournaments/:id"
-						element={<PrivateRoute page={<BracketPage />} />}
-					/>
-				</Routes>
-			</BrowserRouter>
-		</GoogleOAuthProvider>
-	</StrictMode>
+	<GoogleOAuthProvider clientId={CLIENT_ID}>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<App />} />
+				<Route
+					path="/profiles/:id"
+					element={
+						<PrivateRoute
+							page={<ProfilePage accountType={AccountType.PLAYER} />}
+						/>
+					}
+				/>
+				<Route
+					path="/teams/:id"
+					element={
+						<PrivateRoute
+							page={<ProfilePage accountType={AccountType.TEAM} />}
+						/>
+					}
+				/>
+				<Route
+					path="/connect"
+					element={<PrivateRoute page={<ConnectPage />} />}
+				/>
+				<Route
+					path="/apply/:id"
+					element={<PrivateRoute page={<ApplyPage />} />}
+				/>
+				<Route
+					path="/tournaments"
+					element={<PrivateRoute page={<TournamentsPage />} />}
+				/>
+				<Route
+					path="/tournaments/:id"
+					element={<PrivateRoute page={<BracketPage />} />}
+				/>
+			</Routes>
+		</BrowserRouter>
+	</GoogleOAuthProvider>
 )

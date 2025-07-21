@@ -212,6 +212,7 @@ server.post("/api/signup/player", async (req, res, next) => {
 						gameUsernames: req.body.gameUsernames,
 						location: req.body.location,
 						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
+						rosterAccountIds: []
 					},
 				},
 			},
@@ -383,7 +384,7 @@ server.patch("/applications/status/update", async (req, res, next) => {
 			const updatedPlayerData = await prisma.player.update({
 				where: { accountId: req.body.playerAccountId },
 				data: {
-					rosterAccountId: req.body.teamAccountId,
+					rosterAccountIds: req.body.teamAccountId,
 				},
 			})
 			const updatedTeamData = await prisma.team.update({

@@ -58,7 +58,7 @@ export function ApplicationModal() {
 	const teamAccountId = getAccountDataFromSessionStorage().id
 
 	useEffect(() => {
-		if (profileInformation.rosterAccountId != null || applicationStatus != AppicationStatusOptions.PENDING) {
+		if (profileInformation.rosterAccountIds != null || applicationStatus != AppicationStatusOptions.PENDING) {
 			viewProfile(profileInformation, navigate)
 			return
 		}
