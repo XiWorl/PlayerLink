@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { getTournament } from "../api"
+import TournamentLoading from "../components/Tournaments/TournamentLoading"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/Tournaments/BracketPage.css"
 
@@ -30,6 +31,8 @@ export default function BracketPage() {
 	useEffect(() => {
 		loadTournamentInformation(setTournamentInformation, id)
 	}, [])
+
+	return <TournamentLoading tournamentInformation={tournamentInformation}/>
 
 	return (
 		<>
