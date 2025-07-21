@@ -1,11 +1,17 @@
 import { createContext, useState } from "react"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
+import { Roster } from "./Roster"
 import ApplyButton from "./ApplyButton"
 import EditProfileButton from "./EditProfile"
 import "./ProfilePage.css"
 
 const defaultProfileInfo = ""
 export const TeamProfileContext = createContext()
+
+const TabOptions = {
+	HOME: "Home",
+	ROSTER: "Roster",
+}
 
 export default function TeamProfile({ isLoading, accountData }) {
 	if (isLoading) {
@@ -15,6 +21,7 @@ export default function TeamProfile({ isLoading, accountData }) {
 	const [description, setDescription] = useState(
 		accountData.description || defaultProfileInfo
 	)
+	const [selectedTab, setSelectedTab] = useState("Home")
 	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
 	const sessionStorageAccountData = getAccountDataFromSessionStorage()
 
@@ -40,8 +47,8 @@ export default function TeamProfile({ isLoading, accountData }) {
 					</div>
 					<div>
 						<div>
-							<button>Home</button>
-							<button>Roster</button>
+							<button onClick={()=>setSelectedTab(TabOptions.HOME)}>Home</button>
+							<button onClick={()=>setSelectedTab(TabOptions.ROSTER)}>Roster</button>
 							{sessionStorageAccountData &&
 								sessionStorageAccountData.accountType !=
 									AccountType.TEAM &&
@@ -56,12 +63,16 @@ export default function TeamProfile({ isLoading, accountData }) {
 						</div>
 					</div>
 				</div>
-				<div className="profile-about">
-					<div className="profile-about-header">
-						<h3>Overview</h3>
+
+				{selectedTab === TabOptions.HOME && (
+					<div className="profile-about">
+						<div className="profile-about-header">
+							<h3>Overview</h3>
+						</div>
+						<p className="profile-about-text">{`${overview}`}</p>
 					</div>
-					<p className="profile-about-text">{`${overview}`}</p>
-				</div>
+				)}
+				{selectedTab === TabOptions.ROSTER && <Roster accountRosterIds={accountData.rosterAccountIds}/>}
 			</div>
 		</TeamProfileContext.Provider>
 	)
