@@ -1,85 +1,62 @@
 import { useState } from "react"
-import { createContext } from "react"
-import { Header } from "./Header"
 import { AccountType } from "../../utils/globalUtils"
-import { DEFAULT_ERRORS_VALUE } from "./utils"
-import SignupForm from "./SignupForm"
+import { useNavigate } from "react-router-dom"
+import { ModalBody } from "../AccountInformationModal/ModalBody"
+import { BASEURL, GOOGLE_EMAIL_KEY, TOKEN_SESSION_KEY, ACCOUNT_INFORMATION_KEY } from "../../utils/globalUtils"
 import "./SignupModal.css"
-export const SignupModalContext = createContext()
 
-const DEFAULT_FORM_VALUE = ""
+const MODAL_TITLE = "Create Your Account"
 
-function updateFormState(event, setFormData, setFormErrors, selectedAccountType) {
-	const { name, value } = event.target
+async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
+	const body = {
+		...formData,
+		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),
+	}
 
-	setFormData(function (previousValue) {
-		return {
-			...previousValue,
-			[selectedAccountType]: {
-				...previousValue[selectedAccountType],
-				[name]: value,
+	try {
+		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
 			},
-		}
-	})
-	setFormErrors(function (previousValue) {
-		return {
-			...previousValue,
-			[selectedAccountType]: {
-				...previousValue[selectedAccountType],
-				[name]: DEFAULT_FORM_VALUE,
-			},
-		}
-	})
+			body: JSON.stringify(body),
+		})
+
+		const accountData = await response.json()
+
+		sessionStorage.setItem(TOKEN_SESSION_KEY, accountData.token)
+		sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
+
+		const navigationURL =
+			accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
+		navigate(`/${navigationURL}/${accountData.id}`)
+	} catch (error) {
+		console.error("Error while trying to create account:", error)
+	}
 }
 
 export default function SignupModal({ onClose }) {
-	const DEFAULT_FORM_DATA = {
-		player: {
-			firstName: DEFAULT_FORM_VALUE,
-			lastName: DEFAULT_FORM_VALUE,
-			location: DEFAULT_FORM_VALUE,
-			willingToRelocate: DEFAULT_FORM_VALUE,
-			yearsOfExperience: DEFAULT_FORM_VALUE,
-		},
-		team: {
-			teamName: DEFAULT_FORM_VALUE,
-			hiring: DEFAULT_FORM_VALUE,
-			yearEstablished: DEFAULT_FORM_VALUE,
-			location: DEFAULT_FORM_VALUE,
-		},
+	const navigate = useNavigate()
+	const [selectedAccountType, _setSelectedAccountType] = useState(AccountType.PLAYER)
+	const [isModalOpen, setIsModalOpen] = useState(true)
+
+	function handleClose() {
+		setIsModalOpen(false)
+		onClose()
 	}
 
-	const [selectedAccountType, setSelectedAccountType] = useState(AccountType.PLAYER)
-	const [formData, setFormData] = useState(DEFAULT_FORM_DATA)
-	const [formErrors, setFormErrors] = useState(DEFAULT_ERRORS_VALUE)
-
-	function handleInputChange(event) {
-		updateFormState(event, setFormData, setFormErrors, selectedAccountType)
-	}
+	if (isModalOpen === false) return
 
 	return (
-		<SignupModalContext.Provider
-			value={{
-				formData,
-				formErrors,
-				handleInputChange,
-				selectedAccountType,
-				AccountType,
-				setFormErrors,
-				setSelectedAccountType,
-				setFormData,
-				DEFAULT_FORM_DATA,
-			}}
-		>
-			<div className="signup-modal-overlay">
-				<div
-					className="signup-modal-content"
-					onClick={(event) => event.stopPropagation()}
-				>
-					<Header onClose={onClose} />
-					<SignupForm onClose={onClose} />
-				</div>
-			</div>
-		</SignupModalContext.Provider>
+		<div>
+			<ModalBody
+				isOpen={isModalOpen}
+				onClose={handleClose}
+				onSubmit={(submissionFormData, accountType) => onSubmissionFormValid(submissionFormData, accountType, navigate)}
+				title={MODAL_TITLE}
+				accountType={selectedAccountType}
+				useSignupHeader={true}
+			/>
+		</div>
 	)
 }
