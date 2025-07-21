@@ -281,6 +281,7 @@ server.post("/api/tournaments/create", async (req, res, next) => {
 				creatorAccountId: req.body.accountId,
 				name: TOURNAMENT_NAME,
 				rounds: roundsJson,
+				minimumParticipants: MININUM_NUMBER_OF_TEAMS,
 				allTournaments: {
 					connect: { id: GLOBAL_TOURNAMENT_ID },
 				},
@@ -300,7 +301,7 @@ server.post("/api/tournaments/create", async (req, res, next) => {
 			},
 		})
 
-		const updatedGlobalTournaments = await prisma.tournaments.update({
+		await prisma.tournaments.update({
 			where: { id: GLOBAL_TOURNAMENT_ID },
 			data: {
 				tournamentIds: {

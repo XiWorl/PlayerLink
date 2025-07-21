@@ -5,8 +5,8 @@ export default function TournamentLoading({ tournamentInformation }) {
 	if (!tournamentInformation) return null
 	const name = tournamentInformation.name
 	const participants = Object.keys(tournamentInformation.allParticipants).length
-	const minimumParticipants = 16
-
+	const minimumParticipants = tournamentInformation.minimumParticipants
+    
 	return (
 		<>
 			<Navbar />

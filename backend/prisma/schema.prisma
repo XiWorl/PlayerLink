@@ -85,6 +85,7 @@ model Tournament {
   tournamentId Int @id @default(autoincrement())
   name String
   rounds Json
+  minimumParticipants Int
   createdAt DateTime @default(now())
   creatorAccountId Int
   allTournamentsId Int
