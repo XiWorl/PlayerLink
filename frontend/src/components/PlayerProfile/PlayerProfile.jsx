@@ -34,7 +34,7 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 				<div className="profile-info">
 					<h1 className="profile-name">{`${accountData.firstName} ${accountData.lastName}`}</h1>
 					<div className="profile-title">
-						<p className="profile-title-text">{`${bio}`}</p>
+						<p className="profile-title-text">{`${bio || DEFAULT_PROFILE_INFO}`}</p>
 						<EditProfileTextButton
 							modalTitle={"Edit Bio"}
 							onSubmitButtonClicked={(textValue) =>
@@ -73,7 +73,7 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 						profileId={id}
 					/>
 				</div>
-				<p className="profile-about-text">{`${about}`}</p>
+				<p className="profile-about-text">{`${about || DEFAULT_PROFILE_INFO}`}</p>
 			</div>
 		</div>
 	)

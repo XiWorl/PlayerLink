@@ -10,7 +10,7 @@ import EditAccountButton from "../ProfileUtils/EditAccountButton"
 import ApplyButton from "./ApplyButton"
 import "../ProfileUtils/ProfilePage.css"
 
-const defaultProfileInfo = ""
+const DEFAULT_PROFILE_INFO = ""
 
 export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 	if (isLoading || accountData.playerId != null) {
@@ -20,9 +20,9 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 
 	const { id } = useParams()
 	const [description, setDescription] = useState(
-		accountData.description || defaultProfileInfo
+		accountData.description || DEFAULT_PROFILE_INFO
 	)
-	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
+	const [overview, setOverview] = useState(accountData.overview || DEFAULT_PROFILE_INFO)
 	const sessionStorageAccountData = getAccountDataFromSessionStorage()
 
 	return (
@@ -39,7 +39,7 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 					<h1 className="profile-name">{`${accountData.name}`}</h1>
 					<div className="profile-title">
 						<p className="profile-title-text">{`${
-							description || defaultProfileInfo
+							description || DEFAULT_PROFILE_INFO
 						}`}</p>
 						<EditProfileTextButton
 							modalTitle={"Edit Description"}
@@ -93,7 +93,7 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 						profileId={id}
 					/>
 				</div>
-				<p className="profile-about-text">{`${overview}`}</p>
+				<p className="profile-about-text">{`${overview || DEFAULT_PROFILE_INFO}`}</p>
 			</div>
 		</div>
 	)
