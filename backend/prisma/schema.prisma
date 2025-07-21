@@ -61,7 +61,6 @@ model Team {
   overview   String?
   accountId  Int @unique
   account     Account @relation(fields: [accountId], references: [id])
-  tournaments Tournament[] @relation("TournamentParticipants")
 }
 
 model Application {
@@ -89,6 +88,6 @@ model Tournament {
   createdAt DateTime @default(now())
   creatorAccountId Int
   allTournamentsId Int
-  allParticipants Team[] @relation("TournamentParticipants")
+  allParticipants Json
   allTournaments Tournaments @relation("TournamentsList", fields: [allTournamentsId], references: [id])
 }

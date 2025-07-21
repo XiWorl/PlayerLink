@@ -2,7 +2,12 @@ import { createContext, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { getAllTournaments } from "../api"
 import { CreateTournamentButton } from "../components/Tournaments/TournamentPageButtonComponents"
-import { AccountType, getAccountDataFromSessionStorage } from "../utils/globalUtils"
+import { TournamentTile } from "../components/Tournaments/TournamentTile"
+import {
+	AccountType,
+	getAccountDataFromSessionStorage,
+	GOOGLE_EMAIL_KEY,
+} from "../utils/globalUtils"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/Tournaments/TournamentsPage.css"
 
@@ -21,7 +26,8 @@ export default function TournamentsPage() {
 	const sessionStorageAccountData = getAccountDataFromSessionStorage()
 	const accountType = sessionStorageAccountData.accountType
 	const accountId = sessionStorageAccountData.id
-	if (!sessionStorageAccountData || !accountId || !accountType) {
+	const email = sessionStorage.getItem(GOOGLE_EMAIL_KEY)
+	if (!sessionStorageAccountData || !accountId || !accountType || !email) {
 		navigate("/")
 	}
 
@@ -31,26 +37,34 @@ export default function TournamentsPage() {
 
 	if (tournaments.length === 0) {
 		return (
-			<>
+			<TournamentContext.Provider value={{ tournaments, setTournaments }}>
 				<Navbar />
 				<div className="tournament-tile centered">
 					<h2>No Active Tournaments At This Time</h2>
 				</div>
 				{accountType == AccountType.TEAM && (
-					<CreateTournamentButton teamAccountId={accountId} />
+					<CreateTournamentButton teamAccountId={accountId} email={email} />
 				)}
-			</>
+			</TournamentContext.Provider>
 		)
 	}
 
 	return (
-		<TournamentContext.Provider value={{ tournaments }}>
+		<TournamentContext.Provider value={{ tournaments, setTournaments }}>
 			<Navbar />
 			<div className="tournaments-page">
 				<div className="tournaments-container">
-					<div className="tournament-tile">
-						<h2>Tournament Name</h2>
-					</div>
+					{tournaments.map((tournament) => {
+						return (
+							<TournamentTile
+								key={tournament.id}
+								tournamentInformation={tournament}
+							/>
+						)
+					})}
+					{accountType == AccountType.TEAM && (
+						<CreateTournamentButton teamAccountId={accountId} email={email} />
+					)}
 				</div>
 			</div>
 		</TournamentContext.Provider>

@@ -96,20 +96,19 @@ export async function getAllTournaments() {
 	}
 }
 
-export async function createNewTournament(teamAccountId) {
-	console.log("Creating new tournament")
+export async function createNewTournament(teamAccountId, email) {
 	try {
+		const profileData = await getProfileData(AccountType.TEAM, teamAccountId)
+		profileData.email = email
+		
 		const response = await fetch(`${BASEURL}/api/tournaments/create`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({
-				teamAccountId: teamAccountId,
-			}),
+			body: JSON.stringify(profileData),
 		})
 		const data = await response.json()
-		console.log(data)
 		return data
 	} catch (error) {
 		console.error("Error creating application:", error)

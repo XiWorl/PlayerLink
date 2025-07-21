@@ -259,22 +259,29 @@ server.post("/api/signup/team", async (req, res, next) => {
 server.post("/api/tournaments/create", async (req, res, next) => {
 	try {
 		const roundsJson = createRoundsJson(MININUM_NUMBER_OF_TEAMS)
+		console.log(req.body)
+		console.log(req.body.accountId)
 
 		const createdTournament = await prisma.tournament.create({
 			data: {
-				creatorAccountId: req.body.teamAccountId,
+				creatorAccountId: req.body.accountId,
 				name: TOURNAMENT_NAME,
 				rounds: roundsJson,
 				allTournaments: {
 					connect: { id: GLOBAL_TOURNAMENT_ID },
 				},
+				allParticipants: {},
 			},
 		})
-		console.log("TOURNAMENT ID: ", createdTournament)
+
 		const tournamentId = createdTournament.tournamentId
 		const updatedTournament = await prisma.tournament.update({
 			where: { tournamentId: tournamentId },
 			data: {
+				allParticipants: {
+
+					[req.body.accountId]: req.body
+				},
 				name: TOURNAMENT_NAME + " " + tournamentId,
 			},
 		})
@@ -287,8 +294,6 @@ server.post("/api/tournaments/create", async (req, res, next) => {
 				},
 			},
 		})
-
-		console.log(updatedGlobalTournaments)
 
 		return res.status(200).json(updatedTournament)
 	} catch (error) {
@@ -481,6 +486,5 @@ server.use((err, res) => {
 })
 
 initializeTournaments()
-console.log("HEE",GLOBAL_TOURNAMENT_ID)
 
 module.exports = server
