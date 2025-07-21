@@ -124,6 +124,20 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 	}
 })
 
+server.get("/tournaments/:tournamentId", async (req, res, next) => {
+	try {
+		const tournamentId = parseInt(req.params.tournamentId)
+		const tournamentInformation = await prisma.tournament.findUnique({
+			where: {
+				tournamentId: tournamentId,
+			},
+		})
+		return res.status(200).json(tournamentInformation)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.get("/api/tournaments/", async (req, res, next) => {
 	try {
 		const tournaments = await prisma.tournament.findMany()

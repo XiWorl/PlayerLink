@@ -1,5 +1,6 @@
-import { TournamentContext } from "./TournamentsPage"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
+import { getTournament } from "../api"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/Tournaments/BracketPage.css"
 
@@ -15,9 +16,21 @@ function AdvanceButton() {
 	)
 }
 
+async function loadTournamentInformation(setTournamentInformation, id) {
+	const tournamentInformation = await getTournament(id)
+	setTournamentInformation(tournamentInformation)
+    console.log(tournamentInformation)
+}
+
 export default function BracketPage() {
+	const [tournamentInformation, setTournamentInformation] = useState(null)
+	const [rounds, setRounds] = useState({})
 	const { id } = useParams()
-    
+
+	useEffect(() => {
+		loadTournamentInformation(setTournamentInformation, id)
+	}, [])
+
 	return (
 		<>
 			<Navbar />

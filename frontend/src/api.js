@@ -96,11 +96,21 @@ export async function getAllTournaments() {
 	}
 }
 
+export async function getTournament(tournamentId) {
+	try {
+		const response = await fetch(`${BASEURL}/tournaments/${tournamentId}`)
+		const tournamentsData = await response.json()
+		return tournamentsData
+	} catch {
+		console.error(`Error while trying to login with ${email}, redirecting to signup`)
+	}
+}
+
 export async function createNewTournament(teamAccountId, email) {
 	try {
 		const profileData = await getProfileData(AccountType.TEAM, teamAccountId)
 		profileData.email = email
-		
+
 		const response = await fetch(`${BASEURL}/api/tournaments/create`, {
 			method: "POST",
 			headers: {
