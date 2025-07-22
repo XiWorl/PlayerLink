@@ -148,7 +148,9 @@ export async function joinTournament(prisma, accountId, tournamentId, participan
 	if (tournament == null) {
 		return null
 	}
-	if (Object.keys(tournament.allParticipants).length >= tournament.minimumParticipants) {
+	if (
+		Object.keys(tournament.allParticipants).length >= tournament.minimumParticipants
+	) {
 		return null
 	}
 	const updatedParticipantsObject = tournament.allParticipants
@@ -162,5 +164,11 @@ export async function joinTournament(prisma, accountId, tournamentId, participan
 	})
 
 	return updatedTourmanent
+}
 
+export async function getPlayerInfo(prisma, accountId) {
+	const playerData = await prisma.player.findUnique({
+		where: { accountId: accountId },
+	})
+	return playerData
 }

@@ -10,6 +10,7 @@ const {
 	updatePlayerGamingPerformance,
 	getPlayerGamingPerformance,
 	TOURNAMENT_NAME,
+	getPlayerInfo,
 } = require("./utils")
 const {
 	createRoundsJson,
@@ -541,6 +542,10 @@ server.createTournament = async function (body) {
 	} catch (error) {
 		console.log(error)
 	}
+}
+
+server.getPlayerData = async function (accountId) {
+	return await getPlayerInfo(prisma, accountId)
 }
 
 initializeTournaments()

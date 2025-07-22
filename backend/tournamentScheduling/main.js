@@ -112,7 +112,9 @@
 // 		skillLevel: 76,
 // 	},
 // ]
-import { LOCATION_OPTIONS } from "../ServerUtils.js"
+const { LOCATION_OPTIONS } = require("../ServerUtils.js")
+const {getPlayerData} = require("../api/server.js")
+const {SkillLevelOptions} = require("../ServerUtils.js")
 const nearbyLocationScores = {
 	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
 	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
@@ -131,7 +133,22 @@ const Weights = {
 	PLAYER: 20,
 }
 
+const SkillLevelScores = {
+	[SkillLevelOptions.SEMI_PRO]: 10,
+	[SkillLevelOptions.PRO]: 20,
+	[SkillLevelOptions.ELITE]: 30,
+}
+
 const SKILL_LEVEL_RANGE = 10
+
+async function calculateTeamSkillLevel(team) {
+	let totalSkillLevel = 0
+	for (const player of team.players) {
+		const playerData = await getPlayerData(player)
+		totalSkillLevel += playerData.skillLevel
+	}
+	return totalSkillLevel
+}
 
 /**
  * Placeholder function for calculating conflict score between two teams
@@ -139,7 +156,7 @@ const SKILL_LEVEL_RANGE = 10
  * @param {Object} team2 - Second team
  * @returns {number} - Conflict score between the teams
  */
-function getConflictScore(team1, team2) {
+async function getConflictScore(team1, team2) {
 	let score = 0
 
 	score += Weights.LOCATION
@@ -149,13 +166,9 @@ function getConflictScore(team1, team2) {
 		score -= Weights.LOCATION / 2
 	}
 
-	if (team1.supportedGames.some((game) => team2.supportedGames.includes(game))) {
-		score += 5
-	}
-
 	score += Weights.LEVEL
-	if (Math.abs(team1.skillLevel - team2.skillLevel) <= SKILL_LEVEL_RANGE) {
-		score -= 5
+	if (Math.abs(calculateTeamSkillLevel(team1) - calculateTeamSkillLevel(team2)) <= SKILL_LEVEL_RANGE) {
+		score -= Weights.LEVEL
 	}
 
 	score += Weights.GAME
@@ -175,7 +188,7 @@ function getConflictScore(team1, team2) {
  * @param {Array} teams - Array of team objects
  * @returns {Array} - 2D matrix of conflict scores
  */
-function createConflictMatrix(teams) {
+async function createConflictMatrix(teams) {
 	const numTeams = teams.length
 	const conflictMatrix = Array(numTeams)
 		.fill()
@@ -186,7 +199,7 @@ function createConflictMatrix(teams) {
 			if (i === j) {
 				conflictMatrix[i][j] = Infinity
 			} else {
-				conflictMatrix[i][j] = getConflictScore(teams[i], teams[j])
+				conflictMatrix[i][j] = await getConflictScore(teams[i], teams[j])
 			}
 		}
 	}
@@ -248,19 +261,18 @@ function createFirstRoundMatchups(teams, conflictMatrix) {
  * @param {Array} teams - Array of team objects (must contain exactly 16 teams)
  * @returns {Array} - Array of 8 matchup objects for the first round
  */
-function generateTournamentMatchups(teams) {
+async function generateTournamentMatchups(teams) {
 	if (!teams || teams.length !== 16) {
 		throw new Error("Tournament requires exactly 16 teams")
 	}
 
-	const conflictMatrix = createConflictMatrix(teams)
+	const conflictMatrix = await createConflictMatrix(teams)
 	const matchups = createFirstRoundMatchups(teams, conflictMatrix)
 
 	return matchups
 }
 
 module.exports = {
-	sampleTeams,
 	getConflictScore,
 	createConflictMatrix,
 	createFirstRoundMatchups,
