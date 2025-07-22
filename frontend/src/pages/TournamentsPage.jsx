@@ -48,20 +48,21 @@ export default function TournamentsPage() {
 			</TournamentContext.Provider>
 		)
 	}
+	const tournamentTiles = tournaments.map((tournament) => {
+		return <TournamentTile key={tournament.id} tournamentInformation={tournament} />
+	})
+	tournamentTiles.sort((a, b) => {
+		const aDate = new Date(a.props.tournamentInformation.createdAt)
+		const bDate = new Date(b.props.tournamentInformation.createdAt)
+		return bDate - aDate
+	})
 
 	return (
 		<TournamentContext.Provider value={{ tournaments, setTournaments }}>
 			<Navbar />
 			<div className="tournaments-page">
 				<div className="tournaments-container">
-					{tournaments.map((tournament) => {
-						return (
-							<TournamentTile
-								key={tournament.id}
-								tournamentInformation={tournament}
-							/>
-						)
-					})}
+					{tournamentTiles}
 					{accountType == AccountType.TEAM && (
 						<CreateTournamentButton teamAccountId={accountId} email={email} />
 					)}

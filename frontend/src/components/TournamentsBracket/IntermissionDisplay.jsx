@@ -1,4 +1,5 @@
 import { useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import { BASEURL } from "../../utils/globalUtils"
 import { TournamentContext } from "../../pages/BracketPage"
 import Navbar from "../Navbar/Navbar"
@@ -27,6 +28,7 @@ function StartButton({ tournamentInformation }) {
 
 export default function IntermissionDisplay({ tournamentInformation }) {
 	if (tournamentInformation == null) return
+	const navigate = useNavigate()
 	const { setIsLoading, isLoading } = useContext(TournamentContext)
 
 	const allParticipants = tournamentInformation.allParticipants

@@ -92,9 +92,9 @@ export function BracketPage() {
 			<Navbar />
 			<div className="bracket-page">
 				<div className="rounds-header">
-					<button className="round-btn">Round</button>
-					<button className="round-btn">Round</button>
-					<button className="round-btn">Round</button>
+					<button className="round-btn">Round 1</button>
+					<button className="round-btn">Round 2</button>
+					<button className="round-btn">Round 3</button>
 				</div>
 
 				<div className="matchups">
