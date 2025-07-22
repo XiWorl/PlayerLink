@@ -12,6 +12,7 @@ const {
 	TOURNAMENT_NAME,
 	getPlayerInfo,
 } = require("./utils")
+const {generateTournamentMatchups} = require("../tournamentScheduling/main")
 const {
 	createRoundsJson,
 	MININUM_NUMBER_OF_TEAMS,
@@ -496,6 +497,36 @@ server.patch("/api/profiles/edit/profile", async (req, res, next) => {
 	}
 })
 
+//duplicate
+server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
+	try {
+		const tournamentId = parseInt(req.params.tournamentId)
+		const tournamentInformation = await prisma.tournament.findUnique({
+			where: {
+				tournamentId: tournamentId,
+			},
+		})
+		// if (tournamentInformation.isActive == true) {
+		// 	return res.status(400).json({error: "Tournament is already active"})
+		// }
+		const startingMatchups = await generateTournamentMatchups(tournamentInformation.allParticipants)
+		const updatedRounds = tournamentInformation.rounds
+		updatedRounds["round1"] = startingMatchups
+
+		const updatedTournament = await prisma.tournament.update({
+			where: { tournamentId: tournamentId },
+			data: {
+				isActive: true,
+				rounds: updatedRounds
+			},
+		})
+
+		return res.status(200).json(tournamentInformation)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.use((err, res) => {
 	const { message, status = 500 } = err
 	res.status(status).json({ message })
@@ -511,6 +542,7 @@ server.createTournament = async function (body) {
 				name: TOURNAMENT_NAME,
 				rounds: roundsJson,
 				minimumParticipants: MININUM_NUMBER_OF_TEAMS,
+				isActive: false,
 				allTournaments: {
 					connect: { id: GLOBAL_TOURNAMENT_ID },
 				},
@@ -538,7 +570,6 @@ server.createTournament = async function (body) {
 			},
 		})
 		return updatedTournament
-
 	} catch (error) {
 		console.log(error)
 	}

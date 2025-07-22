@@ -3,13 +3,13 @@ import { createRoot } from "react-dom/client"
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AccountType } from "./utils/globalUtils.js"
+import {BracketPage} from "./pages/BracketPage.jsx"
 import App from "./App.jsx"
 import ProfilePage from "./pages/ProfilePage.jsx"
 import PrivateRoute from "./utils/PrivateRoute.jsx"
 import ConnectPage from "./pages/ConnectPage.jsx"
 import ApplyPage from "./pages/ApplyPage.jsx"
 import TournamentsPage from "./pages/TournamentsPage.jsx"
-import BracketPage from "./pages/BracketPage.jsx"
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 

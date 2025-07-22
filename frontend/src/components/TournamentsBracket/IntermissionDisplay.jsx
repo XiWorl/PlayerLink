@@ -1,10 +1,33 @@
+import { useContext } from "react"
+import { BASEURL } from "../../utils/globalUtils"
+import { TournamentContext } from "../../pages/BracketPage"
 import Navbar from "../Navbar/Navbar"
-function StartButton() {
+
+export const TournamentStateOptions = {
+	INTERMISSION: "intermission",
+	ACTIVE: "active",
+}
+
+async function startTournament(tournamentInformation, setIsLoading) {
+	try {
+		setIsLoading(true)
+		const response = await fetch(
+			`${BASEURL}/tournaments/start/${tournamentInformation.tournamentId}`
+		)
+		await response.json()
+	} catch (error) {
+		console.error("Error retrieving profile data:", error)
+	}
+}
+
+function StartButton({ tournamentInformation }) {
 	return <button className="tournament-start-btn">Start Tournament</button>
 }
 
 export default function IntermissionDisplay({ tournamentInformation }) {
 	if (tournamentInformation == null) return
+	const { setIsLoading, isLoading } = useContext(TournamentContext)
+
 	const allParticipants = tournamentInformation.allParticipants
 	const minimumParticipants = tournamentInformation.minimumParticipants
 	const numberOfParticipants = Object.keys(allParticipants).length
@@ -17,13 +40,30 @@ export default function IntermissionDisplay({ tournamentInformation }) {
 			<div className="tournament-intermission">
 				<div className="tournament-intermission-information">
 					<h1>{`${numberOfParticipants}/${minimumParticipants} Participants`}</h1>
-					{canStartTournament && <StartButton />}
+					{canStartTournament && (
+						<button
+							className="tournament-start-btn"
+							onClick={() =>
+								startTournament(
+									tournamentInformation,
+									setIsLoading
+								)
+							}
+						>
+							Start Tournament
+						</button>
+					)}
 				</div>
 
 				<div className="tournament-intermission-teams">
 					{Object.values(allParticipants).map((teamInformation) => {
 						return (
-							<div className="post" onClick={() => console.log("click")}>
+							<div
+								className="post"
+								onClick={() =>
+									navigate(`/teams/${teamInformation.accountId}`)
+								}
+							>
 								<div className="apply-profile-picture"></div>
 								<div className="apply-details">
 									<h2>{teamInformation.name}</h2>

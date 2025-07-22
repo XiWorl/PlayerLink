@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useState, useEffect, createContext } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import { getTournament } from "../api"
 import IntermissionDisplay from "../components/TournamentsBracket/IntermissionDisplay"
 import TournamentLoading from "../components/Tournaments/TournamentLoading"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/Tournaments/BracketPage.css"
+
+export const TournamentContext = createContext()
 
 function EmptyTeam() {
 	return <div className="empty-team"></div>
@@ -20,53 +22,55 @@ function AdvanceButton() {
 
 function MatchupTile({ matchup }) {
 	console.log(matchup)
+	const navigate = useNavigate()
 	return (
 		<div className="matchup-tile">
 			<div className="teams">
-				<div className="team 1">
-					<h2>Team1 Name</h2>
+				<div className="team 1" onClick={()=>navigate(`/teams/${matchup.team1.accountId}`)}>
+					<h2>{matchup.team1.name}</h2>
 				</div>
 				<div className="versus">
 					<h2>VS</h2>
 				</div>
-				<div className="team 2">
-					<h2>Team2 Name</h2>
+				<div className="team 2" onClick={()=>navigate(`/teams/${matchup.team2.accountId}`)}>
+					<h2>{matchup.team2.name}</h2>
 				</div>
 			</div>
 		</div>
 	)
 }
 
-function randomizeMatchups(allParticipants) {
-	const matchups = []
-	for (let i = 0; i < allParticipants.length; i += 2) {
-		const matchup = {
-			team1: allParticipants[i],
-			team2: allParticipants[i + 1],
-		}
-		matchups.push(matchup)
-	}
-	return matchups
-}
-
-async function loadTournamentInformation(setTournamentInformation, id) {
+async function loadTournamentInformation(setTournamentInformation, id, setDisplayedMatchups) {
 	const tournamentInformation = await getTournament(id)
 	setTournamentInformation(tournamentInformation)
+	setDisplayedMatchups(tournamentInformation.rounds.round1)
 	console.log(tournamentInformation)
 }
 
-export default function BracketPage() {
+export function BracketPage() {
 	const [tournamentInformation, setTournamentInformation] = useState(null)
 	const [displayedMatchups, setDisplayedMatchups] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
 	const [rounds, setRounds] = useState({})
 	const { id } = useParams()
 
 	useEffect(() => {
-		loadTournamentInformation(setTournamentInformation, id)
-	}, [])
+		loadTournamentInformation(setTournamentInformation, id, setDisplayedMatchups)
+	}, [isLoading])
+
+	if (isLoading && displayedMatchups == []) {
+		return <TournamentLoading tournamentInformation={tournamentInformation} />
+	} else if (!isLoading && displayedMatchups == []) {
+		return (
+		<TournamentContext.Provider
+			value={{ isLoading, setIsLoading }}
+		>
+			<IntermissionDisplay tournamentInformation={tournamentInformation} />
+		</TournamentContext.Provider>
+	)
+	}
 
 	// return <TournamentLoading tournamentInformation={tournamentInformation}/>
-	return <IntermissionDisplay tournamentInformation={tournamentInformation} />
 
 	return (
 		<>
