@@ -22,10 +22,6 @@ async function startTournament(tournamentInformation, setIsLoading) {
 	}
 }
 
-function StartButton({ tournamentInformation }) {
-	return <button className="tournament-start-btn">Start Tournament</button>
-}
-
 export default function IntermissionDisplay({ tournamentInformation }) {
 	if (tournamentInformation == null) return
 	const navigate = useNavigate()
@@ -35,7 +31,6 @@ export default function IntermissionDisplay({ tournamentInformation }) {
 	const minimumParticipants = tournamentInformation.minimumParticipants
 	const numberOfParticipants = Object.keys(allParticipants).length
 	const canStartTournament = numberOfParticipants == minimumParticipants
-	console.log(tournamentInformation)
 
 	return (
 		<>

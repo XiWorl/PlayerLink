@@ -31,7 +31,7 @@ function RoundButton({
 	setRound,
 	tournamentInformation,
 	setDisplayedMatchups,
-	setEmptyMatchups
+	setEmptyMatchups,
 }) {
 	return (
 		<button
@@ -52,7 +52,7 @@ function getTotalNumberOfMatchupsBasedOnRound(roundNumber) {
 	return remainingTeamsInTournamentBasedOnRound
 }
 
-function AdvanceButton() {
+function AdvanceButton({ accountId }) {
 	return (
 		<div className="advance-div">
 			<button className="advance-btn">Advance</button>
@@ -61,8 +61,26 @@ function AdvanceButton() {
 }
 
 function MatchupTile({ matchup }) {
-	// console.log(matchup)
 	const navigate = useNavigate()
+	let team2 = matchup.team2
+
+	if (team2 == null) {
+		team2 = (
+			<div className="empty-team">
+				<h2>Match TBD</h2>
+			</div>
+		)
+	} else {
+		team2 = (
+			<div
+				className="team 2"
+				onClick={() => navigate(`/teams/${matchup.team2.accountId}`)}
+			>
+				<AdvanceButton accountId={matchup.team2.accountId} />
+				<h2>{matchup.team2.name}</h2>
+			</div>
+		)
+	}
 	return (
 		<div className="matchup-tile">
 			<div className="teams">
@@ -70,17 +88,13 @@ function MatchupTile({ matchup }) {
 					className="team 1"
 					onClick={() => navigate(`/teams/${matchup.team1.accountId}`)}
 				>
+					<AdvanceButton accountId={matchup.team1.accountId} />
 					<h2>{matchup.team1.name}</h2>
 				</div>
 				<div className="versus">
 					<h2>VS</h2>
 				</div>
-				<div
-					className="team 2"
-					onClick={() => navigate(`/teams/${matchup.team2.accountId}`)}
-				>
-					<h2>{matchup.team2.name}</h2>
-				</div>
+				{team2}
 			</div>
 		</div>
 	)

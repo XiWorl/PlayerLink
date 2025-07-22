@@ -579,6 +579,13 @@ server.getPlayerData = async function (accountId) {
 	return await getPlayerInfo(prisma, accountId)
 }
 
+server.patch("/tournaments/team/advance/:teamId", async (req, res, next) => {
+	try {
+	} catch (error) {
+		next(error)
+	}
+})
+
 initializeTournaments()
 
 module.exports = server
