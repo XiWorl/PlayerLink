@@ -1,5 +1,7 @@
 const { PrismaClient } = require("../generated/prisma")
 const prisma = new PrismaClient()
+const {createTournament} = require("../api/server.js")
+const {joinTournament} = require("../api/utils.js")
 
 const YearsOfExperienceOptions = Object.freeze({
 	ZERO_TO_ONE: "0-1",
@@ -119,10 +121,10 @@ function generateRandomPlayerInfo(index) {
 async function main() {
 	const generatedTeamInfos = []
 	const generatedPlayerInfos = []
+	const newGeneratedTeamInfos = []
 
-	for (let i = 1; i <= 30; i++) {
-		const player = generateRandomPlayerInfo(i)
-		generatedPlayerInfos.push(player)
+	for (let i = 1; i <= 35; i++) {
+		let player = generateRandomPlayerInfo(i)
 
 		const playerAcc = await prisma.account.create({
 			data: {
@@ -133,11 +135,16 @@ async function main() {
 				},
 			},
 		})
+		player.accountId = playerAcc.id
+		generatedPlayerInfos.push(player)
 	}
 
-	for (let i = 1; i <= 15; i++) {
-		const team = generateRandomTeamInfo(i)
-		generatedTeamInfos.push(team)
+	for (let i = 1; i <= 20; i++) {
+		let team = generateRandomTeamInfo(i)
+
+		if (i === 1) {
+			team.rosterAccountIds.push(generatedPlayerInfos[0].accountId)
+		}
 
 		const teamAcc = await prisma.account.create({
 			data: {
@@ -148,6 +155,8 @@ async function main() {
 				},
 			},
 		})
+		team.accountId = teamAcc.id
+		generatedTeamInfos.push(team)
 	}
 
 	for (let i = 1; i <= 2; i++) {
@@ -183,7 +192,14 @@ async function main() {
 					rosterAccountIds: [...randomPlayer.rosterAccountIds, randomTeam.accountId]
 				},
 			})
+			newGeneratedTeamInfos.push(teamUpdate)
 		}
+	}
+
+	const tournamentInfo = await createTournament(generatedTeamInfos[0])
+	for (team of newGeneratedTeamInfos) {
+		if (team.rosterAccountIds.length === 0) continue
+		const result = await joinTournament(prisma, team.accountId, tournamentInfo.tournamentId, team)
 	}
 }
 

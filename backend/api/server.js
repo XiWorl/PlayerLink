@@ -212,7 +212,7 @@ server.post("/api/signup/player", async (req, res, next) => {
 						gameUsernames: req.body.gameUsernames,
 						location: req.body.location,
 						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
-						rosterAccountIds: []
+						rosterAccountIds: [],
 					},
 				},
 			},
@@ -295,8 +295,7 @@ server.post("/api/tournaments/create", async (req, res, next) => {
 			where: { tournamentId: tournamentId },
 			data: {
 				allParticipants: {
-
-					[req.body.accountId]: req.body
+					[req.body.accountId]: req.body,
 				},
 				name: TOURNAMENT_NAME + " " + tournamentId,
 			},
@@ -500,6 +499,49 @@ server.use((err, res) => {
 	const { message, status = 500 } = err
 	res.status(status).json({ message })
 })
+
+server.createTournament = async function (body) {
+	try {
+		const roundsJson = createRoundsJson(MININUM_NUMBER_OF_TEAMS)
+
+		const createdTournament = await prisma.tournament.create({
+			data: {
+				creatorAccountId: body.accountId,
+				name: TOURNAMENT_NAME,
+				rounds: roundsJson,
+				minimumParticipants: MININUM_NUMBER_OF_TEAMS,
+				allTournaments: {
+					connect: { id: GLOBAL_TOURNAMENT_ID },
+				},
+				allParticipants: {},
+			},
+		})
+
+		const tournamentId = createdTournament.tournamentId
+		const updatedTournament = await prisma.tournament.update({
+			where: { tournamentId: tournamentId },
+			data: {
+				allParticipants: {
+					[body.accountId]: body,
+				},
+				name: TOURNAMENT_NAME + " " + tournamentId,
+			},
+		})
+
+		await prisma.tournaments.update({
+			where: { id: GLOBAL_TOURNAMENT_ID },
+			data: {
+				tournamentIds: {
+					push: tournamentId,
+				},
+			},
+		})
+		return updatedTournament
+
+	} catch (error) {
+		console.log(error)
+	}
+}
 
 initializeTournaments()
 

@@ -7,7 +7,7 @@ import {
 export const EditType = { ABOUT: "about", BIO: "bio", OVERVIEW: "overview" }
 export const AccountType = { PLAYER: "player", TEAM: "team" }
 export const TOURNAMENT_NAME = "Tournament"
-export let GLOBAL_TOURNAMENT_ID = {id: -1}
+export let GLOBAL_TOURNAMENT_ID = { id: -1 }
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -138,4 +138,29 @@ export async function updatePlayerGamingPerformance(prisma, accountId, gamePerfo
 		},
 	})
 	return updatedPlayerData
+}
+
+export async function joinTournament(prisma, accountId, tournamentId, participantData) {
+	const tournament = await prisma.tournament.findUnique({
+		where: { tournamentId: tournamentId },
+	})
+
+	if (tournament == null) {
+		return null
+	}
+	if (Object.keys(tournament.allParticipants).length >= tournament.minimumParticipants) {
+		return null
+	}
+	const updatedParticipantsObject = tournament.allParticipants
+	updatedParticipantsObject[accountId] = participantData
+
+	const updatedTourmanent = await prisma.tournament.update({
+		where: { tournamentId: tournamentId },
+		data: {
+			allParticipants: updatedParticipantsObject,
+		},
+	})
+
+	return updatedTourmanent
+
 }
