@@ -204,7 +204,6 @@ function createFirstRoundMatchups(teams, conflictMatrix) {
 	const numTeams = teams.length
 	const allPairs = []
 
-	// Create a list of all possible team pairings with their conflict scores
 	for (let i = 0; i < numTeams; i++) {
 		for (let j = i + 1; j < numTeams; j++) {
 			allPairs.push({
@@ -236,7 +235,6 @@ function createFirstRoundMatchups(teams, conflictMatrix) {
 		usedTeams.add(pair.team1Index)
 		usedTeams.add(pair.team2Index)
 
-		// Stop once we have 8 matchups (16 teams total)
 		if (matchups.length === 8) {
 			break
 		}
@@ -256,14 +254,10 @@ function generateTournamentMatchups(teams) {
 	}
 
 	const conflictMatrix = createConflictMatrix(teams)
-
 	const matchups = createFirstRoundMatchups(teams, conflictMatrix)
 
 	return matchups
 }
-
-// console.log(generateTournamentMatchups(sampleTeams))
-// generateTournamentMatchups(sampleTeams)
 
 module.exports = {
 	sampleTeams,

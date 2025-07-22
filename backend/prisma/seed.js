@@ -160,7 +160,7 @@ async function main() {
 			const randomPlayer = allPlayers[Math.floor(randomPlayerNum)]
 			const randomTeam = allTeams[Math.floor(randomTeamNum)]
 
-			if (randomPlayer.rosterAccountId != null) {
+			if (randomTeam.rosterAccountIds.includes(randomPlayer.accountId)) {
 				continue
 			}
 
