@@ -26,6 +26,7 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 	if (selectedAccountType == AccountType.TEAM) {
 		requestBody.currentlyHiring = convertYesOrNoToBoolean(formData.currentlyHiring)
 		requestBody.name = formData.teamName
+		delete requestBody.gameUsernames
 	} else {
 		requestBody.willingToRelocate = convertYesOrNoToBoolean(
 			formData.willingToRelocate

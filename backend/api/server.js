@@ -308,6 +308,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		delete modifiedRequestBody.accountId
 		delete modifiedRequestBody.email
 		delete modifiedRequestBody.teamName
+		delete modifiedRequestBody.teamId
 
 		const existingAccount = await prisma[accountType].findUnique({
 			where: { accountId: accountId },
