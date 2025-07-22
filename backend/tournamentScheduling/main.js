@@ -7,6 +7,7 @@ const {
 const { translateExperience } = require("./utils.js")
 
 const SKILL_LEVEL_RANGE = 10
+const MINIMUM_PARTICIPANTS_REQUIRED = 16
 const SkillLevelScores = {
 	[SkillLevelOptions.SEMI_PRO]: 10,
 	[SkillLevelOptions.PRO]: 20,
@@ -40,12 +41,12 @@ async function getConflictScore(team1, team2) {
 		conflictScore -= TournamentSchedulingWeights.LOCATION / 2
 	}
 
-	conflictScore += TournamentSchedulingWeights.LEVEL
+	conflictScore += TournamentSchedulingWeights.SKILL_LEVEL
 	if (
 		Math.abs(calculateTeamSkillLevel(team1) - calculateTeamSkillLevel(team2)) <=
 		SKILL_LEVEL_RANGE
 	) {
-		conflictScore -= TournamentSchedulingWeights.LEVEL
+		conflictScore -= TournamentSchedulingWeights.SKILL_LEVEL
 	}
 
 	conflictScore += TournamentSchedulingWeights.GAME
@@ -141,8 +142,10 @@ function createFirstRoundMatchups(teams, conflictMatrix) {
  * @returns {Array} - Array of 8 matchup objects for the first round
  */
 async function generateTournamentMatchups(teams) {
-	if (!teams || Object.keys(teams).length !== 16) {
-		throw new Error("Tournament requires exactly 16 teams")
+	if (!teams || Object.keys(teams).length < MINIMUM_PARTICIPANTS_REQUIRED) {
+		throw new Error(
+			`Tournament requires at least ${MINIMUM_PARTICIPANTS_REQUIRED} teams`
+		)
 	}
 
 	const conflictMatrix = await createConflictMatrix(Object.values(teams))

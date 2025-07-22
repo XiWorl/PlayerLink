@@ -53,6 +53,6 @@ export const NearbyLocationScores = {
 export const TournamentSchedulingWeights = {
 	LOCATION: 10,
 	GAME: 15,
-	LEVEL: 5,
+	SKILL_LEVEL: 5,
 	PLAYER: 20,
 }
