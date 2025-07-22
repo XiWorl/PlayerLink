@@ -1,32 +1,17 @@
-const { LOCATION_OPTIONS } = require("../ServerUtils.js")
-const {getPlayerData} = require("../api/endpointUtils.js")
-const {SkillLevelOptions} = require("../ServerUtils.js")
-const {translateExperience} = require("./utils.js")
-const nearbyLocationScores = {
-	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
-	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
-	[LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
-	[LOCATION_OPTIONS.SOUTH_AMERICA]: new Set([LOCATION_OPTIONS.MEXICO]),
-	[LOCATION_OPTIONS.EUROPE]: new Set([LOCATION_OPTIONS.ASIA]),
-	[LOCATION_OPTIONS.AFRICA]: new Set(),
-	[LOCATION_OPTIONS.ASIA]: new Set([LOCATION_OPTIONS.EUROPE]),
-	[LOCATION_OPTIONS.OCEANIA]: new Set(),
-}
+const { getPlayerData } = require("../api/endpointUtils.js")
+const {
+	SkillLevelOptions,
+	NearbyLocationScores,
+	TournamentSchedulingWeights,
+} = require("../ServerUtils.js")
+const { translateExperience } = require("./utils.js")
 
-const Weights = {
-	LOCATION: 10,
-	GAME: 15,
-	LEVEL: 5,
-	PLAYER: 20,
-}
-
+const SKILL_LEVEL_RANGE = 10
 const SkillLevelScores = {
 	[SkillLevelOptions.SEMI_PRO]: 10,
 	[SkillLevelOptions.PRO]: 20,
 	[SkillLevelOptions.ELITE]: 30,
 }
-
-const SKILL_LEVEL_RANGE = 10
 
 async function calculateTeamSkillLevel(team) {
 	let totalTeamSkillLevel = 0
@@ -46,30 +31,35 @@ async function calculateTeamSkillLevel(team) {
  * @returns {number} - Conflict score between the teams
  */
 async function getConflictScore(team1, team2) {
-	let score = 0
+	let conflictScore = 0
 
-	score += Weights.LOCATION
+	conflictScore += TournamentSchedulingWeights.LOCATION
 	if (team1.location === team2.location) {
-		score -= Weights.LOCATION
-	} else if (nearbyLocationScores[team1.location].has(team2.location)) {
-		score -= Weights.LOCATION / 2
+		conflictScore -= TournamentSchedulingWeights.LOCATION
+	} else if (NearbyLocationScores[team1.location].has(team2.location)) {
+		conflictScore -= TournamentSchedulingWeights.LOCATION / 2
 	}
 
-	score += Weights.LEVEL
-	if (Math.abs(calculateTeamSkillLevel(team1) - calculateTeamSkillLevel(team2)) <= SKILL_LEVEL_RANGE) {
-		score -= Weights.LEVEL
+	conflictScore += TournamentSchedulingWeights.LEVEL
+	if (
+		Math.abs(calculateTeamSkillLevel(team1) - calculateTeamSkillLevel(team2)) <=
+		SKILL_LEVEL_RANGE
+	) {
+		conflictScore -= TournamentSchedulingWeights.LEVEL
 	}
 
-	score += Weights.GAME
+	conflictScore += TournamentSchedulingWeights.GAME
 	if (team1.supportedGames.some((game) => team2.supportedGames.includes(game))) {
-		score -= Weights.GAME
+		conflictScore -= TournamentSchedulingWeights.GAME
 	}
 
 	const setOfPlayers = new Set(team2.roster)
-	const numberOfSharedPlayers = team1.rosterAccountIds.filter((int) => setOfPlayers.has(int)).length
-	score += Weights.PLAYER * numberOfSharedPlayers
+	const numberOfSharedPlayers = team1.rosterAccountIds.filter((int) =>
+		setOfPlayers.has(int)
+	).length
+	conflictScore += TournamentSchedulingWeights.PLAYER * numberOfSharedPlayers
 
-	return score
+	return conflictScore
 }
 
 /**
@@ -144,7 +134,6 @@ function createFirstRoundMatchups(teams, conflictMatrix) {
 
 	return matchups
 }
-
 
 /**
  * Main function to generate tournament matchups

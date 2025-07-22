@@ -15,6 +15,7 @@ async function startTournament(tournamentInformation, setIsLoading) {
 			`${BASEURL}/tournaments/start/${tournamentInformation.tournamentId}`
 		)
 		await response.json()
+		setIsLoading(false)
 	} catch (error) {
 		console.error("Error retrieving profile data:", error)
 	}

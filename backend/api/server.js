@@ -289,6 +289,7 @@ server.post("/api/tournaments/create", async (req, res, next) => {
 					connect: { id: GLOBAL_TOURNAMENT_ID },
 				},
 				allParticipants: {},
+				isActive: false,
 			},
 		})
 

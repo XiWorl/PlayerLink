@@ -12,6 +12,12 @@ function EmptyTeam() {
 	return <div className="empty-team"></div>
 }
 
+function RoundButton() {
+	return (
+<button className="round-btn">Round</button>
+	)
+}
+
 function AdvanceButton() {
 	return (
 		<div className="advance-div">
@@ -26,13 +32,19 @@ function MatchupTile({ matchup }) {
 	return (
 		<div className="matchup-tile">
 			<div className="teams">
-				<div className="team 1" onClick={()=>navigate(`/teams/${matchup.team1.accountId}`)}>
+				<div
+					className="team 1"
+					onClick={() => navigate(`/teams/${matchup.team1.accountId}`)}
+				>
 					<h2>{matchup.team1.name}</h2>
 				</div>
 				<div className="versus">
 					<h2>VS</h2>
 				</div>
-				<div className="team 2" onClick={()=>navigate(`/teams/${matchup.team2.accountId}`)}>
+				<div
+					className="team 2"
+					onClick={() => navigate(`/teams/${matchup.team2.accountId}`)}
+				>
 					<h2>{matchup.team2.name}</h2>
 				</div>
 			</div>
@@ -40,37 +52,40 @@ function MatchupTile({ matchup }) {
 	)
 }
 
-async function loadTournamentInformation(setTournamentInformation, id, setDisplayedMatchups) {
+async function loadTournamentInformation(
+	setTournamentInformation,
+	id,
+	setDisplayedMatchups
+) {
 	const tournamentInformation = await getTournament(id)
 	setTournamentInformation(tournamentInformation)
-	setDisplayedMatchups(tournamentInformation.rounds.round1)
-	console.log(tournamentInformation)
+	if (tournamentInformation.isActive == true) {
+		setDisplayedMatchups(tournamentInformation.rounds.round1)
+		console.log("round 1", tournamentInformation.rounds.round1)
+		console.log(tournamentInformation.rounds.round1.length)
+	}
 }
 
 export function BracketPage() {
 	const [tournamentInformation, setTournamentInformation] = useState(null)
 	const [displayedMatchups, setDisplayedMatchups] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
-	const [rounds, setRounds] = useState({})
+	const [rounds, setRounds] = useState(1)
 	const { id } = useParams()
 
 	useEffect(() => {
 		loadTournamentInformation(setTournamentInformation, id, setDisplayedMatchups)
-	}, [isLoading])
+	}, [isLoading, rounds])
 
-	if (isLoading && displayedMatchups == []) {
+	if (isLoading && displayedMatchups.length == 0) {
 		return <TournamentLoading tournamentInformation={tournamentInformation} />
-	} else if (!isLoading && displayedMatchups == []) {
+	} else if (!isLoading && displayedMatchups.length == 0) {
 		return (
-		<TournamentContext.Provider
-			value={{ isLoading, setIsLoading }}
-		>
-			<IntermissionDisplay tournamentInformation={tournamentInformation} />
-		</TournamentContext.Provider>
-	)
+			<TournamentContext.Provider value={{ isLoading, setIsLoading }}>
+				<IntermissionDisplay tournamentInformation={tournamentInformation} />
+			</TournamentContext.Provider>
+		)
 	}
-
-	// return <TournamentLoading tournamentInformation={tournamentInformation}/>
 
 	return (
 		<>
