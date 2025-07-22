@@ -24,7 +24,7 @@ function validateForm(
 
 		const newErrors = { [selectedAccountType]: {} }
 		const currentFormData = formData[selectedAccountType]
-		validateSubmissionFormHelper(
+		const isSubmissionFormValid = validateSubmissionFormHelper(
 			selectedAccountType,
 			newErrors,
 			currentFormData,
@@ -34,17 +34,17 @@ function validateForm(
 		if (currentFormData.gamingExperience.length === 0) {
 			newErrors[selectedAccountType].gamingExperience =
 				"Please select at least one game"
-			isFormValid = false
+			isSubmissionFormValid = false
 		}
 
 		setFormErrors(newErrors)
 
-		if (isFormValid) {
+		if (isSubmissionFormValid) {
 			onSubmit(currentFormData, selectedAccountType)
 			handleClose()
 		}
 
-		return isFormValid
+		return isSubmissionFormValid
 	}
 }
 
