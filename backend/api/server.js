@@ -309,26 +309,27 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		delete modifiedRequestBody.email
 		delete modifiedRequestBody.teamName
 
-		const existingPlayer = await prisma[accountType].findUnique({
+		const existingAccount = await prisma[accountType].findUnique({
 			where: { accountId: accountId },
 		})
 
-		if (!existingPlayer) {
+		if (!existingAccount) {
 			res.status(404).json({ error: "Account information not found in database" })
 			return
 		}
 
-		const updatedPlayerData = await prisma[accountType].update({
+		const updatedAccountInformation = await prisma[accountType].update({
 			where: { accountId: accountId },
 			data: req.body,
 		})
 
-		if (!updatedPlayerData) {
+		if (!updatedAccountInformation) {
 			res.status(400).json({ error: "Invalid profile information, cannot update" })
 			return
 		}
 
-		return res.status(200).json({ updatedValue: updatedPlayerData })
+		res.status(200).json({ updatedAccountInformation: updatedAccountInformation })
+		return
 	} catch (error) {
 		next(error)
 	}
