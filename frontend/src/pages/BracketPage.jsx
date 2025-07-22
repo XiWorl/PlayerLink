@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { getTournament } from "../api"
+import IntermissionDisplay from "../components/TournamentsBracket/IntermissionDisplay"
 import TournamentLoading from "../components/Tournaments/TournamentLoading"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/Tournaments/BracketPage.css"
@@ -17,7 +18,7 @@ function AdvanceButton() {
 	)
 }
 
-function MatchupTile({matchup}) {
+function MatchupTile({ matchup }) {
 	console.log(matchup)
 	return (
 		<div className="matchup-tile">
@@ -34,6 +35,18 @@ function MatchupTile({matchup}) {
 			</div>
 		</div>
 	)
+}
+
+function randomizeMatchups(allParticipants) {
+	const matchups = []
+	for (let i = 0; i < allParticipants.length; i += 2) {
+		const matchup = {
+			team1: allParticipants[i],
+			team2: allParticipants[i + 1],
+		}
+		matchups.push(matchup)
+	}
+	return matchups
 }
 
 async function loadTournamentInformation(setTournamentInformation, id) {
@@ -53,6 +66,7 @@ export default function BracketPage() {
 	}, [])
 
 	// return <TournamentLoading tournamentInformation={tournamentInformation}/>
+	return <IntermissionDisplay tournamentInformation={tournamentInformation} />
 
 	return (
 		<>
@@ -66,7 +80,7 @@ export default function BracketPage() {
 
 				<div className="matchups">
 					{displayedMatchups.map((matchup, index) => {
-						return <MatchupTile key={index} matchup={matchup}/>
+						return <MatchupTile key={index} matchup={matchup} />
 					})}
 				</div>
 			</div>
