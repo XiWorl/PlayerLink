@@ -21,9 +21,7 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 		accountType: selectedAccountType,
 	}
 
-	if (token == null) {
-		return
-	}
+	if (token == null) return null
 
 	if (selectedAccountType == AccountType.TEAM) {
 		requestBody.currentlyHiring = convertYesOrNoToBoolean(formData.currentlyHiring)

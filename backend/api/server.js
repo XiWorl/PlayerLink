@@ -275,8 +275,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		"Invalid request body: JSON payload is incomplete or malformed"
 
 	if (!verifiedAuthorization) {
-		res.status(401).json({ error: "Invalid authorization token" })
-		return
+		return res.status(401).json({ error: "Invalid authorization token" })
 	}
 
 	try {
