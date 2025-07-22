@@ -276,8 +276,7 @@ server.post("/api/signup/team", async (req, res, next) => {
 server.post("/api/tournaments/create", async (req, res, next) => {
 	try {
 		const roundsJson = createRoundsJson(MININUM_NUMBER_OF_TEAMS)
-		console.log(req.body)
-		console.log(req.body.accountId)
+		console.log(roundsJson)
 
 		const createdTournament = await prisma.tournament.create({
 			data: {

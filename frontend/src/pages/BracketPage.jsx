@@ -8,14 +8,48 @@ import "../components/Tournaments/BracketPage.css"
 
 export const TournamentContext = createContext()
 
-function EmptyTeam() {
-	return <div className="empty-team"></div>
+function EmptyTile() {
+	return (
+		<div className="matchup-tile">
+			<div className="teams">
+				<div className="empty-team">
+					<h2>Match TBD</h2>
+				</div>
+				<div className="versus">
+					<h2>VS</h2>
+				</div>
+				<div className="empty-team">
+					<h2>Match TBD</h2>
+				</div>
+			</div>
+		</div>
+	)
 }
 
-function RoundButton() {
+function RoundButton({
+	roundNumber,
+	setRound,
+	tournamentInformation,
+	setDisplayedMatchups,
+	setEmptyMatchups
+}) {
 	return (
-<button className="round-btn">Round</button>
+		<button
+			className="round-btn"
+			onClick={() => {
+				setRound(roundNumber)
+				setDisplayedMatchups(tournamentInformation.rounds[`round${roundNumber}`])
+				setEmptyMatchups([])
+			}}
+		>
+			Round {roundNumber}
+		</button>
 	)
+}
+
+function getTotalNumberOfMatchupsBasedOnRound(roundNumber) {
+	const remainingTeamsInTournamentBasedOnRound = 16 / Math.pow(2, roundNumber)
+	return remainingTeamsInTournamentBasedOnRound
 }
 
 function AdvanceButton() {
@@ -27,7 +61,7 @@ function AdvanceButton() {
 }
 
 function MatchupTile({ matchup }) {
-	console.log(matchup)
+	// console.log(matchup)
 	const navigate = useNavigate()
 	return (
 		<div className="matchup-tile">
@@ -61,25 +95,24 @@ async function loadTournamentInformation(
 	setTournamentInformation(tournamentInformation)
 	if (tournamentInformation.isActive == true) {
 		setDisplayedMatchups(tournamentInformation.rounds.round1)
-		console.log("round 1", tournamentInformation.rounds.round1)
-		console.log(tournamentInformation.rounds.round1.length)
 	}
 }
 
 export function BracketPage() {
 	const [tournamentInformation, setTournamentInformation] = useState(null)
 	const [displayedMatchups, setDisplayedMatchups] = useState([])
+	const [emptyMatchups, setEmptyMatchups] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
 	const [rounds, setRounds] = useState(1)
 	const { id } = useParams()
 
 	useEffect(() => {
 		loadTournamentInformation(setTournamentInformation, id, setDisplayedMatchups)
-	}, [isLoading, rounds])
+	}, [isLoading])
 
 	if (isLoading && displayedMatchups.length == 0) {
 		return <TournamentLoading tournamentInformation={tournamentInformation} />
-	} else if (!isLoading && displayedMatchups.length == 0) {
+	} else if (!isLoading && displayedMatchups.length == 0 && rounds == 1) {
 		return (
 			<TournamentContext.Provider value={{ isLoading, setIsLoading }}>
 				<IntermissionDisplay tournamentInformation={tournamentInformation} />
@@ -87,19 +120,37 @@ export function BracketPage() {
 		)
 	}
 
+	const numberOfEmptyMatchups =
+		getTotalNumberOfMatchupsBasedOnRound(rounds) - displayedMatchups.length
+	for (let i = 0; i < numberOfEmptyMatchups; i++) {
+		emptyMatchups.push(<EmptyTile />)
+	}
+
 	return (
 		<>
 			<Navbar />
 			<div className="bracket-page">
 				<div className="rounds-header">
-					<button className="round-btn">Round 1</button>
-					<button className="round-btn">Round 2</button>
-					<button className="round-btn">Round 3</button>
+					{Object.keys(tournamentInformation.rounds).map((round, index) => {
+						return (
+							<RoundButton
+								key={index}
+								roundNumber={index + 1}
+								setRound={setRounds}
+								tournamentInformation={tournamentInformation}
+								setDisplayedMatchups={setDisplayedMatchups}
+								setEmptyMatchups={setEmptyMatchups}
+							/>
+						)
+					})}
 				</div>
 
 				<div className="matchups">
 					{displayedMatchups.map((matchup, index) => {
 						return <MatchupTile key={index} matchup={matchup} />
+					})}
+					{emptyMatchups.map((index) => {
+						return <EmptyTile />
 					})}
 				</div>
 			</div>

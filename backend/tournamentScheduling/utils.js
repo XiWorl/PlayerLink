@@ -1,7 +1,6 @@
 import { YearsOfExperienceOptions } from "../ServerUtils.js"
 export const MININUM_NUMBER_OF_TEAMS = 16
 const ROUND_PROPERTY_NAME = "round"
-const FINAL_ROUND = 1
 const INITIAL_ROUND = 1
 
 export function calculateRoundsFromNumberOfTeams(numberOfTeams) {
@@ -19,8 +18,8 @@ export function createRoundsJson(numberOfTeams) {
 		return {}
     }
 
-    for (let i = 1; i < numberOfRounds + FINAL_ROUND + INITIAL_ROUND; i++) {
-        rounds[ROUND_PROPERTY_NAME + i] = {}
+    for (let i = 1; i < numberOfRounds + INITIAL_ROUND; i++) {
+        rounds[ROUND_PROPERTY_NAME + i] = []
     }
     return rounds
 }
