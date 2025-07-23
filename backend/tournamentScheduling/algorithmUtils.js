@@ -12,15 +12,15 @@ export function calculateRoundsFromNumberOfTeams(numberOfTeams) {
 
 export function createRoundsJson(numberOfTeams) {
 	const numberOfRounds = calculateRoundsFromNumberOfTeams(numberOfTeams)
-    const rounds = {}
+	const rounds = {}
 	if (numberOfRounds === -1) {
 		return {}
-    }
+	}
 
-    for (let i = 1; i < numberOfRounds + INITIAL_ROUND; i++) {
-        rounds[ROUND_PROPERTY_NAME + i] = []
-    }
-    return rounds
+	for (let i = 1; i < numberOfRounds + INITIAL_ROUND; i++) {
+		rounds[ROUND_PROPERTY_NAME + i] = []
+	}
+	return rounds
 }
 
 export const TournamentSchedulingWeights = {

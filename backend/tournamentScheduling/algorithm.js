@@ -9,8 +9,6 @@ const { translateExperience } = require("./utils.js")
 
 const SKILL_LEVEL_RANGE = 10
 
-
-
 async function calculateTeamSkillLevel(team) {
 	let totalTeamSkillLevel = 0
 	for (const playerId of team.rosterAccountIds) {
