@@ -73,3 +73,24 @@ model Application {
 
   @@unique([playerAccountId, teamAccountId])
 }
+
+model Tournaments {
+  id Int @id @default(autoincrement())
+  tournamentIds Int[]
+  tournaments Tournament[] @relation("TournamentsList")
+}
+
+model Tournament {
+  tournamentId Int @id @default(autoincrement())
+  name String
+  rounds Json
+  minimumParticipants Int
+  currentRound Int @default(1)
+  createdAt DateTime @default(now())
+  creatorAccountId Int
+  allTournamentsId Int
+  isActive Boolean
+  allParticipants Json
+  participantsAdvancedToNextRound Json
+  allTournaments Tournaments @relation("TournamentsList", fields: [allTournamentsId], references: [id])
+}

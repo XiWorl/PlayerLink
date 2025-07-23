@@ -43,3 +43,30 @@ export function convertYesOrNoToBoolean(value) {
 		return true
 	} else return false
 }
+
+export const NearbyLocations = {
+	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
+	[LOCATION_OPTIONS.SOUTH_AMERICA]: new Set([LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.EUROPE]: new Set([LOCATION_OPTIONS.ASIA]),
+	[LOCATION_OPTIONS.AFRICA]: new Set(),
+	[LOCATION_OPTIONS.ASIA]: new Set([LOCATION_OPTIONS.EUROPE]),
+	[LOCATION_OPTIONS.OCEANIA]: new Set(),
+}
+
+export function translateExperience(yearsOfExperience) {
+	if (
+		yearsOfExperience === YearsOfExperienceOptions.ZERO_TO_ONE ||
+		yearsOfExperience === YearsOfExperienceOptions.TWO_TO_THREE
+	) {
+		return "Semi-Pro"
+	} else if (
+		yearsOfExperience === YearsOfExperienceOptions.FOUR_TO_FIVE ||
+		yearsOfExperience === YearsOfExperienceOptions.SIX_TO_TEN
+	) {
+		return "Pro"
+	} else if (yearsOfExperience === YearsOfExperienceOptions.TENPLUS) {
+		return "Elite"
+	}
+}

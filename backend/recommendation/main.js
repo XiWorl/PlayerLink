@@ -1,9 +1,9 @@
 import {
-	translateExperience,
 	calculateLocationScore,
 	calculateSkillLevelScore,
 	calculatePlaystyleScore,
 } from "./utils.js"
+import { translateExperience } from "../ServerUtils.js"
 
 const Weights = {
 	LOCATION: 2,
