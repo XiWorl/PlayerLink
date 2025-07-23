@@ -5,12 +5,14 @@ const {
 	NearbyLocations,
 	TournamentSchedulingWeights,
 } = require("../ServerUtils.js")
-const { translateExperience } = require("./utils.js")
 
 const SKILL_LEVEL_RANGE = 10
+const INITIAL_TEAM_SKILL_LEVEL = 0
+const INITIAL_CONFLICT_SCORE = 0
 
 async function calculateTeamSkillLevel(team) {
-	let totalTeamSkillLevel = 0
+	let totalTeamSkillLevel = INITIAL_TEAM_SKILL_LEVEL
+
 	for (const playerId of team.rosterAccountIds) {
 		const playerData = await getAccountData(playerId, AccountType.PLAYER)
 		const playerSkillLevelText = translateExperience(playerData.yearsOfExperience)
@@ -27,7 +29,7 @@ async function calculateTeamSkillLevel(team) {
  * @returns {number} - Conflict score between the teams
  */
 async function getConflictScore(team1, team2) {
-	let conflictScore = 0
+	let conflictScore = INITIAL_CONFLICT_SCORE
 
 	conflictScore += TournamentSchedulingWeights.LOCATION
 	if (team1.location === team2.location) {
@@ -67,7 +69,7 @@ async function createConflictMatrix(teams) {
 	const numTeams = teams.length
 	const conflictMatrix = Array(numTeams)
 		.fill()
-		.map(() => Array(numTeams).fill(0))
+		.map(() => Array(numTeams).fill(INITIAL_CONFLICT_SCORE))
 
 	for (let i = 0; i < numTeams; i++) {
 		for (let j = 0; j < numTeams; j++) {
