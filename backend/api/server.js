@@ -290,17 +290,23 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		}
 
 		if (accountType == AccountType.PLAYER) {
-			const hasUsernameChanged = JSON.stringify(existingAccount.gameUsernames) == JSON.stringify(modifiedRequestBody.gameUsernames)
+			const hasUsernameChanged = true//JSON.stringify(existingAccount.gameUsernames) == JSON.stringify(modifiedRequestBody.gameUsernames)
 
 			if (hasUsernameChanged) {
-				const playerGamingPerformance = await getPlayerGamingPerformance(modifiedRequestBody.gameUsernames)
-				const endval = await updatePlayerGamingPerformance(prisma, accountId, playerGamingPerformance)
+				for (const gameName of Object.keys(modifiedRequestBody.games)) {
+				if (!modifiedRequestBody.gamingExperience.includes(gameName)) {
+					delete modifiedRequestBody.games[gameName]
+				}
 			}
+				const playerGamingPerformance = await getPlayerGamingPerformance(modifiedRequestBody.gameUsernames)
+				modifiedRequestBody.games = playerGamingPerformance
+			}
+
 		}
 
 		const updatedAccountInformation = await prisma[accountType].update({
 			where: { accountId: accountId },
-			data: req.body,
+			data: modifiedRequestBody,
 		})
 
 		if (!updatedAccountInformation) {

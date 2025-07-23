@@ -15,7 +15,7 @@ async function getAccountData(accountId, accountType) {
 		})
 		return accountData
 	} catch (error) {
-		next(error)
+        return error
 	}
 }
 
