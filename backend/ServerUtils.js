@@ -36,3 +36,10 @@ export const SkillLevelOptions = {
 	PRO: "Pro",
 	ELITE: "Elite",
 }
+
+export function convertYesOrNoToBoolean(value) {
+	const YES_VALUE = "yes"
+	if (value.toLowerCase() == YES_VALUE) {
+		return true
+	} else return false
+}
