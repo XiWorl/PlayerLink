@@ -46,8 +46,8 @@ export async function getApexAccountData(username) {
 			if (!response.ok) continue
 
 			const apexAccountData = await response.json()
-			const careerWins = apexAccountData.total.career_wins.value
-			const wins = careerWins == null ? apexAccountData.total.arenas_wins.value : careerWins
+			const careerWins = apexAccountData.total.career_wins
+			const wins = careerWins == null ? apexAccountData.total.arenas_wins.value : careerWins.value
 			const performanceData = {
 				wins: wins,
 				kills: apexAccountData.total.career_kills.value,
