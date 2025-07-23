@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { GameOptions } from "../ServerUtils.js"
+import { GameOptions, AccountType } from "../ServerUtils.js"
 import {
 	getFortniteAccountData,
 	getApexAccountData,

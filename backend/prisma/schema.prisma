@@ -39,10 +39,12 @@ model Player {
   willingToRelocate Boolean
   playstyle String
   gamingExperience String[]
+  games Json
   gameUsernames Json
   bio         String?
   about      String?
   accountId  Int @unique
+  rosterAccountId Int?
   account     Account @relation(fields: [accountId], references: [id])
 }
 

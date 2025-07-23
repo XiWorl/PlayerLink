@@ -7,6 +7,8 @@ const {
 	formatClientAccountInformation,
 	dataPagination,
 	verifyUserAuthorization,
+	getPlayerGamingPerformance,
+	updatePlayerGamingPerformance,
 } = require("./apiUtils")
 const {
 	getAccountData,
@@ -173,6 +175,9 @@ server.post("/api/signup/player", async (req, res, next) => {
 			createdAccount,
 			jwtToken
 		)
+
+		const playerGamesJson = await getPlayerGamingPerformance(req.body.gameUsernames)
+		await updatePlayerGamingPerformance(prisma, createdAccount.id, playerGamesJson)
 
 		return res.status(200).json(clientAccountInformation)
 	} catch (error) {

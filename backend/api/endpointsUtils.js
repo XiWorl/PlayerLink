@@ -33,6 +33,7 @@ async function registerPlayerAccount(requestBody) {
 					playstyle: requestBody.playstyle,
 					gamingExperience: requestBody.gamingExperience,
 					gameUsernames: requestBody.gameUsernames,
+                    games: {},
 					willingToRelocate: convertYesOrNoToBoolean(
 						requestBody.willingToRelocate
 					),
