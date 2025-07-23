@@ -15,7 +15,7 @@ async function getAccountData(accountId, accountType) {
 		})
 		return accountData
 	} catch (error) {
-        return error
+		return error
 	}
 }
 
@@ -33,7 +33,7 @@ async function registerPlayerAccount(requestBody) {
 					playstyle: requestBody.playstyle,
 					gamingExperience: requestBody.gamingExperience,
 					gameUsernames: requestBody.gameUsernames,
-                    games: {},
+					games: {},
 					willingToRelocate: convertYesOrNoToBoolean(
 						requestBody.willingToRelocate
 					),

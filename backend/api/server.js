@@ -18,6 +18,8 @@ const {
 const { AccountType } = require("../ServerUtils")
 const { getTeamRecommendations } = require("../recommendation/main")
 
+let globalTournamentId = -1
+
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -290,18 +292,21 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		}
 
 		if (accountType == AccountType.PLAYER) {
-			const hasUsernameChanged = JSON.stringify(existingAccount.gameUsernames) != JSON.stringify(modifiedRequestBody.gameUsernames)
+			const hasUsernameChanged =
+				JSON.stringify(existingAccount.gameUsernames) !=
+				JSON.stringify(modifiedRequestBody.gameUsernames)
 
 			if (hasUsernameChanged) {
 				for (const gameName of Object.keys(modifiedRequestBody.games)) {
-				if (!modifiedRequestBody.gamingExperience.includes(gameName)) {
-					delete modifiedRequestBody.games[gameName]
+					if (!modifiedRequestBody.gamingExperience.includes(gameName)) {
+						delete modifiedRequestBody.games[gameName]
+					}
 				}
-			}
-				const playerGamingPerformance = await getPlayerGamingPerformance(modifiedRequestBody.gameUsernames)
+				const playerGamingPerformance = await getPlayerGamingPerformance(
+					modifiedRequestBody.gameUsernames
+				)
 				modifiedRequestBody.games = playerGamingPerformance
 			}
-
 		}
 
 		const updatedAccountInformation = await prisma[accountType].update({
@@ -325,5 +330,16 @@ server.use((err, res) => {
 	const { message, status = 500 } = err
 	res.status(status).json({ message })
 })
+
+async function initializeTournaments() {
+	const tournamentsHolder = await prisma.tournaments.create({
+		data: {
+			tournamentIds: [],
+		},
+	})
+	globalTournamentId = tournamentsHolder.id
+}
+
+initializeTournaments()
 
 module.exports = server
