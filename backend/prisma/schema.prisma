@@ -44,7 +44,7 @@ model Player {
   bio         String?
   about      String?
   accountId  Int @unique
-  rosterAccountId Int?
+  rosterAccountIds Int[]
   account     Account @relation(fields: [accountId], references: [id])
 }
 
