@@ -289,6 +289,15 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 			return
 		}
 
+		if (accountType == AccountType.PLAYER) {
+			const hasUsernameChanged = JSON.stringify(existingAccount.gameUsernames) == JSON.stringify(modifiedRequestBody.gameUsernames)
+
+			if (hasUsernameChanged) {
+				const playerGamingPerformance = await getPlayerGamingPerformance(modifiedRequestBody.gameUsernames)
+				const endval = await updatePlayerGamingPerformance(prisma, accountId, playerGamingPerformance)
+			}
+		}
+
 		const updatedAccountInformation = await prisma[accountType].update({
 			where: { accountId: accountId },
 			data: req.body,

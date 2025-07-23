@@ -6,6 +6,7 @@ import { AccountType } from "../../utils/globalUtils"
 import { modalSubmitHelper } from "../ProfileUtils/EditProfileButtonUtils"
 import { useParams } from "react-router-dom"
 import { useState } from "react"
+import GamingExperience from "./GamingExperience"
 import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import EditAccountButton from "../ProfileUtils/EditAccountButton"
 import "../ProfileUtils/ProfilePage.css"
@@ -78,6 +79,14 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 				</div>
 				<p className="profile-about-text">{`${about || DEFAULT_PROFILE_INFO}`}</p>
 			</div>
+			{Object.keys(accountData.games).length > 0 && (
+					<div className="profile-about">
+						<div className="profile-about-header">
+							<h3>Gaming Experience</h3>
+						</div>
+						<GamingExperience accountData={accountData} />
+					</div>
+				)}
 		</div>
 	)
 }

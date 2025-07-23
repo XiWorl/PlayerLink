@@ -144,6 +144,55 @@
   white-space: pre-line;
 }
 
+.profile-gaming-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.profile-gaming-game {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.profile-gaming-icon {
+  width: 84px;
+  height: 84px;
+  border-radius: 15px;
+}
+
+.profile-gaming-information {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  width: 100%;
+}
+
+.profile-gaming-performance {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	grid-template-rows: 1fr;
+	gap: 16px;
+	align-items: center;
+	margin-top: 12px;
+}
+
+.profile-gaming-performance p {
+	margin: 0;
+	padding: 8px 12px;
+	background: #f8f9fa;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
+	text-align: center;
+	border: 1px solid #e9ecef;
+}
+
 @media (max-width: 768px) {
   .profile-page {
     padding: 10px;
