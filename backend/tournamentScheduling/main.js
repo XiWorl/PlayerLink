@@ -142,11 +142,12 @@ function createFirstRoundMatchups(teams, conflictMatrix) {
  * @returns {Array} - Array of 8 matchup objects for the first round
  */
 async function generateTournamentMatchups(teams) {
-	if (!teams || Object.keys(teams).length < MINIMUM_PARTICIPANTS_REQUIRED) {
-		throw new Error(
-			`Tournament requires at least ${MINIMUM_PARTICIPANTS_REQUIRED} teams`
-		)
-	}
+	// if (!teams || Object.keys(teams).length < MINIMUM_PARTICIPANTS_REQUIRED) {
+	// 	throw new Error(
+	// 		`Tournament requires at least ${MINIMUM_PARTICIPANTS_REQUIRED} teams`
+	// 	)
+	// }
+	console.log("teams", teams)
 
 	const conflictMatrix = await createConflictMatrix(Object.values(teams))
 	const matchups = await createFirstRoundMatchups(Object.values(teams), conflictMatrix)

@@ -12,7 +12,7 @@ const {
 	TOURNAMENT_NAME,
 	getPlayerInfo,
 } = require("./utils")
-const {generateTournamentMatchups} = require("../tournamentScheduling/main")
+const { generateTournamentMatchups } = require("../tournamentScheduling/main")
 const {
 	createRoundsJson,
 	MININUM_NUMBER_OF_TEAMS,
@@ -289,6 +289,7 @@ server.post("/api/tournaments/create", async (req, res, next) => {
 				},
 				allParticipants: {},
 				isActive: false,
+				participantsAdvancedToNextRound: {},
 			},
 		})
 
@@ -509,7 +510,9 @@ server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
 		// if (tournamentInformation.isActive == true) {
 		// 	return res.status(400).json({error: "Tournament is already active"})
 		// }
-		const startingMatchups = await generateTournamentMatchups(tournamentInformation.allParticipants)
+		const startingMatchups = await generateTournamentMatchups(
+			tournamentInformation.allParticipants
+		)
 		const updatedRounds = tournamentInformation.rounds
 		updatedRounds["round1"] = startingMatchups
 
@@ -517,11 +520,111 @@ server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
 			where: { tournamentId: tournamentId },
 			data: {
 				isActive: true,
-				rounds: updatedRounds
+				rounds: updatedRounds,
 			},
 		})
 
 		return res.status(200).json(tournamentInformation)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/tournaments/team/advance/", async (req, res, next) => {
+	function getTotalNumberOfMatchupsBasedOnRound(roundNumber, numberOfParticipants) {
+		const remainingTeamsInTournamentBasedOnRound =
+			numberOfParticipants / Math.pow(2, roundNumber)
+		return remainingTeamsInTournamentBasedOnRound
+	}
+
+	try {
+		const tournamentId = parseInt(req.body.tournamentId)
+		const accountId = parseInt(req.body.accountId)
+		const tournamentInformation = await prisma.tournament.findUnique({
+			where: {
+				tournamentId: tournamentId,
+			},
+		})
+		if (
+			tournamentInformation.isActive == false ||
+			!tournamentInformation.allParticipants[req.body.accountId]
+		) {
+			return res.status(400).json({ error: "Tournament is not active" })
+		}
+
+		if (tournamentInformation.participantsAdvancedToNextRound[accountId]) {
+			return res.status(400).json({ error: "Team has already advanced" })
+		}
+
+
+
+		const teamData = await prisma.team.findUnique({
+			where: { accountId: accountId },
+		})
+
+		const updatedTournament = await prisma.tournament.update({
+			where: { tournamentId: tournamentId },
+			data: {
+				participantsAdvancedToNextRound: {
+					...tournamentInformation.participantsAdvancedToNextRound,
+					[req.body.accountId]: teamData,
+				},
+			},
+		})
+
+		const currentRound = tournamentInformation.currentRound
+		const num = getTotalNumberOfMatchupsBasedOnRound(
+			currentRound,
+			Object.keys(tournamentInformation.allParticipants).length
+		)
+		if (num == 1) { return res.status(200).json(updatedTournament) }
+
+		console.log(num, Object.keys(updatedTournament.participantsAdvancedToNextRound).length)
+
+		if (
+			Object.keys(updatedTournament.participantsAdvancedToNextRound).length >=
+			num
+		) {
+			const nextRound = currentRound + 1
+
+			const updatedTournament2 = await prisma.tournament.update({
+				where: { tournamentId: tournamentId },
+				data: {
+					currentRound: nextRound,
+					rounds: {
+						...updatedTournament.rounds,
+						["round" + nextRound]: [
+							updatedTournament.participantsAdvancedToNextRound,
+						],
+					},
+					// participantsAdvancedToNextRound: {
+					// 	...tournamentInformation.participantsAdvancedToNextRound,
+					// 	[req.body.accountId]: teamData,
+					// },
+				},
+			})
+			const firstElement = Object.values(
+				updatedTournament2.rounds["round" + nextRound]
+			)[0]
+			console.log("updatedTournament", firstElement)
+			const matchups = await generateTournamentMatchups(firstElement)
+			console.log("new round", matchups)
+
+			const updatedTournament3 = await prisma.tournament.update({
+				where: { tournamentId: tournamentId },
+				data: {
+					currentRound: nextRound,
+					rounds: {
+						...updatedTournament2.rounds,
+						["round" + nextRound]: matchups,
+					},
+					participantsAdvancedToNextRound: {},
+				},
+			})
+			return res.status(200).json(updatedTournament3)
+		}
+
+		return res.status(200).json(updatedTournament)
 	} catch (error) {
 		next(error)
 	}
@@ -543,6 +646,7 @@ server.createTournament = async function (body) {
 				rounds: roundsJson,
 				minimumParticipants: MININUM_NUMBER_OF_TEAMS,
 				isActive: false,
+				participantsAdvancedToNextRound: {},
 				allTournaments: {
 					connect: { id: GLOBAL_TOURNAMENT_ID },
 				},
@@ -578,13 +682,6 @@ server.createTournament = async function (body) {
 server.getPlayerData = async function (accountId) {
 	return await getPlayerInfo(prisma, accountId)
 }
-
-server.patch("/tournaments/team/advance/:teamId", async (req, res, next) => {
-	try {
-	} catch (error) {
-		next(error)
-	}
-})
 
 initializeTournaments()
 

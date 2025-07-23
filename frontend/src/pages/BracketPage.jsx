@@ -1,6 +1,8 @@
 import { useState, useEffect, createContext } from "react"
+import { BASEURL } from "../utils/globalUtils"
 import { useParams, useNavigate } from "react-router-dom"
 import { getTournament } from "../api"
+import { createNextRoundArray } from "../components/TournamentsBracket/NextRoundBracket"
 import IntermissionDisplay from "../components/TournamentsBracket/IntermissionDisplay"
 import TournamentLoading from "../components/Tournaments/TournamentLoading"
 import Navbar from "../components/Navbar/Navbar"
@@ -51,16 +53,41 @@ function getTotalNumberOfMatchupsBasedOnRound(roundNumber) {
 	const remainingTeamsInTournamentBasedOnRound = 16 / Math.pow(2, roundNumber)
 	return remainingTeamsInTournamentBasedOnRound
 }
-
-function AdvanceButton({ accountId }) {
+async function advanceTeam(accountId, tournamentId, setTournamentInformation) {
+	const response = await fetch(`${BASEURL}/tournaments/team/advance/`, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ accountId: accountId, tournamentId: tournamentId }),
+	})
+	const updatedTournamentInformation = await response.json()
+	setTournamentInformation(updatedTournamentInformation)
+	return updatedTournamentInformation
+}
+function AdvanceButton({ accountId, setTournamentInformation }) {
+	const { id } = useParams()
 	return (
 		<div className="advance-div">
-			<button className="advance-btn">Advance</button>
+			<button
+				className="advance-btn"
+				onClick={(event) => {
+					advanceTeam(accountId, id, setTournamentInformation)
+					event.stopPropagation()
+				}}
+			>
+				Advance
+			</button>
 		</div>
 	)
 }
 
-function MatchupTile({ matchup }) {
+function MatchupTile({
+	matchup,
+	tournamentInformation,
+	round,
+	setTournamentInformation,
+}) {
 	const navigate = useNavigate()
 	let team2 = matchup.team2
 
@@ -76,7 +103,15 @@ function MatchupTile({ matchup }) {
 				className="team 2"
 				onClick={() => navigate(`/teams/${matchup.team2.accountId}`)}
 			>
-				<AdvanceButton accountId={matchup.team2.accountId} />
+				{!tournamentInformation.participantsAdvancedToNextRound[
+					matchup.team2.accountId
+				] &&
+					round == tournamentInformation.currentRound && (
+						<AdvanceButton
+							accountId={matchup.team2.accountId}
+							setTournamentInformation={setTournamentInformation}
+						/>
+					)}
 				<h2>{matchup.team2.name}</h2>
 			</div>
 		)
@@ -88,7 +123,15 @@ function MatchupTile({ matchup }) {
 					className="team 1"
 					onClick={() => navigate(`/teams/${matchup.team1.accountId}`)}
 				>
-					<AdvanceButton accountId={matchup.team1.accountId} />
+					{!tournamentInformation.participantsAdvancedToNextRound[
+						matchup.team1.accountId
+					] &&
+						round == tournamentInformation.currentRound && (
+							<AdvanceButton
+								accountId={matchup.team1.accountId}
+								setTournamentInformation={setTournamentInformation}
+							/>
+						)}
 					<h2>{matchup.team1.name}</h2>
 				</div>
 				<div className="versus">
@@ -134,11 +177,18 @@ export function BracketPage() {
 		)
 	}
 
-	const numberOfEmptyMatchups =
+	let numberOfEmptyMatchups =
 		getTotalNumberOfMatchupsBasedOnRound(rounds) - displayedMatchups.length
+
+	if (rounds == tournamentInformation.currentRound + 1) {
+		numberOfEmptyMatchups = getTotalNumberOfMatchupsBasedOnRound(rounds) - createNextRoundArray(tournamentInformation)
+	}
+
 	for (let i = 0; i < numberOfEmptyMatchups; i++) {
 		emptyMatchups.push(<EmptyTile />)
 	}
+
+	console.log(tournamentInformation)
 
 	return (
 		<>
@@ -160,9 +210,36 @@ export function BracketPage() {
 				</div>
 
 				<div className="matchups">
-					{displayedMatchups.map((matchup, index) => {
-						return <MatchupTile key={index} matchup={matchup} />
-					})}
+					{rounds == tournamentInformation.currentRound + 1 &&
+						createNextRoundArray(tournamentInformation).map(
+							(matchup, index) => {
+								console.log(matchup)
+								return (
+									<MatchupTile
+										key={index}
+										matchup={matchup}
+										tournamentInformation={tournamentInformation}
+										round={rounds}
+										setTournamentInformation={
+											setTournamentInformation
+										}
+									/>
+								)
+							}
+						)}
+
+					{rounds != tournamentInformation.currentRound + 1 &&
+						displayedMatchups.map((matchup, index) => {
+							return (
+								<MatchupTile
+									key={index}
+									matchup={matchup}
+									tournamentInformation={tournamentInformation}
+									round={rounds}
+									setTournamentInformation={setTournamentInformation}
+								/>
+							)
+						})}
 					{emptyMatchups.map((index) => {
 						return <EmptyTile />
 					})}

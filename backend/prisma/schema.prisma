@@ -92,5 +92,6 @@ model Tournament {
   allTournamentsId Int
   isActive Boolean
   allParticipants Json
+  participantsAdvancedToNextRound Json
   allTournaments Tournaments @relation("TournamentsList", fields: [allTournamentsId], references: [id])
 }

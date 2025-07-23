@@ -123,7 +123,7 @@ async function main() {
 	const generatedPlayerInfos = []
 	const newGeneratedTeamInfos = []
 
-	for (let i = 1; i <= 35; i++) {
+	for (let i = 1; i <= 40; i++) {
 		let player = generateRandomPlayerInfo(i)
 
 		const playerAcc = await prisma.account.create({
