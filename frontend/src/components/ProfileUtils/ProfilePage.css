@@ -193,6 +193,24 @@
 	border: 1px solid #e9ecef;
 }
 
+.profile-gaming-information-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profile-gaming-information-text h4 {
+  margin: 0;
+  margin-left: 20px;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.profile-gaming-information-text h3 {
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .profile-page {
     padding: 10px;

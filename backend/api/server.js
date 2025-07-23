@@ -290,7 +290,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		}
 
 		if (accountType == AccountType.PLAYER) {
-			const hasUsernameChanged = true//JSON.stringify(existingAccount.gameUsernames) == JSON.stringify(modifiedRequestBody.gameUsernames)
+			const hasUsernameChanged = JSON.stringify(existingAccount.gameUsernames) != JSON.stringify(modifiedRequestBody.gameUsernames)
 
 			if (hasUsernameChanged) {
 				for (const gameName of Object.keys(modifiedRequestBody.games)) {

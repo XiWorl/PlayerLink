@@ -8,7 +8,7 @@ function formatNumberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function GameInformation({ gameName, gamePerformanceData }) {
+function GameInformation({ gameName, gamePerformanceData, gameUsername }) {
 	const performanceMetric = gameName == GameOptions.FORTNITE ? "K/D" : "Elo"
 	const iconSource = `/${gameName}_Icon.png`
 
@@ -16,7 +16,10 @@ function GameInformation({ gameName, gamePerformanceData }) {
 		<div className="profile-gaming-game">
 			<img src={iconSource} className="profile-gaming-icon" />
 			<div className="profile-gaming-information">
+                <div className="profile-gaming-information-text">
 				<h3>{gameName}</h3>
+				<h4>{gameUsername}</h4>
+                </div>
 				<div className="profile-gaming-performance">
 					<p>
 						{performanceMetric}: {formatNumberWithCommas(gamePerformanceData.elo)}
@@ -38,6 +41,7 @@ export default function GamingExperience({ accountData }) {
 				key={gameName}
 				gameName={gameName}
 				gamePerformanceData={accountData.games[gameName]}
+                gameUsername={accountData.gameUsernames[gameName]}
 			/>
 		))
 		setDisplayedGames(games)
