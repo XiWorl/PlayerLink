@@ -80,13 +80,13 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 				<p className="profile-about-text">{`${about || DEFAULT_PROFILE_INFO}`}</p>
 			</div>
 			{Object.keys(accountData.games).length > 0 && (
-					<div className="profile-about">
-						<div className="profile-about-header">
-							<h3>Gaming Experience</h3>
-						</div>
-						<GamingExperience accountData={accountData} />
+				<div className="profile-about">
+					<div className="profile-about-header">
+						<h3>Gaming Experience</h3>
 					</div>
-				)}
+					<GamingExperience accountData={accountData} />
+				</div>
+			)}
 		</div>
 	)
 }
