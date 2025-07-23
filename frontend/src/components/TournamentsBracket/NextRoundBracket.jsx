@@ -6,18 +6,22 @@ export function createNextRoundArray(tournamentInformation) {
 	const participants = tournamentInformation.participantsAdvancedToNextRound
 	const participantValues = Object.values(participants)
 
-	for (let i = 0; i < participantValues.length; i += 2) {
+	const array = Object.entries(tournamentInformation.participantsAdvancedToNextRound)
+	array.sort((a, b) => a[1].advancedAt - b[1].advancedAt)
+	console.log(array)
+
+	for (let i = 0; i < array.length; i += 2) {
 		const matchupObject = {
-			team1: participantValues[i],
+			team1: array[i][1],
 			team2: null,
 		}
 
 		if (i + 1 < participantValues.length) {
-			matchupObject.team2 = participantValues[i + 1]
+			matchupObject.team2 = array[i+1][1]
 		}
 
 		finalMatchups.push(matchupObject)
 	}
-
+	console.log(finalMatchups)
 	return finalMatchups
 }

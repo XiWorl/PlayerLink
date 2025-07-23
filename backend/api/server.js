@@ -562,6 +562,8 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 			where: { accountId: accountId },
 		})
 
+		teamData.advancedAt = Date.now()
+
 		const updatedTournament = await prisma.tournament.update({
 			where: { tournamentId: tournamentId },
 			data: {
