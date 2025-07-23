@@ -21,13 +21,12 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 		accountType: selectedAccountType,
 	}
 
-	if (token == null) {
-		return
-	}
+	if (token == null) return null
 
 	if (selectedAccountType == AccountType.TEAM) {
 		requestBody.currentlyHiring = convertYesOrNoToBoolean(formData.currentlyHiring)
 		requestBody.name = formData.teamName
+		delete requestBody.gameUsernames
 	} else {
 		requestBody.willingToRelocate = convertYesOrNoToBoolean(
 			formData.willingToRelocate
