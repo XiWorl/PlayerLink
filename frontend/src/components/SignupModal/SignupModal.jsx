@@ -8,7 +8,6 @@ import {
 	TOKEN_SESSION_KEY,
 	ACCOUNT_INFORMATION_KEY,
 } from "../../utils/globalUtils"
-import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import "./SignupModal.css"
 
 const MODAL_TITLE = "Create Your Account"
@@ -25,6 +24,7 @@ async function onSubmissionFormValid(
 	}
 
 	try {
+		setIsLoading(true)
 		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
 			method: "POST",
 			headers: {
@@ -32,10 +32,6 @@ async function onSubmissionFormValid(
 			},
 			body: JSON.stringify(body),
 		})
-
-		if (response.ok) {
-			setIsLoading(true)
-		}
 
 		const accountData = await response.json()
 
@@ -51,13 +47,10 @@ async function onSubmissionFormValid(
 	}
 }
 
-export default function SignupModal({ onClose }) {
+export default function SignupModal({ onClose, setIsLoading }) {
 	const navigate = useNavigate()
 	const [selectedAccountType, _setSelectedAccountType] = useState(AccountType.PLAYER)
 	const [isModalOpen, setIsModalOpen] = useState(true)
-	const [isLoading, setIsLoading] = useState(false)
-
-	if (isLoading) return <LoadingScreen message={"Loading Profile..."} />
 
 	function handleClose() {
 		setIsModalOpen(false)
