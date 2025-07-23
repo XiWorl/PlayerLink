@@ -141,7 +141,6 @@ function createFirstRoundMatchups(teams, conflictMatrix) {
 async function generateTournamentMatchups(teams) {
 	const conflictMatrix = await createConflictMatrix(Object.values(teams))
 	const matchups = await createFirstRoundMatchups(Object.values(teams), conflictMatrix)
-
 	return matchups
 }
 
