@@ -2,7 +2,13 @@ import { useState, useEffect } from "react"
 import { getApplicationsFromAccountId } from "../../api"
 import { Sidebar } from "./Utils.jsx"
 import { ApplicationTile } from "./ApplicationTile.jsx"
+import { Recommendations } from "./Recommendations.jsx"
 import "./ApplyPage.css"
+
+const TABS = {
+	APPLICATIONS: "Applications",
+	RECOMMENDATIONS: "Recommendations",
+}
 
 function EmptyApplicationsDisplay() {
 	return (
@@ -28,6 +34,7 @@ async function loadApplications(accountId, setApplicationsDisplay) {
 
 export function Applications({ accountData, accountId }) {
 	const [applicationsDisplay, setApplicationsDisplay] = useState([])
+	const [currentTab, setCurrentTab] = useState(TABS.APPLICATIONS)
 
 	useEffect(() => {
 		loadApplications(accountId, setApplicationsDisplay)
@@ -35,10 +42,24 @@ export function Applications({ accountData, accountId }) {
 
 	return (
 		<div className="apply-page">
-			<div className="page-content">
-				<Sidebar accountType={accountData.accountType} />
-				<div className="postings">{applicationsDisplay}</div>
-			</div>
+			{currentTab === TABS.APPLICATIONS && (
+				<div className="page-content">
+					<Sidebar
+						accountType={accountData.accountType}
+						setCurrentTab={setCurrentTab}
+					/>
+					<div className="postings">{applicationsDisplay}</div>
+				</div>
+			)}
+			{currentTab === TABS.RECOMMENDATIONS && accountData != null && (
+				<div className="page-content">
+					<Sidebar
+						accountType={accountData.accountType}
+						setCurrentTab={setCurrentTab}
+					/>
+					<Recommendations accountId={accountId} />
+				</div>
+			)}
 		</div>
 	)
 }

@@ -131,8 +131,22 @@ export async function incrementProfileVisit(playerAccountId, teamAccountId) {
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({ playerAccountId: playerAccountId, teamAccountId: teamAccountId }),
+		body: JSON.stringify({
+			playerAccountId: playerAccountId,
+			teamAccountId: teamAccountId,
+		}),
 	})
 	const data = await response.json()
 	return data
+}
+
+export async function getRecommendations(accountId) {
+	try {
+		const response = await fetch(`${BASEURL}/api/recommendations/${accountId}`)
+		const recommendationsData = await response.json()
+		return recommendationsData
+	} catch (error) {
+		console.error("Error retrieving recommendations:", error)
+	}
+	return tournamentsData
 }
