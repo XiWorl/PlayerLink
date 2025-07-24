@@ -42,6 +42,16 @@ export const SkillLevelOptions = {
 	ELITE: "Elite",
 }
 
+export function translateExperience(yearsOfExperience) {
+    if (yearsOfExperience === YearsOfExperienceOptions.ZERO_TO_ONE || yearsOfExperience === YearsOfExperienceOptions.TWO_TO_THREE) {
+        return "Semi-Pro"
+    } else if (yearsOfExperience === YearsOfExperienceOptions.FOUR_TO_FIVE || yearsOfExperience === YearsOfExperienceOptions.SIX_TO_TEN) {
+        return "Pro"
+    } else if (yearsOfExperience === YearsOfExperienceOptions.TENPLUS) {
+        return "Elite"
+    }
+}
+
 export const NearbyLocationScores = {
 	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
 	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),

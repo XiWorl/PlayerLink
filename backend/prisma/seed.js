@@ -20,12 +20,15 @@ const GameOptions = {
 const SkillLevelOptions = {
 	SEMI_PRO: "Semi-Pro",
 	PRO: "Pro",
-	CASUAL: "Casual",
+	ELITE: "Elite",
 }
 const PlaystyleOptions = {
-	ADAPTABLE: "Adaptable",
-	DEFENSIVE: "Defensive",
+	TACTICAL: "Tactical",
 	AGGRESSIVE: "Aggressive",
+	DEFENSIVE: "Defensive",
+	BALANCED: "Balanced",
+	SUPPORTIVE: "Supportive",
+	ADAPTABLE: "Adaptable",
 }
 function generateRandomTeamInfo(index) {
 	const gameOptions = Object.values(GameOptions)
@@ -187,6 +190,14 @@ async function main() {
 						...randomTeam.rosterAccountIds,
 						randomPlayer.accountId,
 					],
+					recommendationHistory: {
+						interactions: {
+							...randomTeam.recommendationHistory.interactions,
+							[randomPlayer.accountId]: {
+								declinedRecommendation: true
+							}
+						}
+					}
 				},
 			})
 			const playerUpdate = await prisma.player.update({

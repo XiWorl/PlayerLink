@@ -57,7 +57,7 @@ export function Applications({ accountData, accountId }) {
 						accountType={accountData.accountType}
 						setCurrentTab={setCurrentTab}
 					/>
-					<Recommendations accountId={accountId} />
+					<Recommendations accountId={accountId} accountData={accountData}/>
 				</div>
 			)}
 		</div>

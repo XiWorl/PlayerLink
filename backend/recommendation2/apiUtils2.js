@@ -1,4 +1,5 @@
 import { getPlayerData } from "../api/endpointUtils.js"
+import { getAllRecommendations } from "./algorithm2.js"
 
 export async function incrementProfileVisit(playerAccountId, teamAccountId) {
     const accountData = await getPlayerData(playerAccountId, teamAccountId)
@@ -21,4 +22,9 @@ export function getDefaultInteractions() {
         memberOfTeam: false,
         rejectedFromTeam: false,
     }
+}
+
+export async function getRecommendationData(playerData, allTeams) {
+    const recommendations = await getAllRecommendations(playerData, allTeams)
+    return(recommendations)
 }

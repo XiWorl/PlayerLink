@@ -142,11 +142,10 @@ export async function incrementProfileVisit(playerAccountId, teamAccountId) {
 
 export async function getRecommendations(accountId) {
 	try {
-		const response = await fetch(`${BASEURL}/api/recommendations/${accountId}`)
+		const response = await fetch(`${BASEURL}/api/recommendations/?accountId=${accountId}`)
 		const recommendationsData = await response.json()
 		return recommendationsData
 	} catch (error) {
 		console.error("Error retrieving recommendations:", error)
 	}
-	return tournamentsData
 }

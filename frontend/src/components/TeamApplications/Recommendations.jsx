@@ -15,15 +15,15 @@ function RecommendationTile({teamData}) {
     )
 }
 
-async function loadRecommendations(setRecommendations) {
-    const recommendations = await getRecommendations()
+async function loadRecommendations(setRecommendations, accountId) {
+    const recommendations = await getRecommendations(accountId)
     setRecommendations(recommendations)
 }
 
-export function Recommendations() {
+export function Recommendations({accountData, accountId}) {
     const [recommendations, setRecommendations] = useState([])
     useEffect(() => {
-        loadRecommendations(setRecommendations)
+        loadRecommendations(setRecommendations, accountId)
     }, [])
 
     return (
