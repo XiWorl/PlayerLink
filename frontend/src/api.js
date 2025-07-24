@@ -124,3 +124,15 @@ export async function createNewTournament(teamAccountId, email) {
 		console.error("Error creating application:", error)
 	}
 }
+
+export async function incrementProfileVisit(playerAccountId, teamAccountId) {
+	const response = await fetch(`${BASEURL}/api/profiles/visit`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ playerAccountId: playerAccountId, teamAccountId: teamAccountId }),
+	})
+	const data = await response.json()
+	return data
+}

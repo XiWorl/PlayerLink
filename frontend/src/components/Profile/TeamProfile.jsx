@@ -1,5 +1,6 @@
-import { createContext, useState } from "react"
+import { createContext, useState, useEffect } from "react"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
+import { incrementProfileVisit } from "../../api"
 import { Roster } from "./Roster"
 import ApplyButton from "./ApplyButton"
 import EditProfileButton from "./EditProfile"
@@ -13,6 +14,10 @@ const TabOptions = {
 	ROSTER: "Roster",
 }
 
+async function addToProfileVisits(playerAccountId, teamAccountId) {
+	await incrementProfileVisit(playerAccountId, teamAccountId)
+}
+
 export default function TeamProfile({ isLoading, accountData }) {
 	if (isLoading) {
 		return <h1>Loading...</h1>
@@ -24,6 +29,12 @@ export default function TeamProfile({ isLoading, accountData }) {
 	const [selectedTab, setSelectedTab] = useState("Home")
 	const [overview, setOverview] = useState(accountData.overview || defaultProfileInfo)
 	const sessionStorageAccountData = getAccountDataFromSessionStorage()
+
+	useEffect(() => {
+		if (sessionStorageAccountData.accountType != AccountType.TEAM) {
+			addToProfileVisits(sessionStorageAccountData.id, accountData.accountId)
+		}
+	}, [])
 
 	return (
 		<TeamProfileContext.Provider value={{ setDescription, setOverview }}>
@@ -47,8 +58,12 @@ export default function TeamProfile({ isLoading, accountData }) {
 					</div>
 					<div>
 						<div>
-							<button onClick={()=>setSelectedTab(TabOptions.HOME)}>Home</button>
-							<button onClick={()=>setSelectedTab(TabOptions.ROSTER)}>Roster</button>
+							<button onClick={() => setSelectedTab(TabOptions.HOME)}>
+								Home
+							</button>
+							<button onClick={() => setSelectedTab(TabOptions.ROSTER)}>
+								Roster
+							</button>
 							{sessionStorageAccountData &&
 								sessionStorageAccountData.accountType !=
 									AccountType.TEAM &&
@@ -72,7 +87,9 @@ export default function TeamProfile({ isLoading, accountData }) {
 						<p className="profile-about-text">{`${overview}`}</p>
 					</div>
 				)}
-				{selectedTab === TabOptions.ROSTER && <Roster accountRosterIds={accountData.rosterAccountIds}/>}
+				{selectedTab === TabOptions.ROSTER && (
+					<Roster accountRosterIds={accountData.rosterAccountIds} />
+				)}
 			</div>
 		</TeamProfileContext.Provider>
 	)

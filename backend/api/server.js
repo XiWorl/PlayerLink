@@ -18,6 +18,7 @@ const {
 	createRoundsJson,
 	MININUM_NUMBER_OF_TEAMS,
 } = require("../tournamentScheduling/utils")
+const { incrementProfileVisit } = require("../recommendation/apiUtils")
 const { getFornitePlayerData } = require("../externalApi/main")
 const express = require("express")
 const cors = require("cors")
@@ -624,6 +625,18 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 		}
 
 		return res.status(200).json(updatedTournament)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.post("/api/profiles/visit", async (req, res, next) => {
+	try {
+		console.log("got to")
+		const playerAccountId = parseInt(req.body.playerAccountId)
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		await incrementProfileVisit(playerAccountId, teamAccountId)
+		return res.status(200).json({ success: true })
 	} catch (error) {
 		next(error)
 	}
