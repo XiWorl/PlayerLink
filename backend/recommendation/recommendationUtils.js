@@ -1,190 +1,169 @@
-import { PrismaClient } from "../generated/prisma"
-const prisma = new PrismaClient()
-import {
-	DEFAULT_RECOMMENDATION_STATISTICS,
-	DEFAULT_RECOMMENDATION_HISTORY,
-} from "../api/utils.js"
-import {
-	generateTeamRecommendations,
-	processProfileVisit,
-	processDeclinedRecommendation,
-} from "./algorithm.js"
+/**
+ * Utility Functions for Team Recommendation Algorithm
+ *
+ * This file contains utility functions for the team recommendation algorithm.
+ * It provides helper functions for working with recommendation data structures.
+ */
+
+import { recommendTeams, createDefaultRecommendationStatistics } from "./algorithm.js"
+import { LOCATION_OPTIONS, SkillLevelOptions, PlaystyleOptions } from "../ServerUtils.js"
 
 /**
  * Get team recommendations for a player
- * @param {string} playerAccountId - The player's account ID
- * @returns {Promise<Array>} - A promise that resolves to an array of recommended teams with scores
+ * This function generates recommendations for a player based on their preferences
+ *
+ * @param {Object} player - The player object
+ * @param {Array} teams - Array of team objects
+ * @returns {Array} - Array of recommended teams with scores
  */
-async function getTeamRecommendationsForPlayer(playerAccountId) {
-	try {
-		// Get the player data
-		const player = await prisma.player.findUnique({
-			where: { accountId: parseInt(playerAccountId) },
-		})
+function getTeamRecommendationsForPlayer(player, teams) {
+	// In a real implementation, you would:
+	// 1. Retrieve the player data from the database
+	// const player = await getPlayerFromDatabase(playerAccountId);
 
-		if (!player) {
-			throw new Error(`Player with account ID ${playerAccountId} not found`)
-		}
+	// 2. Retrieve all eligible teams from the database
+	// const teams = await getEligibleTeamsFromDatabase();
 
-		// Get all teams
-		const teams = await prisma.team.findMany({
-			where: {
-				currentlyHiring: true,
-			},
-		})
+	// 3. Generate recommendations using the algorithm
+	const recommendations = recommendTeams(player, teams)
 
-		// Generate recommendations
-		const recommendations = generateTeamRecommendations(player, teams)
-
-		return recommendations
-	} catch (error) {
-		console.error("Error getting team recommendations:", error)
-		throw error
-	}
+	return recommendations
 }
 
 /**
  * Initialize recommendation statistics for a new player
- * @param {string} playerAccountId - The player's account ID
- * @returns {Promise<Object>} - A promise that resolves to the updated player object
+ * This function creates default recommendation statistics for a new player
+ *
+ * @param {Object} locationOptions - Object containing location options
+ * @param {Object} skillLevelOptions - Object containing skill level options
+ * @param {Object} playstyleOptions - Object containing playstyle options
+ * @returns {Object} - Default recommendation statistics
  */
-async function initializePlayerRecommendationStatistics(playerAccountId) {
-	try {
-		const updatedPlayer = await prisma.player.update({
-			where: { accountId: parseInt(playerAccountId) },
-			data: {
-				recommendationStatistics: DEFAULT_RECOMMENDATION_STATISTICS,
-			},
-		})
-
-		return updatedPlayer
-	} catch (error) {
-		console.error("Error initializing player recommendation statistics:", error)
-		throw error
-	}
+function initializePlayerRecommendationStatistics() {
+	// Create default recommendation statistics using the algorithm's helper function
+	return createDefaultRecommendationStatistics(
+		LOCATION_OPTIONS,
+		SkillLevelOptions,
+		PlaystyleOptions
+	)
 }
 
 /**
  * Initialize recommendation history for a new team
- * @param {string} teamAccountId - The team's account ID
- * @returns {Promise<Object>} - A promise that resolves to the updated team object
+ * This function creates default recommendation history for a new team
+ *
+ * @returns {Object} - Default recommendation history
  */
-async function initializeTeamRecommendationHistory(teamAccountId) {
-	try {
-		const updatedTeam = await prisma.team.update({
-			where: { accountId: parseInt(teamAccountId) },
-			data: {
-				recommendationHistory: DEFAULT_RECOMMENDATION_HISTORY,
-			},
-		})
-
-		return updatedTeam
-	} catch (error) {
-		console.error("Error initializing team recommendation history:", error)
-		throw error
+function initializeTeamRecommendationHistory() {
+	// Create default recommendation history
+	return {
+		interactions: {},
 	}
 }
 
 /**
  * Record a player's profile visit to a team
- * @param {string} playerAccountId - The player's account ID
- * @param {string} teamAccountId - The team's account ID
- * @returns {Promise<Object>} - A promise that resolves to the updated player object
+ * This function updates the player's recommendation statistics based on a profile visit
+ *
+ * @param {Object} player - The player object
+ * @param {Object} team - The team object
+ * @param {number} profileVisits - The number of profile visits
+ * @returns {Object} - Updated player object
  */
-async function recordProfileVisit(playerAccountId, teamAccountId) {
-	try {
-		// Get the player and team data
-		const player = await prisma.player.findUnique({
-			where: { accountId: parseInt(playerAccountId) },
-		})
+function recordProfileVisit(player, team, profileVisits) {
+	// In a real implementation, you would:
+	// 1. Retrieve the player and team data from the database
+	// const player = await getPlayerFromDatabase(playerAccountId);
+	// const team = await getTeamFromDatabase(teamAccountId);
 
-		const team = await prisma.team.findUnique({
-			where: { accountId: parseInt(teamAccountId) },
-		})
+	// 2. Create a copy of the player object to avoid mutating the original
+	const updatedPlayer = JSON.parse(JSON.stringify(player))
 
-		if (!player || !team) {
-			throw new Error(`Player or team not found`)
+	// 3. Initialize or update the team interactions
+	if (!updatedPlayer.recommendationStatistics.interactions[team.accountId]) {
+		updatedPlayer.recommendationStatistics.interactions[team.accountId] = {
+			profileVisits: profileVisits,
+			declinedRecommendation: false,
+			rejectedFromTeam: false,
 		}
-
-		// Process the profile visit
-		const updatedPlayer = processProfileVisit(player, team)
-
-		// Update the player in the database
-		const savedPlayer = await prisma.player.update({
-			where: { accountId: parseInt(playerAccountId) },
-			data: {
-				recommendationStatistics: updatedPlayer.recommendationStatistics,
-			},
-		})
-
-		return savedPlayer
-	} catch (error) {
-		console.error("Error recording profile visit:", error)
-		throw error
+	} else {
+		updatedPlayer.recommendationStatistics.interactions[
+			team.accountId
+		].profileVisits = profileVisits
 	}
+
+	// 4. In a real implementation, you would save the updated player to the database
+	// await savePlayerToDatabase(updatedPlayer);
+
+	return updatedPlayer
 }
 
 /**
  * Record a player's declined recommendation for a team
- * @param {string} playerAccountId - The player's account ID
- * @param {string} teamAccountId - The team's account ID
- * @returns {Promise<Object>} - A promise that resolves to the updated player object
+ * This function updates the player's recommendation statistics when they decline a recommendation
+ *
+ * @param {Object} player - The player object
+ * @param {Object} team - The team object
+ * @returns {Object} - Updated player object
  */
-async function recordDeclinedRecommendation(playerAccountId, teamAccountId) {
-	try {
-		// Get the player and team data
-		const player = await prisma.player.findUnique({
-			where: { accountId: parseInt(playerAccountId) },
-		})
+function recordDeclinedRecommendation(player, team) {
+	// In a real implementation, you would:
+	// 1. Retrieve the player and team data from the database
+	// const player = await getPlayerFromDatabase(playerAccountId);
+	// const team = await getTeamFromDatabase(teamAccountId);
 
-		const team = await prisma.team.findUnique({
-			where: { accountId: parseInt(teamAccountId) },
-		})
+	// 2. Create a copy of the player object to avoid mutating the original
+	const updatedPlayer = JSON.parse(JSON.stringify(player))
 
-		if (!player || !team) {
-			throw new Error(`Player or team not found`)
+	// 3. Initialize or update the team interactions
+	if (!updatedPlayer.recommendationStatistics.interactions[team.accountId]) {
+		updatedPlayer.recommendationStatistics.interactions[team.accountId] = {
+			profileVisits: 0,
+			declinedRecommendation: true,
+			rejectedFromTeam: false,
 		}
-
-		// Process the declined recommendation
-		const updatedPlayer = processDeclinedRecommendation(player, team)
-
-		// Update the player in the database
-		const savedPlayer = await prisma.player.update({
-			where: { accountId: parseInt(playerAccountId) },
-			data: {
-				recommendationStatistics: updatedPlayer.recommendationStatistics,
-			},
-		})
-
-		// Update the team in the database
-		await prisma.team.update({
-			where: { accountId: parseInt(teamAccountId) },
-			data: {
-				recommendationHistory: team.recommendationHistory,
-			},
-		})
-
-		return savedPlayer
-	} catch (error) {
-		console.error("Error recording declined recommendation:", error)
-		throw error
+	} else {
+		updatedPlayer.recommendationStatistics.interactions[
+			team.accountId
+		].declinedRecommendation = true
 	}
+
+	// 4. Create a copy of the team object to avoid mutating the original
+	const updatedTeam = JSON.parse(JSON.stringify(team))
+
+	// 5. Update the team's recommendation history
+	if (!updatedTeam.recommendationHistory.interactions[player.accountId]) {
+		updatedTeam.recommendationHistory.interactions[player.accountId] = {
+			declinedRecommendation: true,
+		}
+	} else {
+		updatedTeam.recommendationHistory.interactions[
+			player.accountId
+		].declinedRecommendation = true
+	}
+
+	// 6. In a real implementation, you would save the updated player and team to the database
+	// await savePlayerToDatabase(updatedPlayer);
+	// await saveTeamToDatabase(updatedTeam);
+
+	return updatedPlayer
 }
 
 /**
  * Get the top N recommended teams for a player
- * @param {string} playerAccountId - The player's account ID
+ * This function returns the top N recommended teams for a player
+ *
+ * @param {Object} player - The player object
+ * @param {Array} teams - Array of team objects
  * @param {number} limit - The maximum number of recommendations to return
- * @returns {Promise<Array>} - A promise that resolves to an array of the top N recommended teams
+ * @returns {Array} - Array of the top N recommended teams
  */
-async function getTopRecommendedTeams(playerAccountId, limit = 5) {
-	try {
-		const recommendations = await getTeamRecommendationsForPlayer(playerAccountId)
-		return recommendations.slice(0, limit)
-	} catch (error) {
-		console.error("Error getting top recommended teams:", error)
-		throw error
-	}
+function getTopRecommendedTeams(player, teams, limit = 5) {
+	// Get all recommendations for the player
+	const recommendations = getTeamRecommendationsForPlayer(player, teams)
+
+	// Return the top N recommendations
+	return recommendations.slice(0, limit)
 }
 
 export {

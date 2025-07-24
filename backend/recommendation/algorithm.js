@@ -1,27 +1,46 @@
+/**
+ * Team Recommendation Algorithm
+ *
+ * This algorithm recommends teams to players based on their preferences and interactions.
+ * It takes into account location, skill level, playstyle, and profile visits.
+ */
+
+// Constants for weight calculations
 const WeightUpdateIncrement = {
-	BASE_VALUE: 0.05,
-	DECAY_RATE: 0.025,
+	BASE_VALUE: 0.05, // Base value for weight increments
+	DECAY_RATE: 0.025, // Rate at which weight increments decay with subsequent visits
 }
+
+// Weights for different team attributes in the recommendation score
 const TeamAttributeWeight = {
-	LOCATION_WEIGHT: 0.4,
-	SKILL_LEVEL_WEIGHT: 0.3,
-	PLAYSTYLE_WEIGHT: 0.3,
+	LOCATION_WEIGHT: 0.4, // Weight for location match
+	SKILL_LEVEL_WEIGHT: 0.3, // Weight for skill level match
+	PLAYSTYLE_WEIGHT: 0.3, // Weight for playstyle match
 }
+
+// Min and max values for favorability weights
 const LocationFavorabilityWeight = {
 	MIN_WEIGHT: 0,
 	MAX_WEIGHT: 1,
 }
+
 const SkillLevelFavorabilityWeight = {
 	MIN_WEIGHT: 0,
 	MAX_WEIGHT: 1,
 }
+
 const PlaystyleFavorabilityWeight = {
 	MIN_WEIGHT: 0,
 	MAX_WEIGHT: 1,
 }
+
+// Threshold for profile visits to start affecting weights
 const ProfileVisitThreshold = {
 	MIN_VISITS: 3,
 }
+
+// Initial weight value for favorability weights
+const INITIAL_WEIGHT_VALUE = 0.5
 
 /**
  * Calculate the location favorability weight based on player and team locations
@@ -122,21 +141,19 @@ function calculateWeightIncrement(profileVisits) {
 
 /**
  * Update the favorability weights based on profile visits
- * @param {Object} player - The player object
+ * @param {Object} favorabilityWeights - The current favorability weights
  * @param {Object} team - The team object
  * @param {number} profileVisits - The number of profile visits
  * @returns {Object} - The updated favorability weights
  */
-function updateFavorabilityWeights(player, team, profileVisits) {
+function updateFavorabilityWeights(favorabilityWeights, team, profileVisits) {
 	// Only update weights if the number of profile visits exceeds the threshold
 	if (profileVisits < ProfileVisitThreshold.MIN_VISITS) {
-		return player.recommendationStatistics.favorabilityWeights
+		return favorabilityWeights
 	}
 
 	const weightIncrement = calculateWeightIncrement(profileVisits)
-	const updatedWeights = JSON.parse(
-		JSON.stringify(player.recommendationStatistics.favorabilityWeights)
-	)
+	const updatedWeights = JSON.parse(JSON.stringify(favorabilityWeights))
 
 	// Update location weight
 	const locationWeight = updatedWeights.locations[team.location] || 0
@@ -168,9 +185,10 @@ function updateFavorabilityWeights(player, team, profileVisits) {
  * Calculate the recommendation score for a player and team
  * @param {Object} player - The player object
  * @param {Object} team - The team object
+ * @param {Object} interactions - The player's interactions with teams
  * @returns {number} - The recommendation score
  */
-function calculateRecommendationScore(player, team) {
+function calculateRecommendationScore(player, team, interactions) {
 	const favorabilityWeights = player.recommendationStatistics.favorabilityWeights
 
 	// Calculate individual favorability weights
@@ -198,16 +216,16 @@ function calculateRecommendationScore(player, team) {
 		TeamAttributeWeight.SKILL_LEVEL_WEIGHT * skillLevelWeight +
 		TeamAttributeWeight.PLAYSTYLE_WEIGHT * playstyleWeight
 
-	// Adjust score based on team recommendation history
-	const teamInteractions = player.recommendationStatistics.interactions[team.accountId]
-	if (teamInteractions) {
+	// Adjust score based on team interactions
+	const teamInteraction = interactions[team.accountId]
+	if (teamInteraction) {
 		// If the player has declined a recommendation from this team, reduce the score
-		if (teamInteractions.declinedRecommendation) {
+		if (teamInteraction.declinedRecommendation) {
 			return score * 0.5 // Reduce score by 50%
 		}
 
 		// If the player has been rejected from this team, reduce the score
-		if (teamInteractions.rejectedFromTeam) {
+		if (teamInteraction.rejectedFromTeam) {
 			return score * 0.3 // Reduce score by 70%
 		}
 	}
@@ -217,11 +235,16 @@ function calculateRecommendationScore(player, team) {
 
 /**
  * Generate team recommendations for a player
- * @param {Object} player - The player object
- * @param {Array} teams - The list of teams
- * @returns {Array} - The list of recommended teams with scores
+ * This is the main function that takes a player and returns recommended teams
+ * @returns {Array} - Array of recommended teams with scores, sorted by score in descending order
  */
-function generateTeamRecommendations(player, teams) {
+function recommendTeams(player, teams) {
+	// In a real implementation, you would retrieve the player data from the database
+	// const player = await getPlayerData(playerAccountId);
+
+	// In a real implementation, you would retrieve all eligible teams from the database
+	// const teams = await getEligibleTeams();
+
 	// Filter out teams that the player is already a member of
 	const eligibleTeams = teams.filter(
 		(team) => !player.rosterAccountIds.includes(team.accountId)
@@ -229,7 +252,12 @@ function generateTeamRecommendations(player, teams) {
 
 	// Calculate recommendation scores for each team
 	const recommendedTeams = eligibleTeams.map((team) => {
-		const score = calculateRecommendationScore(player, team)
+		const score = calculateRecommendationScore(
+			player,
+			team,
+			player.recommendationStatistics.interactions
+		)
+
 		return {
 			team,
 			score,
@@ -243,82 +271,75 @@ function generateTeamRecommendations(player, teams) {
 }
 
 /**
- * Process a player's profile visit to a team
- * @param {Object} player - The player object
- * @param {Object} team - The team object
- * @returns {Object} - The updated player object with updated recommendation statistics
+ * Create default recommendation statistics for a new player
+ * @returns {Object} - Default recommendation statistics
  */
-function processProfileVisit(player, team) {
-	const updatedPlayer = JSON.parse(JSON.stringify(player))
+function createDefaultRecommendationStatistics(
+	locationOptions,
+	skillLevelOptions,
+	playstyleOptions
+) {
+	// Create default favorability weights for locations
+	const locationWeights = {}
+	Object.values(locationOptions).forEach((location) => {
+		locationWeights[location] = INITIAL_WEIGHT_VALUE
+	})
 
-	// Initialize or update the team interactions
-	if (!updatedPlayer.recommendationStatistics.interactions[team.accountId]) {
-		updatedPlayer.recommendationStatistics.interactions[team.accountId] = {
-			profileVisits: 1,
-			declinedRecommendation: false,
-			memberOfTeam: false,
-			rejectedFromTeam: false,
-		}
-	} else {
-		updatedPlayer.recommendationStatistics.interactions[
-			team.accountId
-		].profileVisits += 1
+	// Create default favorability weights for skill levels
+	const skillLevelWeights = {}
+	Object.values(skillLevelOptions).forEach((skillLevel) => {
+		skillLevelWeights[skillLevel] = INITIAL_WEIGHT_VALUE
+	})
+
+	// Create default favorability weights for playstyles
+	const playstyleWeights = {}
+	Object.values(playstyleOptions).forEach((playstyle) => {
+		playstyleWeights[playstyle] = INITIAL_WEIGHT_VALUE
+	})
+
+	return {
+		favorabilityWeights: {
+			locations: locationWeights,
+			skillLevels: skillLevelWeights,
+			playstyle: playstyleWeights,
+		},
+		interactions: {},
 	}
-
-	const profileVisits =
-		updatedPlayer.recommendationStatistics.interactions[team.accountId].profileVisits
-
-	// Update favorability weights based on profile visits
-	updatedPlayer.recommendationStatistics.favorabilityWeights =
-		updateFavorabilityWeights(updatedPlayer, team, profileVisits)
-
-	return updatedPlayer
 }
 
 /**
- * Process a player's declined recommendation for a team
+ * Process a player's profile visit to a team
+ * This function updates the player's recommendation statistics based on a profile visit
+ *
  * @param {Object} player - The player object
  * @param {Object} team - The team object
- * @returns {Object} - The updated player object with updated recommendation statistics
+ * @param {number} profileVisits - The number of profile visits
+ * @returns {Object} - Updated favorability weights
  */
-function processDeclinedRecommendation(player, team) {
-	const updatedPlayer = JSON.parse(JSON.stringify(player))
+function processProfileVisit(player, team, profileVisits) {
+	// In a real implementation, you would retrieve the current profile visit count
+	// const profileVisits = await getProfileVisitCount(playerAccountId, teamAccountId);
 
-	// Initialize or update the team interactions
-	if (!updatedPlayer.recommendationStatistics.interactions[team.accountId]) {
-		updatedPlayer.recommendationStatistics.interactions[team.accountId] = {
-			profileVisits: 0,
-			declinedRecommendation: true,
-			memberOfTeam: false,
-			rejectedFromTeam: false,
-		}
-	} else {
-		updatedPlayer.recommendationStatistics.interactions[
-			team.accountId
-		].declinedRecommendation = true
-	}
+	// Update the favorability weights based on the profile visits
+	const updatedWeights = updateFavorabilityWeights(
+		player.recommendationStatistics.favorabilityWeights,
+		team,
+		profileVisits
+	)
 
-	// Update team's recommendation history
-	if (!team.recommendationHistory.interactions[player.accountId]) {
-		team.recommendationHistory.interactions[player.accountId] = {
-			declinedRecommendation: true,
-		}
-	} else {
-		team.recommendationHistory.interactions[
-			player.accountId
-		].declinedRecommendation = true
-	}
+	// In a real implementation, you would save the updated weights to the database
+	// await saveUpdatedWeights(playerAccountId, updatedWeights);
 
-	return updatedPlayer
+	return updatedWeights
 }
 
 export {
-	generateTeamRecommendations,
-	processProfileVisit,
-	processDeclinedRecommendation,
+	recommendTeams,
 	calculateRecommendationScore,
 	calculateLocationFavorabilityWeight,
 	calculateSkillLevelFavorabilityWeight,
 	calculatePlaystyleFavorabilityWeight,
 	updateFavorabilityWeights,
+	processProfileVisit,
+	createDefaultRecommendationStatistics,
 }

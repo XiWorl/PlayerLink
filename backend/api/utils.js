@@ -190,13 +190,13 @@ export const DEFAULT_RECOMMENDATION_STATISTICS = {
 			[SkillLevelOptions.PRO]: INITIAL_WEIGHT_VALUE,
 			[SkillLevelOptions.ELITE]: INITIAL_WEIGHT_VALUE,
 		},
-		playstyle: {
+		playstyles: {
 			[PlaystyleOptions.AGGRESSIVE]: INITIAL_WEIGHT_VALUE,
 			[PlaystyleOptions.DEFENSIVE]: INITIAL_WEIGHT_VALUE,
-			[PlaystyleOptions.ADAPTIVE]: INITIAL_WEIGHT_VALUE,
 			[PlaystyleOptions.SUPPORTIVE]: INITIAL_WEIGHT_VALUE,
 			[PlaystyleOptions.TACTICAL]: INITIAL_WEIGHT_VALUE,
 			[PlaystyleOptions.BALANCED]: INITIAL_WEIGHT_VALUE,
+			[PlaystyleOptions.ADAPTABLE]: INITIAL_WEIGHT_VALUE,
 		},
 	},
 	interactions: {

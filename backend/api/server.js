@@ -18,7 +18,7 @@ const {
 	createRoundsJson,
 	MININUM_NUMBER_OF_TEAMS,
 } = require("../tournamentScheduling/utils")
-const { incrementProfileVisit } = require("../recommendation/apiUtils")
+const { incrementProfileVisit } = require("../recommendation2/apiUtils2")
 const { getFornitePlayerData } = require("../externalApi/main")
 const express = require("express")
 const cors = require("cors")
@@ -634,7 +634,13 @@ server.post("/api/profiles/visit", async (req, res, next) => {
 	try {
 		const playerAccountId = parseInt(req.body.playerAccountId)
 		const teamAccountId = parseInt(req.body.teamAccountId)
-		await incrementProfileVisit(playerAccountId, teamAccountId)
+		const playerData = await incrementProfileVisit(playerAccountId, teamAccountId)
+
+		const updatedPlayerData = await prisma.player.update({
+			where: { accountId: playerAccountId },
+			data: playerData,
+		})
+
 		return res.status(200).json({ success: true })
 	} catch (error) {
 		next(error)

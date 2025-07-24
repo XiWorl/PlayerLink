@@ -23,7 +23,7 @@ const SkillLevelOptions = {
 	CASUAL: "Casual",
 }
 const PlaystyleOptions = {
-	ADAPTIVE: "Adaptive",
+	ADAPTABLE: "Adaptable",
 	DEFENSIVE: "Defensive",
 	AGGRESSIVE: "Aggressive",
 }
