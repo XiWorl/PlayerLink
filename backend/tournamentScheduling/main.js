@@ -147,7 +147,6 @@ async function generateTournamentMatchups(teams) {
 	// 		`Tournament requires at least ${MINIMUM_PARTICIPANTS_REQUIRED} teams`
 	// 	)
 	// }
-	console.log("teams", teams)
 
 	const conflictMatrix = await createConflictMatrix(Object.values(teams))
 	const matchups = await createFirstRoundMatchups(Object.values(teams), conflictMatrix)

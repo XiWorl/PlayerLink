@@ -8,7 +8,6 @@ export function createNextRoundArray(tournamentInformation) {
 
 	const array = Object.entries(tournamentInformation.participantsAdvancedToNextRound)
 	array.sort((a, b) => a[1].advancedAt - b[1].advancedAt)
-	console.log(array)
 
 	for (let i = 0; i < array.length; i += 2) {
 		const matchupObject = {
@@ -22,6 +21,5 @@ export function createNextRoundArray(tournamentInformation) {
 
 		finalMatchups.push(matchupObject)
 	}
-	console.log(finalMatchups)
 	return finalMatchups
 }

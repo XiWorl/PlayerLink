@@ -103,12 +103,10 @@ export async function getPlayerGamingPerformance(gameUsernames) {
 	let gamePerformance = {}
 
 	if (gameUsernames["Fortnite"] != null) {
-		console.log("in c1")
 		const fortnitePlayerData = await getFortnitePlayerData(gameUsernames["Fortnite"])
 		if (fortnitePlayerData != null) {
 			gamePerformance["Fortnite"] = fortnitePlayerData
 		}
-		console.log("past c1")
 	}
 
 	if (gameUsernames["Apex Legends"] != null) {

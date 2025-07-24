@@ -55,7 +55,6 @@ export async function getApexPlayerData(username) {
 			}
 			return performanceData
 		} catch (error) {
-			console.log(error)
 			return null
 		}
 	}
@@ -90,7 +89,6 @@ export async function getValorantPlayerData(username, tagline) {
 			}
 			return performanceData
 		} catch (error) {
-			console.log(error)
 			return null
 		}
 	}

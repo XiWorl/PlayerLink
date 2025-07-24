@@ -276,7 +276,6 @@ server.post("/api/signup/team", async (req, res, next) => {
 server.post("/api/tournaments/create", async (req, res, next) => {
 	try {
 		const roundsJson = createRoundsJson(MININUM_NUMBER_OF_TEAMS)
-		console.log(roundsJson)
 
 		const createdTournament = await prisma.tournament.create({
 			data: {
@@ -320,7 +319,6 @@ server.post("/api/tournaments/create", async (req, res, next) => {
 })
 
 server.patch("/profiles/games/update", async (req, res, next) => {
-	console.log(req.body)
 	if (
 		req.body == null ||
 		req.body.accountId == null ||
@@ -333,7 +331,6 @@ server.patch("/profiles/games/update", async (req, res, next) => {
 		const fortnitePlayerData = await getFornitePlayerData(
 			req.body.gameUsernames["Fortnite"]
 		)
-		console.log(fortnitePlayerData)
 	}
 })
 
@@ -581,7 +578,6 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 		)
 		if (num == 1) { return res.status(200).json(updatedTournament) }
 
-		console.log(num, Object.keys(updatedTournament.participantsAdvancedToNextRound).length)
 
 		if (
 			Object.keys(updatedTournament.participantsAdvancedToNextRound).length >=
@@ -608,9 +604,7 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 			const firstElement = Object.values(
 				updatedTournament2.rounds["round" + nextRound]
 			)[0]
-			console.log("updatedTournament", firstElement)
 			const matchups = await generateTournamentMatchups(firstElement)
-			console.log("new round", matchups)
 
 			const updatedTournament3 = await prisma.tournament.update({
 				where: { tournamentId: tournamentId },
@@ -677,7 +671,6 @@ server.createTournament = async function (body) {
 		})
 		return updatedTournament
 	} catch (error) {
-		console.log(error)
 	}
 }
 
