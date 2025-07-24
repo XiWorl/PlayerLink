@@ -11,6 +11,7 @@ const {
 	getPlayerGamingPerformance,
 	TOURNAMENT_NAME,
 	getPlayerInfo,
+	DEFAULT_RECOMMENDATION_STATISTICS
 } = require("./utils")
 const { generateTournamentMatchups } = require("../tournamentScheduling/main")
 const {
@@ -211,6 +212,7 @@ server.post("/api/signup/player", async (req, res, next) => {
 						playstyle: req.body.playstyle,
 						gamingExperience: req.body.gamingExperience,
 						games: {},
+						recommendationStatistics: DEFAULT_RECOMMENDATION_STATISTICS,
 						gameUsernames: req.body.gameUsernames,
 						location: req.body.location,
 						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
@@ -553,8 +555,6 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 			return res.status(400).json({ error: "Team has already advanced" })
 		}
 
-
-
 		const teamData = await prisma.team.findUnique({
 			where: { accountId: accountId },
 		})
@@ -576,12 +576,12 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 			currentRound,
 			Object.keys(tournamentInformation.allParticipants).length
 		)
-		if (num == 1) { return res.status(200).json(updatedTournament) }
-
+		if (num == 1) {
+			return res.status(200).json(updatedTournament)
+		}
 
 		if (
-			Object.keys(updatedTournament.participantsAdvancedToNextRound).length >=
-			num
+			Object.keys(updatedTournament.participantsAdvancedToNextRound).length >= num
 		) {
 			const nextRound = currentRound + 1
 
@@ -670,8 +670,7 @@ server.createTournament = async function (body) {
 			},
 		})
 		return updatedTournament
-	} catch (error) {
-	}
+	} catch (error) {}
 }
 
 server.getPlayerData = async function (accountId) {

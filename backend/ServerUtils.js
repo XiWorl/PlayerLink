@@ -29,9 +29,12 @@ export const GameOptions = {
 	APEX_LEGENDS: "Apex Legends",
 }
 export const PlaystyleOptions = {
+	TACTICAL: "Tactical",
 	AGGRESSIVE: "Aggressive",
 	DEFENSIVE: "Defensive",
-	ADAPTIVE: "Adaptive",
+	BALANCED: "Balanced",
+	SUPPORTIVE: "Supportive",
+	ADAPTABLE: "Adaptable",
 }
 export const SkillLevelOptions = {
 	SEMI_PRO: "Semi-Pro",

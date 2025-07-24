@@ -34,6 +34,7 @@ function generateRandomTeamInfo(index) {
 		name: `Unlimited Range Gaming${index}`,
 		location: ["USA", "Europe", "Asia"][Math.floor(Math.random() * 3)],
 		rosterAccountIds: [],
+		recommendationHistory: {},
 		description: [
 			"FPS focused e-sports Team",
 			"Championship focused e-sports Team",
@@ -89,6 +90,7 @@ function generateRandomPlayerInfo(index) {
 	return {
     rosterAccountIds: [],
         games: {},
+		recommendationStatistics: {},
 		firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
 		lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
 		yearsOfExperience:
