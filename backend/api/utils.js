@@ -199,4 +199,12 @@ export const DEFAULT_RECOMMENDATION_STATISTICS = {
 			[PlaystyleOptions.BALANCED]: INITIAL_WEIGHT_VALUE,
 		},
 	},
+	interactions: {
+
+	}
+}
+
+export const DEFAULT_RECOMMENDATION_HISTORY = {
+    interactions: {
+    },
 }

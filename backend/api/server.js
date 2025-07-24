@@ -11,7 +11,7 @@ const {
 	getPlayerGamingPerformance,
 	TOURNAMENT_NAME,
 	getPlayerInfo,
-	DEFAULT_RECOMMENDATION_STATISTICS
+	DEFAULT_RECOMMENDATION_STATISTICS,
 } = require("./utils")
 const { generateTournamentMatchups } = require("../tournamentScheduling/main")
 const {
@@ -257,6 +257,9 @@ server.post("/api/signup/team", async (req, res, next) => {
 						desiredPlaystyle: req.body.desiredPlaystyle,
 						desiredSkillLevel: req.body.desiredSkillLevel,
 						supportedGames: req.body.supportedGames,
+						recommendationHistory: {
+							interactions: {},
+						},
 						currentlyHiring: convertToBoolean(req.body.currentlyHiring),
 					},
 				},
