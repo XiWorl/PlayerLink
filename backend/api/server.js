@@ -632,7 +632,6 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 
 server.post("/api/profiles/visit", async (req, res, next) => {
 	try {
-		console.log("got to")
 		const playerAccountId = parseInt(req.body.playerAccountId)
 		const teamAccountId = parseInt(req.body.teamAccountId)
 		await incrementProfileVisit(playerAccountId, teamAccountId)
