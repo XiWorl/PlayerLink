@@ -131,6 +131,7 @@ export async function getRecommendations(accountId) {
 		return recommendationsData
 	} catch (error) {
 		console.error("Error retrieving recommendations:", error)
+		return null
 	}
 }
 
@@ -150,6 +151,7 @@ export async function updateRecommendationStatus(playerAccountId, teamAccountId,
 		const recommendationsData = await response.json()
 		return recommendationsData
 	} catch (error) {
-		console.error("Error retrieving recommendations:", error)
+		console.error("Error updating recommendations:", error)
+		return null
 	}
 }
