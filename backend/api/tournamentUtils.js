@@ -43,7 +43,7 @@ async function updateTournament(tournamentId, tournamentData) {
 	try {
 		const updatedTournament = await prisma.tournament.update({
 			where: { tournamentId: tournamentId },
-			data: { tournamentData },
+			data: tournamentData ,
 		})
 		return updatedTournament
 	} catch (error) {
@@ -143,16 +143,18 @@ async function advanceTournamentRound(tournamentId) {
 async function advanceTeamInTournament(tournamentId, teamAccountId) {
 	try {
 		const tournamentInformation = await getTournament(tournamentId)
-		const teamData = await getAccountData(teamAccountId)
+		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 
 		if (
 			tournamentInformation.isActive == false ||
-			!tournamentInformation.allParticipants[req.body.accountId] ||
-			tournamentInformation.participantsAdvancedToNextRound[accountId] ||
+			!tournamentInformation.allParticipants[teamAccountId] ||
+			tournamentInformation.participantsAdvancedToNextRound[teamAccountId] ||
 			teamData == null
 		) {
 			return null
 		}
+
+		teamData.advancedAt = Date.now()
 
 		const addTeamToNextRound = {
 			participantsAdvancedToNextRound: {
@@ -160,6 +162,7 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 				[teamAccountId]: teamData,
 			},
 		}
+
 		const tournamentWithAdvancingTeam = await updateTournament(
 			tournamentId,
 			addTeamToNextRound
@@ -174,7 +177,7 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 async function joinTournament(tournamentId, teamId) {
 	try {
 		const tournamentInformation = await getTournament(tournamentId)
-		const teamData = await getAccountData(teamAccountId)
+		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 
 		if (
 			tournamentInformation.isActive == false ||
@@ -214,7 +217,8 @@ async function startTournament(tournamentId) {
 			rounds: updatedRounds,
 			isActive: true,
 		}
-		const updatedTournament = updateTournament(tournamentId, updatedTournamentData)
+
+		const updatedTournament = await updateTournament(tournamentId, updatedTournamentData)
 		return updatedTournament
 	} catch (error) {
 		return null
@@ -230,5 +234,5 @@ module.exports = {
 	advanceTournamentRound,
 	getAllTournaments,
 	startTournament,
-	joinTournament
+	joinTournament,
 }
