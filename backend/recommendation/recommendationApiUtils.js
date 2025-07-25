@@ -6,6 +6,7 @@ import {
 } from "./algorithm.js"
 import { incrementWithMaximumValue } from "./recommendationUtils.js"
 
+const NO_PROFILE_VISITS_DATA = 0
 const RecommendationStatus = {
 	INTERESTED: "Interested",
 	NOT_INTERESTED: "Not Interested",
