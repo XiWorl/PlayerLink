@@ -4,6 +4,7 @@ import { getTournament } from "../api"
 import { MatchupTile } from "../components/TournamentsBracket/MatchupTile"
 // import { createNextRoundArray } from "../components/TournamentsBracket/NextRoundBracket"
 import IntermissionDisplay from "../components/TournamentsBracket/IntermissionDisplay"
+import RoundSelectionButton from "../components/TournamentsBracket/RoundSelectionButton"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/TournamentsBracket/BracketPage.css"
 
@@ -27,27 +28,6 @@ function EmptyTile() {
 	)
 }
 
-function RoundButton({
-	roundNumber,
-	setRound,
-	tournamentInformation,
-	setDisplayedMatchups,
-	setEmptyMatchups,
-}) {
-	return (
-		<button
-			className="round-btn"
-			onClick={() => {
-				setRound(roundNumber)
-				setDisplayedMatchups(tournamentInformation.rounds[`round${roundNumber}`])
-				setEmptyMatchups([])
-			}}
-		>
-			Round {roundNumber}
-		</button>
-	)
-}
-
 function getTotalNumberOfMatchupsBasedOnRound(roundNumber) {
 	const remainingTeamsInTournamentBasedOnRound = 16 / Math.pow(2, roundNumber)
 	return remainingTeamsInTournamentBasedOnRound
@@ -59,8 +39,8 @@ async function loadTournamentInformation(
 	setDisplayedMatchups
 ) {
 	const tournamentInformation = await getTournament(id)
-    console.log(tournamentInformation)
 	setTournamentInformation(tournamentInformation)
+
 	if (tournamentInformation.isActive == true) {
 		setDisplayedMatchups(tournamentInformation.rounds.round1)
 	}
@@ -78,11 +58,13 @@ export function BracketPage() {
 		loadTournamentInformation(setTournamentInformation, id, setDisplayedMatchups)
 	}, [isLoading])
 
+	console.log(displayedMatchups)
 	if (!isLoading && displayedMatchups.length == 0 && rounds == 1) {
 		return (
-			// <TournamentContext.Provider value={{ setIsLoading, tournamentInformation }}>
-				<IntermissionDisplay setIsLoading={setIsLoading} tournamentInformation={tournamentInformation}/>
-			// </TournamentContext.Provider>
+			<IntermissionDisplay
+				setIsLoading={setIsLoading}
+				tournamentInformation={tournamentInformation}
+			/>
 		)
 	}
 
@@ -108,7 +90,7 @@ export function BracketPage() {
 				<div className="rounds-header">
 					{Object.keys(tournamentInformation.rounds).map((round, index) => {
 						return (
-							<RoundButton
+							<RoundSelectionButton
 								key={index}
 								roundNumber={index + 1}
 								setRound={setRounds}

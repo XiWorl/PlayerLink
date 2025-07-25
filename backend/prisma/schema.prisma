@@ -52,6 +52,7 @@ model Team {
   teamId     Int @id @default(autoincrement())
   name       String
   location   String
+  rosterAccountIds Int[]
   currentlyHiring Boolean
   desiredPlaystyle String[]
   supportedGames String[]

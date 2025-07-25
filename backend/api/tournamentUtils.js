@@ -43,7 +43,7 @@ async function updateTournament(tournamentId, tournamentData) {
 	try {
 		const updatedTournament = await prisma.tournament.update({
 			where: { tournamentId: tournamentId },
-			data: { tournamentData },
+			data: tournamentData ,
 		})
 		return updatedTournament
 	} catch (error) {
@@ -147,8 +147,8 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 
 		if (
 			tournamentInformation.isActive == false ||
-			!tournamentInformation.allParticipants[req.body.accountId] ||
-			tournamentInformation.participantsAdvancedToNextRound[accountId] ||
+			!tournamentInformation.allParticipants[teamAccountId] ||
+			tournamentInformation.participantsAdvancedToNextRound[teamAccountId] ||
 			teamData == null
 		) {
 			return null
@@ -160,6 +160,7 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 				[teamAccountId]: teamData,
 			},
 		}
+		console.log(addTeamToNextRound,"Add")
 		const tournamentWithAdvancingTeam = await updateTournament(
 			tournamentId,
 			addTeamToNextRound
@@ -214,7 +215,8 @@ async function startTournament(tournamentId) {
 			rounds: updatedRounds,
 			isActive: true,
 		}
-		const updatedTournament = updateTournament(tournamentId, updatedTournamentData)
+
+		const updatedTournament = await updateTournament(tournamentId, updatedTournamentData)
 		return updatedTournament
 	} catch (error) {
 		return null

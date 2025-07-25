@@ -64,8 +64,8 @@ export default function IntermissionDisplay({ tournamentInformation, setIsLoadin
 	}, [])
 
 	const canStartTournament = numberOfParticipants >= minimumParticipants
-	const isTournamentCreator =
-		tournamentInformation.creatorAccountId === loggedInAccount.accountId
+	const isTournamentCreator =true
+		//tournamentInformation.creatorAccountId === loggedInAccount.accountId
 
 	return (
 		<>

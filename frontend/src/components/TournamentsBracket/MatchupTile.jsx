@@ -9,7 +9,7 @@ async function advanceTeam(accountId, tournamentId, setTournamentInformation) {
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({ accountId: accountId, tournamentId: tournamentId }),
+		body: JSON.stringify({ teamAccountId: accountId, tournamentId: tournamentId }),
 	})
 	const updatedTournamentInformation = await response.json()
 	setTournamentInformation(updatedTournamentInformation)
@@ -18,7 +18,7 @@ async function advanceTeam(accountId, tournamentId, setTournamentInformation) {
 
 function AdvanceButton({ accountId, setTournamentInformation }) {
 	const { id } = useParams()
-    
+
 	return (
 		<div className="advance-div">
 			<button
