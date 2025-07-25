@@ -1,3 +1,4 @@
+export const MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT = 16
 export const AccountType = { PLAYER: "player", TEAM: "team" }
 export const LOCATION_OPTIONS = {
 	USA: "USA",

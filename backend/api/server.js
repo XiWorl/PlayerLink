@@ -15,7 +15,14 @@ const {
 	registerPlayerAccount,
 	registerTeamAccount,
 } = require("./endpointsUtils")
-const { AccountType } = require("../ServerUtils")
+const {
+	createTournament,
+	advanceTeamInTournament,
+	advanceTournamentRound,
+	startTournament,
+	joinTournament,
+} = require("./tournamentUtils")
+const { AccountType, MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT } = require("../ServerUtils")
 const { getTeamRecommendations } = require("../recommendation/main")
 
 let globalTournamentId = -1
@@ -129,6 +136,38 @@ server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) 
 	}
 })
 
+server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
+	try {
+		const tournamentId = parseInt(req.params.tournamentId)
+		const startedTournament = startTournament(tournamentId)
+		if (startedTournament == null) {
+			return res.status(400).json({ error: "Error while starting tournament" })
+		}
+		return res.status(200).json(startedTournament)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.post("/api/tournaments/create", async (req, res, next) => {
+	try {
+		const teamAccountId = parseInt(req.body.accountId)
+		const newTournament = await createTournament(
+			teamAccountId,
+			globalTournamentId,
+			MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT
+		)
+
+		if (newTournament == null) {
+			return res.status(400).json({ error: "Error while creating tournament" })
+		}
+
+		return res.status(200).json(newTournament)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.post("/account/application", async (req, res, next) => {
 	try {
 		const playerApplicationToTeam = await prisma.application.findUnique({
@@ -205,6 +244,48 @@ server.post("/api/signup/team", async (req, res, next) => {
 		)
 
 		return res.status(200).json(clientAccountInformation)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/tournaments/team/advance/", async (req, res, next) => {
+	try {
+		const teamAccountId = parseInt(req.body.accountId)
+		const tournamentId = parseInt(req.body.tournamentId)
+
+		const updatedTournamentData = await advanceTeamInTournament(
+			tournamentId,
+			teamAccountId
+		)
+		if (updatedTournamentData == null) {
+			return res
+				.status(400)
+				.json({ error: "Error while advancing team in tournament" })
+		}
+
+		const nextRoundTournament = await advanceTournamentRound(tournamentId)
+		if (nextRoundTournament == null) {
+			return res
+				.status(400)
+				.json({ error: "Error while advancing tournament round" })
+		}
+
+		return res.status(200).json(nextRoundTournament)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/tournaments/join/", async (req, res, next) => {
+	try {
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const tournamentId = parseInt(req.body.tournamentId)
+		const joinedTournamentData = joinTournament(tournamentId, teamAccountId)
+		if (joinedTournamentData == null) {
+			return res.status(400).json({ error: "Error while starting tournament" })
+		}
+		return res.status(200).json(joinedTournamentData)
 	} catch (error) {
 		next(error)
 	}
