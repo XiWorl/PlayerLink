@@ -2,7 +2,7 @@ import {
 	EditProfileTextButton,
 	TypeOfEditButton,
 } from "../ProfileUtils/EditProfileButton"
-import { AccountType } from "../../utils/globalUtils"
+import { AccountType, getAccountDataFromSessionStorage } from "../../utils/globalUtils"
 import { modalSubmitHelper } from "../ProfileUtils/EditProfileButtonUtils"
 import { useParams } from "react-router-dom"
 import { useState } from "react"
@@ -23,7 +23,8 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 	const [bio, setBio] = useState(accountData.bio || DEFAULT_PROFILE_INFO)
 	const [about, setAbout] = useState(accountData.about || DEFAULT_PROFILE_INFO)
 	const { id } = useParams()
-	
+	const sessionStorageAccountData = getAccountDataFromSessionStorage()
+
 	return (
 		<>
 			<Navbar />
@@ -57,11 +58,13 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 							/>
 						</div>
 						<p className="profile-location">📍 {accountData.location}</p>
-						<EditAccountButton
-							accountType={AccountType.PLAYER}
-							accountData={accountData}
-							setIsLoading={setIsLoading}
-						/>
+						{sessionStorageAccountData.id == accountData.accountId && (
+							<EditAccountButton
+								accountType={AccountType.PLAYER}
+								accountData={accountData}
+								setIsLoading={setIsLoading}
+							/>
+						)}
 					</div>
 				</div>
 				<div className="profile-about">

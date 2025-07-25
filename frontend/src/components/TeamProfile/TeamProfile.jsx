@@ -77,11 +77,13 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 						<p className="profile-location">📍 {accountData.location}</p>
 					</div>
 					<div>
-						<EditAccountButton
-							accountType={AccountType.TEAM}
-							accountData={accountData}
-							setIsLoading={setIsLoading}
-						/>
+						{sessionStorageAccountData.id == accountData.accountId && (
+							<EditAccountButton
+								accountType={AccountType.TEAM}
+								accountData={accountData}
+								setIsLoading={setIsLoading}
+							/>
+						)}
 						<div>
 							<button onClick={() => setSelectedTab(TabOptions.HOME)}>
 								Home
