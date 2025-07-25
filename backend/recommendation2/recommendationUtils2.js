@@ -96,3 +96,30 @@ export async function getRejectedTeamAttributesFrequency(teamData) {
 export async function getTeamRosterAttributesFrequency(teamData) {
 	return getAttributesFrequency(teamData.rosterAccountIds, true, teamData.rosterAccountIds.length)
 }
+
+export function updateAllWeights(
+	skillLevelIncrement,
+	locationIncrement,
+	playstyleIncrement,
+	playerData,
+	teamData
+) {
+	updateSkillLevelWeights(
+		skillLevelIncrement,
+		playerData.recommendationStatistics,
+		SkillLevelFavorabilityWeight.MAX_WEIGHT,
+		teamData
+	)
+	updateLocationWeights(
+		locationIncrement,
+		playerData.recommendationStatistics,
+		LocationFavorabilityWeight.MAX_WEIGHT,
+		teamData
+	)
+	updatePlaystyleWeights(
+		playstyleIncrement,
+		playerData.recommendationStatistics,
+		PlaystyleFavorabilityWeight.MAX_WEIGHT,
+		teamData
+	)
+}

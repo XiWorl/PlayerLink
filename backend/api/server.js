@@ -638,11 +638,18 @@ server.post("/api/profiles/visit", async (req, res, next) => {
 	try {
 		const playerAccountId = parseInt(req.body.playerAccountId)
 		const teamAccountId = parseInt(req.body.teamAccountId)
-		const playerData = await incrementProfileVisit(playerAccountId, teamAccountId)
-
-		const updatedPlayerData = await prisma.player.update({
+		const playerData = await prisma.player.findUnique({
 			where: { accountId: playerAccountId },
-			data: playerData,
+		})
+		const teamData = await prisma.team.findUnique({
+			where: { accountId: teamAccountId },
+		})
+
+		const incremetedPlayerData = await incrementProfileVisit(playerData, teamData)
+
+		await prisma.player.update({
+			where: { accountId: playerAccountId },
+			data: incremetedPlayerData,
 		})
 
 		return res.status(200).json({ success: true })

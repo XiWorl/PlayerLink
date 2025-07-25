@@ -1,4 +1,4 @@
-import { getPlayerData } from "../api/endpointUtils.js"
+import { getPlayerData, getTeamData } from "../api/endpointUtils.js"
 import {
 	getAllRecommendations,
 	LocationFavorabilityWeight,
@@ -23,18 +23,77 @@ const StatusModifier = {
 	DECLINED: -1,
 }
 
-export async function incrementProfileVisit(playerAccountId, teamAccountId) {
-	const accountData = await getPlayerData(playerAccountId, teamAccountId)
-	const interactions = accountData.recommendationStatistics.interactions
+const ProfileVisitEnum = {
+	BASE_VALUE: 0.005,
+	MIN_VISITS_THRESHOLD: 3,
+	MAX_VISITS_THRESHOLD: 20,
+	ROOT_FACTOR: 0.0025,
+}
 
-	if (!interactions[teamAccountId]) {
-		interactions[teamAccountId] = getDefaultInteractions()
+function getProfileVisitsWeight(recommendationStatistics, teamAccountId) {
+	if (recommendationStatistics.interactions[teamAccountId] == null)
+		return NO_PROFILE_VISITS_DATA
+	const playerInteractions = recommendationStatistics.interactions[teamAccountId]
+
+	const profileVisits = Math.min(
+		playerInteractions.profileVisits,
+		ProfileVisitEnum.MAX_VISITS_THRESHOLD
+	)
+
+	if (profileVisits < ProfileVisitEnum.MIN_VISITS_THRESHOLD)
+		return NO_PROFILE_VISITS_DATA
+
+	const decayRate = Math.sqrt(profileVisits - ProfileVisitEnum.MIN_VISITS_THRESHOLD)
+	const weightIncrement =
+		ProfileVisitEnum.BASE_VALUE + decayRate * ProfileVisitEnum.ROOT_FACTOR
+	return weightIncrement
+}
+
+function incrementWithMaximumValue(value, increment, maximum) {
+	value = Math.min(value + increment, maximum)
+	console.log(value)
+}
+
+export async function incrementProfileVisit(playerData, teamData) {
+	const interactions = playerData.recommendationStatistics.interactions
+
+	if (!interactions[teamData.accountId]) {
+		interactions[teamData.accountId] = getDefaultInteractions()
 	}
 
-	interactions[teamAccountId].profileVisits += 1
-	accountData.recommendationStatistics.interactions = interactions
+	interactions[teamData.accountId].profileVisits += 1
+	playerData.recommendationStatistics.interactions = interactions
 
-	return accountData
+	const profileVisitIncrementScore = getProfileVisitsWeight(
+		playerData.recommendationStatistics,
+		teamData.accountId
+	)
+
+	const favorabilityWeights = playerData.recommendationStatistics.favorabilityWeights
+	// favorabilityWeights.locations[teamData.location] += Math.min(profileVisitIncrementScore, LocationFavorabilityWeight.MAX_WEIGHT)
+	// favorabilityWeights.skillLevels[teamData.desiredSkillLevel] += Math.min(profileVisitIncrementScore, SkillLevelFavorabilityWeight.MAX_WEIGHT)
+	// favorabilityWeights.playstyles[teamData.desiredPlaystyle] += Math.min(profileVisitIncrementScore, PlaystyleFavorabilityWeight.MAX_WEIGHT)
+
+	// console.log("FF",incrementWithMaximumValue(favorabilityWeights.locations[teamData.location], profileVisitIncrementScore, LocationFavorabilityWeight.MAX_WEIGHT))
+
+	incrementWithMaximumValue(
+		favorabilityWeights.locations[teamData.location],
+		profileVisitIncrementScore,
+		LocationFavorabilityWeight.MAX_WEIGHT
+	)
+
+	incrementWithMaximumValue(
+		favorabilityWeights.skillLevels[teamData.desiredSkillLevel],
+		profileVisitIncrementScore,
+		SkillLevelFavorabilityWeight.MAX_WEIGHT
+	)
+
+	incrementWithMaximumValue(
+		favorabilityWeights.playstyles[teamData.desiredPlaystyle],
+		profileVisitIncrementScore,
+		PlaystyleFavorabilityWeight.MAX_WEIGHT
+	)
+	return playerData
 }
 
 export function getDefaultInteractions() {
@@ -49,20 +108,6 @@ export function getDefaultInteractions() {
 export async function getRecommendationData(playerData, allTeams) {
 	const recommendations = await getAllRecommendations(playerData, allTeams)
 	return recommendations
-}
-
-function getIncrementProfileVisitIncrementValue(playerInteractions) {
-	if (playerInteractions == null) return 0
-
-	const profileVisits = Math.min(
-		playerInteractions.profileVisits,
-		ProfileVisitEnum.MAX_VISITS_THRESHOLD
-	)
-	if (profileVisits < ProfileVisitEnum.MIN_VISITS_THRESHOLD) return
-	const decayRate = Math.sqrt(profileVisits - ProfileVisitEnum.MIN_VISITS_THRESHOLD)
-	const weightIncrement =
-		ProfileVisitEnum.BASE_VALUE + decayRate * ProfileVisitEnum.ROOT_FACTOR
-	return weightIncrement
 }
 
 export function userInteractedWithRecommendation(

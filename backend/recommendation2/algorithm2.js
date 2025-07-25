@@ -57,42 +57,11 @@ export const PlaystyleFavorabilityWeight = {
 	MAX_WEIGHT: 1,
 }
 
-const ProfileVisitEnum = {
-	BASE_VALUE: 0.005,
-	MIN_VISITS_THRESHOLD: 3,
-	MAX_VISITS_THRESHOLD: 20,
-	ROOT_FACTOR: 0.0025,
-}
-
 const INITIAL_WEIGHT_VALUE = 0.5
 const MAX_RECOMMENDATION_SCORE = 1
+const NO_PROFILE_VISITS_DATA = 0
 
-export function updateAllWeights(
-	skillLevelIncrement,
-	locationIncrement,
-	playstyleIncrement,
-	playerData,
-	teamData
-) {
-	updateSkillLevelWeights(
-		skillLevelIncrement,
-		playerData.recommendationStatistics,
-		SkillLevelFavorabilityWeight.MAX_WEIGHT,
-		teamData
-	)
-	updateLocationWeights(
-		locationIncrement,
-		playerData.recommendationStatistics,
-		LocationFavorabilityWeight.MAX_WEIGHT,
-		teamData
-	)
-	updatePlaystyleWeights(
-		playstyleIncrement,
-		playerData.recommendationStatistics,
-		PlaystyleFavorabilityWeight.MAX_WEIGHT,
-		teamData
-	)
-}
+
 
 function getTeamFavorabilityScore(playerData, teamData) {
 	const favorabilityWeights = playerData.recommendationStatistics.favorabilityWeights
@@ -154,6 +123,8 @@ async function getAverageDeclinedPlayerScore(teamData, playerData) {
 	return similarityScore
 }
 
+
+
 export async function getAllRecommendations(playerData, allTeams) {
 	const recommendations = []
 
@@ -170,6 +141,7 @@ export async function getAllRecommendations(playerData, allTeams) {
 
 		let teamFavorabilityScore = getTeamFavorabilityScore(playerData, teamData)
 		teamFavorabilityScore *= FinalRecommendationScoreWeight.TEAM_ATTRIBUTES_WEIGHT
+
 
 		let finalScore =
 			teamFavorabilityScore +
