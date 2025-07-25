@@ -105,4 +105,4 @@ export async function getTournament(tournamentId) {
 		console.error(`Error while trying to get tournament with id ${tournamentId}`)
 		return null
 	}
-}
+}``
