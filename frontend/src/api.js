@@ -66,3 +66,11 @@ export async function createTeamApplication(playerAccountId, teamAccountId) {
 		console.error("Error creating application:", error)
 	}
 }
+
+export async function createNewTournament(accountId) {
+	//TODO: Get newly created tournament from backend endpoint
+}
+
+export async function getAllTournaments(accountId) {
+	//TODO: Get all tournaments from backend endpoint
+}
