@@ -147,12 +147,9 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 	try {
 		const tournamentInformation = await getTournament(tournamentId)
 		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
-		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 
 		if (
 			tournamentInformation.isActive == false ||
-			!tournamentInformation.allParticipants[teamAccountId] ||
-			tournamentInformation.participantsAdvancedToNextRound[teamAccountId] ||
 			!tournamentInformation.allParticipants[teamAccountId] ||
 			tournamentInformation.participantsAdvancedToNextRound[teamAccountId] ||
 			teamData == null
@@ -162,15 +159,12 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 
 		teamData.advancedAt = Date.now()
 
-		teamData.advancedAt = Date.now()
-
 		const addTeamToNextRound = {
 			participantsAdvancedToNextRound: {
 				...tournamentInformation.participantsAdvancedToNextRound,
 				[teamAccountId]: teamData,
 			},
 		}
-
 
 		const tournamentWithAdvancingTeam = await updateTournament(
 			tournamentId,
@@ -186,7 +180,6 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 async function joinTournament(tournamentId, teamId) {
 	try {
 		const tournamentInformation = await getTournament(tournamentId)
-		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 
 		if (
