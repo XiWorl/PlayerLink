@@ -1,7 +1,7 @@
 const { AccountType, translateExperience } = require("../ServerUtils.js")
 const { getAccountData } = require("../api/endpointsUtils.js")
 const {
-	SkillLevelScores,
+	SkillLevelOptions,
 	NearbyLocations,
 	TournamentSchedulingWeights,
 } = require("../ServerUtils.js")
@@ -9,6 +9,12 @@ const {
 const SKILL_LEVEL_RANGE = 10
 const INITIAL_TEAM_SKILL_LEVEL = 0
 const INITIAL_CONFLICT_SCORE = 0
+
+const SkillLevelScores = {
+	[SkillLevelOptions.SEMI_PRO]: 10,
+	[SkillLevelOptions.PRO]: 20,
+	[SkillLevelOptions.ELITE]: 30,
+}
 
 async function calculateTeamSkillLevel(team) {
 	let totalTeamSkillLevel = INITIAL_TEAM_SKILL_LEVEL

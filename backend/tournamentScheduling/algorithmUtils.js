@@ -1,3 +1,4 @@
+import { SkillLevelOptions } from "../ServerUtils.js"
 export const MININUM_NUMBER_OF_TEAMS = 16
 const ROUND_PROPERTY_NAME = "round"
 const INITIAL_ROUND = 1
@@ -10,7 +11,7 @@ export function calculateRoundsFromNumberOfTeams(numberOfTeams) {
 	return parseInt(rounds)
 }
 
-export function createRoundsJson(numberOfTeams) {
+export function createEmptyTournamentRoundsJson(numberOfTeams) {
 	const numberOfRounds = calculateRoundsFromNumberOfTeams(numberOfTeams)
 	const rounds = {}
 	if (numberOfRounds === -1) {
