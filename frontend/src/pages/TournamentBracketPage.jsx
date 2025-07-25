@@ -2,12 +2,14 @@ import { useState, useEffect, createContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { getTournament } from "../api"
 import { MatchupTile } from "../components/TournamentsBracket/MatchupTile"
-// import { createNextRoundArray } from "../components/TournamentsBracket/NextRoundBracket"
+import { createNextRoundArray } from "../components/TournamentsBracket/BracketUtils"
 import IntermissionDisplay from "../components/TournamentsBracket/IntermissionDisplay"
+import RoundSelectionButton from "../components/TournamentsBracket/RoundSelectionButton"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/TournamentsBracket/BracketPage.css"
 
 export const TournamentContext = createContext()
+const NEXT_ROUND_VALUE = 1
 
 function EmptyTile() {
 	return (
@@ -27,27 +29,6 @@ function EmptyTile() {
 	)
 }
 
-function RoundButton({
-	roundNumber,
-	setRound,
-	tournamentInformation,
-	setDisplayedMatchups,
-	setEmptyMatchups,
-}) {
-	return (
-		<button
-			className="round-btn"
-			onClick={() => {
-				setRound(roundNumber)
-				setDisplayedMatchups(tournamentInformation.rounds[`round${roundNumber}`])
-				setEmptyMatchups([])
-			}}
-		>
-			Round {roundNumber}
-		</button>
-	)
-}
-
 function getTotalNumberOfMatchupsBasedOnRound(roundNumber) {
 	const remainingTeamsInTournamentBasedOnRound = 16 / Math.pow(2, roundNumber)
 	return remainingTeamsInTournamentBasedOnRound
@@ -61,6 +42,7 @@ async function loadTournamentInformation(
 	const tournamentInformation = await getTournament(id)
     console.log(tournamentInformation)
 	setTournamentInformation(tournamentInformation)
+
 	if (tournamentInformation.isActive == true) {
 		setDisplayedMatchups(tournamentInformation.rounds.round1)
 	}
@@ -80,16 +62,17 @@ export function BracketPage() {
 
 	if (!isLoading && displayedMatchups.length == 0 && rounds == 1) {
 		return (
-			// <TournamentContext.Provider value={{ setIsLoading, tournamentInformation }}>
-				<IntermissionDisplay setIsLoading={setIsLoading} tournamentInformation={tournamentInformation}/>
-			// </TournamentContext.Provider>
+			<IntermissionDisplay
+				setIsLoading={setIsLoading}
+				tournamentInformation={tournamentInformation}
+			/>
 		)
 	}
 
 	let numberOfEmptyMatchups =
 		getTotalNumberOfMatchupsBasedOnRound(rounds) - displayedMatchups.length
 
-	if (rounds == tournamentInformation.currentRound + 1) {
+	if (rounds == tournamentInformation.currentRound + NEXT_ROUND_VALUE) {
 		numberOfEmptyMatchups =
 			getTotalNumberOfMatchupsBasedOnRound(rounds) -
 			createNextRoundArray(tournamentInformation).length
@@ -99,8 +82,6 @@ export function BracketPage() {
 		emptyMatchups.push(<EmptyTile />)
 	}
 
-	console.log(tournamentInformation)
-
 	return (
 		<>
 			<Navbar />
@@ -108,9 +89,9 @@ export function BracketPage() {
 				<div className="rounds-header">
 					{Object.keys(tournamentInformation.rounds).map((round, index) => {
 						return (
-							<RoundButton
+							<RoundSelectionButton
 								key={index}
-								roundNumber={index + 1}
+								roundNumber={index + NEXT_ROUND_VALUE}
 								setRound={setRounds}
 								tournamentInformation={tournamentInformation}
 								setDisplayedMatchups={setDisplayedMatchups}
@@ -121,10 +102,9 @@ export function BracketPage() {
 				</div>
 
 				<div className="matchups">
-					{rounds == tournamentInformation.currentRound + 1 &&
+					{rounds == tournamentInformation.currentRound + NEXT_ROUND_VALUE &&
 						createNextRoundArray(tournamentInformation).map(
 							(matchup, index) => {
-								console.log(matchup)
 								return (
 									<MatchupTile
 										key={index}
@@ -139,7 +119,7 @@ export function BracketPage() {
 							}
 						)}
 
-					{rounds != tournamentInformation.currentRound + 1 &&
+					{rounds != tournamentInformation.currentRound + NEXT_ROUND_VALUE &&
 						displayedMatchups.map((matchup, index) => {
 							return (
 								<MatchupTile

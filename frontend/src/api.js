@@ -67,8 +67,22 @@ export async function createTeamApplication(playerAccountId, teamAccountId) {
 	}
 }
 
-export async function createNewTournament(accountId) {
-	//TODO: Get newly created tournament from backend endpoint
+export async function createNewTournament(teamAccountId) {
+	try {
+		const response = await fetch(`${BASEURL}/api/tournaments/create`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				teamAccountId: teamAccountId,
+			}),
+		})
+		const newTournament = await response.json()
+		return newTournament
+	} catch (error) {
+		console.error("Error creating new tournament:", error)
+	}
 }
 
 export async function getAllTournaments() {
@@ -91,4 +105,4 @@ export async function getTournament(tournamentId) {
 		console.error(`Error while trying to get tournament with id ${tournamentId}`)
 		return null
 	}
-}
+}``
