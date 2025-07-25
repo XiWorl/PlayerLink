@@ -147,6 +147,11 @@ server.get("/api/tournament/:tournamentId", async (req, res, next) => {
 	}
 })
 
+server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
+	//TODO: replace with recommendation algorithm results
+	return res.status(400).json({ error: "Not implemented" })
+})
+
 server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
 	try {
 		const tournamentId = parseInt(req.params.tournamentId)

@@ -4,6 +4,7 @@ import {
 	SkillLevelFavorabilityWeight,
 	PlaystyleFavorabilityWeight,
 } from "./algorithm.js"
+import { incrementWithMaximumValue } from "./recommendationUtils.js"
 
 const RecommendationStatus = {
 	INTERESTED: "Interested",
