@@ -10,7 +10,13 @@ import Navbar from "../Navbar/Navbar"
 import EditAccountButton from "../ProfileUtils/EditAccountButton"
 import ApplyButton from "./ApplyButton"
 import LoadingScreen from "../LoadingScreen/LoadingScreen"
+import { Roster } from "./Roster"
 import "../ProfileUtils/ProfilePage.css"
+
+const TabOptions = {
+	HOME: "Home",
+	ROSTER: "Roster",
+}
 
 const DEFAULT_PROFILE_INFO = ""
 
@@ -24,6 +30,7 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 	const [description, setDescription] = useState(
 		accountData.description || DEFAULT_PROFILE_INFO
 	)
+	const [selectedTab, setSelectedTab] = useState(TabOptions.HOME)
 	const [overview, setOverview] = useState(accountData.overview || DEFAULT_PROFILE_INFO)
 	const sessionStorageAccountData = getAccountDataFromSessionStorage()
 
@@ -68,8 +75,12 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 							setIsLoading={setIsLoading}
 						/>
 						<div>
-							<button>Home</button>
-							<button>Roster</button>
+							<button onClick={() => setSelectedTab(TabOptions.HOME)}>
+								Home
+							</button>
+							<button onClick={() => setSelectedTab(TabOptions.ROSTER)}>
+								Roster
+							</button>
 							{sessionStorageAccountData &&
 								sessionStorageAccountData.accountType !=
 									AccountType.TEAM &&
@@ -104,6 +115,17 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 						overview || DEFAULT_PROFILE_INFO
 					}`}</p>
 				</div>
+				{selectedTab === TabOptions.HOME && (
+					<div className="profile-about">
+						<div className="profile-about-header">
+							<h3>Overview</h3>
+						</div>
+						<p className="profile-about-text">{`${overview}`}</p>
+					</div>
+				)}
+				{selectedTab === TabOptions.ROSTER && (
+					<Roster accountRosterIds={accountData.rosterAccountIds} />
+				)}
 			</div>
 		</>
 	)
