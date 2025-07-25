@@ -107,7 +107,6 @@ export function BracketPage() {
 					{rounds == tournamentInformation.currentRound + 1 &&
 						createNextRoundArray(tournamentInformation).map(
 							(matchup, index) => {
-								console.log(matchup)
 								return (
 									<MatchupTile
 										key={index}

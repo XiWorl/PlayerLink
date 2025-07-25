@@ -154,6 +154,8 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 			return null
 		}
 
+		teamData.advancedAt = Date.now()
+
 		const addTeamToNextRound = {
 			participantsAdvancedToNextRound: {
 				...tournamentInformation.participantsAdvancedToNextRound,
