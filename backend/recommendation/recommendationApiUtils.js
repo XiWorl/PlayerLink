@@ -177,7 +177,7 @@ function declinedRecommendation(playerData, teamData) {
 
 	teamData.recommendationHistory.interactions[
 		playerData.accountId
-	].declinedRecommendation = true
+	] = {declinedRecommendation: true}
 	return updatedPlayerData
 }
 
