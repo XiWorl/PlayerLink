@@ -25,7 +25,6 @@ const {
 	getTournament,
 } = require("./tournamentUtils")
 const { AccountType, MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT } = require("../ServerUtils")
-const { getTeamRecommendations } = require("../recommendation/main")
 
 let globalTournamentId = -1
 
@@ -145,22 +144,8 @@ server.get("/api/tournament/:tournamentId", async (req, res, next) => {
 })
 
 server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
-	try {
-		const playerData = await getAccountData(
-			req.params.playerAccountId,
-			AccountType.PLAYER
-		)
-		if (playerData == null) {
-			return res.status(404).json({ error: "Player not found in database" })
-		}
-
-		const allTeamsInDatabase = await prisma.team.findMany()
-		const teamRecommendations = getTeamRecommendations(playerData, allTeamsInDatabase)
-
-		return res.status(200).json(teamRecommendations)
-	} catch (error) {
-		next(error)
-	}
+	//TODO: replace with recommendation logic
+	return res.status(400).json({ error: "Not implemented" })
 })
 
 server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
