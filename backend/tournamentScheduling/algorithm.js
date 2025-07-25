@@ -1,9 +1,10 @@
-const { AccountType, translateExperience } = require("../ServerUtils.js")
 const { getAccountData } = require("../api/endpointsUtils.js")
 const {
 	SkillLevelOptions,
 	NearbyLocations,
 	TournamentSchedulingWeights,
+	AccountType,
+	translateExperience,
 } = require("../ServerUtils.js")
 
 const SKILL_LEVEL_RANGE = 10
