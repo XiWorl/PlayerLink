@@ -1,8 +1,64 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid #e0e0e0;
+}
+
 .navbar-contents {
     display: flex;
     justify-content: space-between;
-    flex-direction: row;
-    background-color: cornsilk;
-    margin: 0px;
-    border-radius: 0px 0px 10px 10px;
+    align-items: center;
+    max-width: 1128px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: 64px;
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-contents button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 12px;
+    color: #666;
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.navbar-contents button:hover {
+    color: #0a66c2;
+}
+
+.navbar-contents button h3 {
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.navbar-contents a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.profile-btn,
+.connect-btn,
+.apply-btn,
+.tournament-navbar {
+    position: relative;
+    padding: 0 12px;
+}
+
+.logo-text {
+    color: #0a66c2;
 }
