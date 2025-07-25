@@ -285,7 +285,6 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 			tournamentId,
 			teamAccountId
 		)
-		console.log(updatedTournamentData, "adv")
 		if (updatedTournamentData == null) {
 			return res
 				.status(400)
@@ -296,7 +295,6 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 		if (nextRoundTournament == null) {
 			return res.status(200).json(updatedTournamentData)
 		}
-		console.log(nextRoundTournament, "next")
 		return res.status(200).json(nextRoundTournament)
 	} catch (error) {
 		next(error)

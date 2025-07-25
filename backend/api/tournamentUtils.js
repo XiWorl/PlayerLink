@@ -162,7 +162,7 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 				[teamAccountId]: teamData,
 			},
 		}
-		console.log(addTeamToNextRound,"Add")
+		
 		const tournamentWithAdvancingTeam = await updateTournament(
 			tournamentId,
 			addTeamToNextRound

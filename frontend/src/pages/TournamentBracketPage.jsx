@@ -3,13 +3,13 @@ import { useParams, useNavigate } from "react-router-dom"
 import { getTournament } from "../api"
 import { MatchupTile } from "../components/TournamentsBracket/MatchupTile"
 import { createNextRoundArray } from "../components/TournamentsBracket/BracketUtils"
-// import { createNextRoundArray } from "../components/TournamentsBracket/NextRoundBracket"
 import IntermissionDisplay from "../components/TournamentsBracket/IntermissionDisplay"
 import RoundSelectionButton from "../components/TournamentsBracket/RoundSelectionButton"
 import Navbar from "../components/Navbar/Navbar"
 import "../components/TournamentsBracket/BracketPage.css"
 
 export const TournamentContext = createContext()
+const NEXT_ROUND_VALUE = 1
 
 function EmptyTile() {
 	return (
@@ -59,7 +59,6 @@ export function BracketPage() {
 		loadTournamentInformation(setTournamentInformation, id, setDisplayedMatchups)
 	}, [isLoading])
 
-	console.log(displayedMatchups)
 	if (!isLoading && displayedMatchups.length == 0 && rounds == 1) {
 		return (
 			<IntermissionDisplay
@@ -72,7 +71,7 @@ export function BracketPage() {
 	let numberOfEmptyMatchups =
 		getTotalNumberOfMatchupsBasedOnRound(rounds) - displayedMatchups.length
 
-	if (rounds == tournamentInformation.currentRound + 1) {
+	if (rounds == tournamentInformation.currentRound + NEXT_ROUND_VALUE) {
 		numberOfEmptyMatchups =
 			getTotalNumberOfMatchupsBasedOnRound(rounds) -
 			createNextRoundArray(tournamentInformation).length
@@ -81,8 +80,6 @@ export function BracketPage() {
 	for (let i = 0; i < numberOfEmptyMatchups; i++) {
 		emptyMatchups.push(<EmptyTile />)
 	}
-
-	console.log(tournamentInformation)
 
 	return (
 		<>
@@ -93,7 +90,7 @@ export function BracketPage() {
 						return (
 							<RoundSelectionButton
 								key={index}
-								roundNumber={index + 1}
+								roundNumber={index + NEXT_ROUND_VALUE}
 								setRound={setRounds}
 								tournamentInformation={tournamentInformation}
 								setDisplayedMatchups={setDisplayedMatchups}
@@ -104,7 +101,7 @@ export function BracketPage() {
 				</div>
 
 				<div className="matchups">
-					{rounds == tournamentInformation.currentRound + 1 &&
+					{rounds == tournamentInformation.currentRound + NEXT_ROUND_VALUE &&
 						createNextRoundArray(tournamentInformation).map(
 							(matchup, index) => {
 								return (
@@ -121,7 +118,7 @@ export function BracketPage() {
 							}
 						)}
 
-					{rounds != tournamentInformation.currentRound + 1 &&
+					{rounds != tournamentInformation.currentRound + NEXT_ROUND_VALUE &&
 						displayedMatchups.map((matchup, index) => {
 							return (
 								<MatchupTile
