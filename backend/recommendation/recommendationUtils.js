@@ -55,3 +55,16 @@ export async function getTeamRosterAttributesFrequency(teamData) {
 		teamData.rosterAccountIds.length
 	)
 }
+
+export function getEligibleTeams(playerData, allTeams) {
+	const eligibleTeams = []
+	for (const team of allTeams) {
+		if (team.currentlyHiring == false) continue
+		if (team.rosterAccountIds.includes(playerData.accountId)) continue
+		if (playerData.willingToRelocate == false && team.location != playerData.location)
+			continue
+		eligibleTeams.push(team)
+	}
+	
+	return eligibleTeams
+}

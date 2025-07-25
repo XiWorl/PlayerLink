@@ -1,6 +1,7 @@
 import {
 	getRejectedTeamAttributesFrequency,
 	getTeamRosterAttributesFrequency,
+	getEligibleTeams
 } from "./recommendationUtils.js"
 import { translateExperience } from "../ServerUtils.js"
 
@@ -112,8 +113,9 @@ async function getAverageDeclinedPlayerScore(teamData, playerData) {
 
 export async function getAllRecommendations(playerData, allTeams) {
 	const recommendations = []
+	const eligibleTeams = getEligibleTeams(playerData, allTeams)
 
-	for (const teamData of allTeams) {
+	for (const teamData of eligibleTeams) {
 		let rosterSimilarityScore = await getRosterSimilarityScore(teamData, playerData)
 		rosterSimilarityScore *= FinalRecommendationScoreWeight.ROSTER_SIMILARITY_WEIGHT
 
