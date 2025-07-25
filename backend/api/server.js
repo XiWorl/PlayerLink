@@ -360,11 +360,12 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 	}
 })
 
-server.patch("/tournaments/join/", async (req, res, next) => {
+server.patch("/tournaments/join", async (req, res, next) => {
 	try {
 		const teamAccountId = parseInt(req.body.teamAccountId)
 		const tournamentId = parseInt(req.body.tournamentId)
-		const joinedTournamentData = joinTournament(tournamentId, teamAccountId)
+		const joinedTournamentData = await joinTournament(tournamentId, teamAccountId)
+		
 		if (joinedTournamentData == null) {
 			return res.status(400).json({ error: "Error while starting tournament" })
 		}

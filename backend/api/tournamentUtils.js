@@ -10,6 +10,7 @@ const prisma = new PrismaClient()
 const TOURNAMENT_NAME = "Tournament"
 const TOURNAMENT_ROUND = "round"
 const FIRST_ROUND_OF_TOURNAMENT = 1
+const MAXIMUM_PARTICIPANTS = 16
 
 async function getTournament(tournamentId) {
 	try {
@@ -176,16 +177,17 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 	}
 }
 
-async function joinTournament(tournamentId, teamId) {
+async function joinTournament(tournamentId, teamAccountId) {
 	try {
 		const tournamentInformation = await getTournament(tournamentId)
 		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 
 		if (
-			tournamentInformation.isActive == false ||
-			!tournamentInformation.allParticipants[req.body.accountId] ||
-			tournamentInformation.participantsAdvancedToNextRound[accountId] ||
-			teamData == null
+			tournamentInformation.isActive == true ||
+			tournamentInformation.allParticipants[teamAccountId] ||
+			teamData == null ||
+			Object.keys(tournamentInformation.allParticipants).length >=
+				MAXIMUM_PARTICIPANTS
 		) {
 			return null
 		}
@@ -193,7 +195,7 @@ async function joinTournament(tournamentId, teamId) {
 		const addTeamToTournament = {
 			allParticipants: {
 				...tournamentInformation.allParticipants,
-				[teamId]: [teamData],
+				[teamAccountId]: teamData,
 			},
 		}
 		const tournamentWithJoinedTeam = await updateTournament(
