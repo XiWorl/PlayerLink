@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+
 export function TournamentTile({ tournamentInformation }) {
 	const navigate = useNavigate()
 
