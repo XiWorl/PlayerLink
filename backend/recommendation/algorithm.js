@@ -5,6 +5,7 @@ import {
 } from "./recommendationUtils.js"
 import { translateExperience } from "../ServerUtils.js"
 
+const NUMBER_OF_RECOMMENDATIONS = 10
 const CollaborativeFilteringWeight = {
 	LOCATION_WEIGHT: 0.4,
 	SKILL_LEVEL_WEIGHT: 0.3,
@@ -138,5 +139,6 @@ export async function getAllRecommendations(playerData, allTeams) {
 		recommendations.push({ team: teamData, score: finalScore })
 	}
 
-	return recommendations
+	const topTenRecommendations = recommendations.slice(0, NUMBER_OF_RECOMMENDATIONS)
+	return topTenRecommendations
 }
