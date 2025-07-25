@@ -21,6 +21,8 @@ const {
 	advanceTournamentRound,
 	startTournament,
 	joinTournament,
+	getAllTournaments,
+	getTournament,
 } = require("./tournamentUtils")
 const { AccountType, MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT } = require("../ServerUtils")
 const { getTeamRecommendations } = require("../recommendation/main")
@@ -117,6 +119,31 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 	}
 })
 
+server.get("/api/tournaments", async (req, res, next) => {
+	try {
+		const allTournaments = await getAllTournaments()
+		if (allTournaments == null) {
+			return res.status(400).json({ error: "Error while getting tournaments" })
+		}
+		return res.status(200).json(allTournaments)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/api/tournament/:tournamentId", async (req, res, next) => {
+	try {
+		const tournamentId = parseInt(req.params.tournamentId)
+		const tournamentData = await getTournament(tournamentId)
+		if (tournamentData == null) {
+			return res.status(400).json({ error: "Error while getting tournament data" })
+		}
+		return res.status(200).json(tournamentData)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
 	try {
 		const playerData = await getAccountData(
@@ -139,7 +166,7 @@ server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) 
 server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
 	try {
 		const tournamentId = parseInt(req.params.tournamentId)
-		const startedTournament = startTournament(tournamentId)
+		const startedTournament = await startTournament(tournamentId)
 		if (startedTournament == null) {
 			return res.status(400).json({ error: "Error while starting tournament" })
 		}
@@ -251,7 +278,7 @@ server.post("/api/signup/team", async (req, res, next) => {
 
 server.patch("/tournaments/team/advance/", async (req, res, next) => {
 	try {
-		const teamAccountId = parseInt(req.body.accountId)
+		const teamAccountId = parseInt(req.body.teamAccountId)
 		const tournamentId = parseInt(req.body.tournamentId)
 
 		const updatedTournamentData = await advanceTeamInTournament(
@@ -266,11 +293,8 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 
 		const nextRoundTournament = await advanceTournamentRound(tournamentId)
 		if (nextRoundTournament == null) {
-			return res
-				.status(400)
-				.json({ error: "Error while advancing tournament round" })
+			return res.status(200).json(updatedTournamentData)
 		}
-
 		return res.status(200).json(nextRoundTournament)
 	} catch (error) {
 		next(error)
