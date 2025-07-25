@@ -47,6 +47,12 @@ export const TournamentSchedulingWeights = {
 	PLAYER: 20,
 }
 
+export const RosterApplicationStatusOptions = {
+	PENDING: "pending",
+	ACCEPTED: "accepted",
+	REJECTED: "rejected",
+}
+
 export function convertYesOrNoToBoolean(value) {
 	const YES_VALUE = "yes"
 	if (value.toLowerCase() == YES_VALUE) {

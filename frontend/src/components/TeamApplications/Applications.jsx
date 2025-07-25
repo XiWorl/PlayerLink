@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"
 import { getApplicationsFromAccountId } from "../../api"
-import { createApplicationTile, SidebarTabs, Sidebar } from "./Utils"
+import { SidebarTabs, Sidebar } from "./Utils"
 import { AccountType } from "../../utils/globalUtils"
 import { Recommendations } from "./Recommendations"
+import { ApplicationTile } from "./ApplicationTile.jsx"
 import "./ApplyPage.css"
 
 function EmptyApplicationsDisplay() {
@@ -21,9 +22,9 @@ async function loadApplications(accountId, setApplicationsDisplay) {
 		return
 	}
 
-	const newApplicationsDisplay = applications.map((applicationData) =>
-		createApplicationTile(applicationData)
-	)
+	const newApplicationsDisplay = applications.map((applicationData) => (
+		<ApplicationTile applicationData={applicationData} />
+	))
 	setApplicationsDisplay(newApplicationsDisplay)
 }
 
