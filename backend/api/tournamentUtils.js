@@ -1,11 +1,15 @@
 const { PrismaClient } = require("../generated/prisma")
 const { AccountType } = require("../ServerUtils")
-const { createRoundsJson } = require("../tournamentScheduling/algorithmUtils")
+const {
+	createEmptyTournamentRoundsJson,
+} = require("../tournamentScheduling/algorithmUtils")
+const { generateTournamentMatchups } = require("../tournamentScheduling/algorithm")
 const { getAccountData } = require("./endpointsUtils")
 const prisma = new PrismaClient()
 
 const TOURNAMENT_NAME = "Tournament"
 const TOURNAMENT_ROUND = "round"
+const FIRST_ROUND_OF_TOURNAMENT = 1
 
 async function getTournament(tournamentId) {
 	try {
@@ -39,7 +43,7 @@ async function updateTournament(tournamentId, tournamentData) {
 	try {
 		const updatedTournament = await prisma.tournament.update({
 			where: { tournamentId: tournamentId },
-			data: { tournamentData },
+			data: tournamentData ,
 		})
 		return updatedTournament
 	} catch (error) {
@@ -49,7 +53,7 @@ async function updateTournament(tournamentId, tournamentData) {
 
 async function createTournament(teamData, globalTournamentId, MININUM_NUMBER_OF_TEAMS) {
 	try {
-		const roundsJson = createRoundsJson(MININUM_NUMBER_OF_TEAMS)
+		const roundsJson = createEmptyTournamentRoundsJson(MININUM_NUMBER_OF_TEAMS)
 
 		const createdTournament = await prisma.tournament.create({
 			data: {
@@ -130,6 +134,7 @@ async function advanceTournamentRound(tournamentId) {
 
 			return tournamentWithMatchups
 		}
+		return null
 	} catch (error) {
 		return null
 	}
@@ -138,16 +143,18 @@ async function advanceTournamentRound(tournamentId) {
 async function advanceTeamInTournament(tournamentId, teamAccountId) {
 	try {
 		const tournamentInformation = await getTournament(tournamentId)
-		const teamData = await getAccountData(teamAccountId)
+		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 
 		if (
 			tournamentInformation.isActive == false ||
-			!tournamentInformation.allParticipants[req.body.accountId] ||
-			tournamentInformation.participantsAdvancedToNextRound[accountId] ||
+			!tournamentInformation.allParticipants[teamAccountId] ||
+			tournamentInformation.participantsAdvancedToNextRound[teamAccountId] ||
 			teamData == null
 		) {
 			return null
 		}
+
+		teamData.advancedAt = Date.now()
 
 		const addTeamToNextRound = {
 			participantsAdvancedToNextRound: {
@@ -155,6 +162,7 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 				[teamAccountId]: teamData,
 			},
 		}
+
 		const tournamentWithAdvancingTeam = await updateTournament(
 			tournamentId,
 			addTeamToNextRound
@@ -169,7 +177,7 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 async function joinTournament(tournamentId, teamId) {
 	try {
 		const tournamentInformation = await getTournament(tournamentId)
-		const teamData = await getAccountData(teamAccountId)
+		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 
 		if (
 			tournamentInformation.isActive == false ||
@@ -186,11 +194,32 @@ async function joinTournament(tournamentId, teamId) {
 				[teamId]: [teamData],
 			},
 		}
-		const tournamentWithAdvancingTeam = await updateTournament(
+		const tournamentWithJoinedTeam = await updateTournament(
 			tournamentId,
 			addTeamToTournament
 		)
-		return tournamentWithAdvancingTeam
+		return tournamentWithJoinedTeam
+	} catch (error) {
+		return null
+	}
+}
+
+async function startTournament(tournamentId) {
+	try {
+		const tournamentInformation = await getTournament(tournamentId)
+		const startingMatchups = await generateTournamentMatchups(
+			tournamentInformation.allParticipants
+		)
+		const updatedRounds = tournamentInformation.rounds
+		updatedRounds[TOURNAMENT_ROUND + FIRST_ROUND_OF_TOURNAMENT] = startingMatchups
+
+		const updatedTournamentData = {
+			rounds: updatedRounds,
+			isActive: true,
+		}
+
+		const updatedTournament = await updateTournament(tournamentId, updatedTournamentData)
+		return updatedTournament
 	} catch (error) {
 		return null
 	}
@@ -204,4 +233,6 @@ module.exports = {
 	advanceTeamInTournament,
 	advanceTournamentRound,
 	getAllTournaments,
+	startTournament,
+	joinTournament,
 }
