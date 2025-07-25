@@ -90,7 +90,6 @@ async function createTournament(teamData, globalTournamentId, MININUM_NUMBER_OF_
 
 		return finalizedTournament
 	} catch (error) {
-		console.log(error)
 		return null
 	}
 }
