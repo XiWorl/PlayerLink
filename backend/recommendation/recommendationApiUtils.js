@@ -103,7 +103,7 @@ export function getDefaultInteractions() {
 	return {
 		profileVisits: 0,
 		declinedRecommendation: false,
-		memberOfTeam: false,
+		acceptedRecommendation: false,
 		rejectedFromTeam: false,
 	}
 }
@@ -188,5 +188,10 @@ function acceptedRecommendation(playerData, teamData) {
 		TeamAcceptanceWeight,
 		StatusModifier.ACCEPTED
 	)
+
+	playerData.recommendationStatistics.interactions[
+		teamData.accountId
+	].acceptedRecommendation = true
+
 	return updatedPlayerData
 }
