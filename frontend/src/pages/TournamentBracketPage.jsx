@@ -40,7 +40,6 @@ async function loadTournamentInformation(
 	setDisplayedMatchups
 ) {
 	const tournamentInformation = await getTournament(id)
-    console.log(tournamentInformation)
 	setTournamentInformation(tournamentInformation)
 
 	if (tournamentInformation.isActive == true) {
