@@ -106,7 +106,8 @@ function MatchupTile({
 				{!tournamentInformation.participantsAdvancedToNextRound[
 					matchup.team2.accountId
 				] &&
-					round == tournamentInformation.currentRound && round != 4&& (
+					round == tournamentInformation.currentRound &&
+					round != 4 && !tournamentInformation.participantsAdvancedToNextRound[matchup.team1.accountId] && (
 						<AdvanceButton
 							accountId={matchup.team2.accountId}
 							setTournamentInformation={setTournamentInformation}
@@ -126,7 +127,11 @@ function MatchupTile({
 					{!tournamentInformation.participantsAdvancedToNextRound[
 						matchup.team1.accountId
 					] &&
-						round == tournamentInformation.currentRound && round != 4 && (
+						round == tournamentInformation.currentRound &&
+						round != 4 &&
+						!tournamentInformation.participantsAdvancedToNextRound[
+							matchup.team2.accountId
+						] && (
 							<AdvanceButton
 								accountId={matchup.team1.accountId}
 								setTournamentInformation={setTournamentInformation}
@@ -181,7 +186,9 @@ export function BracketPage() {
 		getTotalNumberOfMatchupsBasedOnRound(rounds) - displayedMatchups.length
 
 	if (rounds == tournamentInformation.currentRound + 1) {
-		numberOfEmptyMatchups = getTotalNumberOfMatchupsBasedOnRound(rounds) - createNextRoundArray(tournamentInformation).length
+		numberOfEmptyMatchups =
+			getTotalNumberOfMatchupsBasedOnRound(rounds) -
+			createNextRoundArray(tournamentInformation).length
 	}
 
 	for (let i = 0; i < numberOfEmptyMatchups; i++) {
