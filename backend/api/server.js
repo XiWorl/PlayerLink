@@ -18,8 +18,11 @@ const {
 	createRoundsJson,
 	MININUM_NUMBER_OF_TEAMS,
 } = require("../tournamentScheduling/utils")
-const { getRecommendationData } = require("../recommendation2/apiUtils2")
-const { incrementProfileVisit } = require("../recommendation2/apiUtils2")
+const {
+	getRecommendationData,
+	incrementProfileVisit,
+	userInteractedWithRecommendation,
+} = require("../recommendation2/apiUtils2")
 const { getFornitePlayerData } = require("../externalApi/main")
 const express = require("express")
 const cors = require("cors")
@@ -656,6 +659,32 @@ server.get("/api/recommendations/", async (req, res, next) => {
 		})
 		const allTeams = await prisma.team.findMany()
 		const recommendations = await getRecommendationData(playerData, allTeams)
+		return res.status(200).json(recommendations)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/api/recommendations/update", async (req, res, next) => {
+	try {
+		const playerAccountId = parseInt(req.body.playerAccountId)
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const status = req.body.status
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: playerAccountId },
+		})
+		const teamData = await prisma.team.findUnique({
+			where: { accountId: teamAccountId },
+		})
+
+		const playerDataWithUpdatedWeights = await userInteractedWithRecommendation(playerData, teamData, status)
+		const updatedPlayerData = await prisma.player.update({
+			where: { accountId: playerAccountId },
+			data: playerDataWithUpdatedWeights,
+		})
+
+		const allTeams = await prisma.team.findMany()
+		const recommendations = await getRecommendationData(updatedPlayerData, allTeams)
 		return res.status(200).json(recommendations)
 	} catch (error) {
 		next(error)

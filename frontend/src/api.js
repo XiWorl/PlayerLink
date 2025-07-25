@@ -142,7 +142,29 @@ export async function incrementProfileVisit(playerAccountId, teamAccountId) {
 
 export async function getRecommendations(accountId) {
 	try {
-		const response = await fetch(`${BASEURL}/api/recommendations/?accountId=${accountId}`)
+		const response = await fetch(
+			`${BASEURL}/api/recommendations/?accountId=${accountId}`
+		)
+		const recommendationsData = await response.json()
+		return recommendationsData
+	} catch (error) {
+		console.error("Error retrieving recommendations:", error)
+	}
+}
+
+export async function updateRecommendationStatus(playerAccountId, teamAccountId, status) {
+	try {
+		const response = await fetch(`${BASEURL}/api/recommendations/update/`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				playerAccountId: playerAccountId,
+				teamAccountId: teamAccountId,
+				status: status,
+			}),
+		})
 		const recommendationsData = await response.json()
 		return recommendationsData
 	} catch (error) {

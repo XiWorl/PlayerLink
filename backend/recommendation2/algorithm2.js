@@ -26,10 +26,6 @@ const RosterSimilarityWeight = {
 	PLAYSTYLE_WEIGHT: 0.3,
 }
 
-const TeamRejectionWeight = {
-	BASE_VALUE: 0.1,
-}
-
 const FinalRecommendationScoreWeight = {
 	TEAM_ATTRIBUTES_WEIGHT: 0.5,
 	ROSTER_SIMILARITY_WEIGHT: 0.3,
@@ -37,24 +33,25 @@ const FinalRecommendationScoreWeight = {
 }
 
 const TeamAttributeWeight = {
+	MAX_RECOMMENDATION_SCORE: 1,
 	LOCATION_WEIGHT: 0.4,
 	SKILL_LEVEL_WEIGHT: 0.3,
 	PLAYSTYLE_WEIGHT: 0.3,
 }
 
-const LocationFavorabilityWeight = {
+export const LocationFavorabilityWeight = {
 	BASE_VALUE: 0.05,
 	MIN_WEIGHT: 0,
 	MAX_WEIGHT: 1,
 }
 
-const SkillLevelFavorabilityWeight = {
+export const SkillLevelFavorabilityWeight = {
 	BASE_VALUE: 0.05,
 	MIN_WEIGHT: 0,
 	MAX_WEIGHT: 1,
 }
 
-const PlaystyleFavorabilityWeight = {
+export const PlaystyleFavorabilityWeight = {
 	BASE_VALUE: 0.05,
 	MIN_WEIGHT: 0,
 	MAX_WEIGHT: 1,
@@ -97,8 +94,6 @@ export function updateAllWeights(
 	)
 }
 
-
-
 function getTeamFavorabilityScore(playerData, teamData) {
 	const favorabilityWeights = playerData.recommendationStatistics.favorabilityWeights
 	const locationFavorability = favorabilityWeights.locations[teamData.location]
@@ -117,7 +112,7 @@ function getTeamFavorabilityScore(playerData, teamData) {
 	playstyleScore *= TeamAttributeWeight.PLAYSTYLE_WEIGHT
 	const finalFavorabilityScore = locationScore + skillLevelScore + playstyleScore
 
-	return Math.min(finalFavorabilityScore, MAX_RECOMMENDATION_SCORE)
+	return Math.min(finalFavorabilityScore, TeamAttributeWeight.MAX_RECOMMENDATION_SCORE)
 }
 
 async function getSimilarityScore(teamAttributesFrequency, playerData, weight) {
@@ -176,13 +171,15 @@ export async function getAllRecommendations(playerData, allTeams) {
 		let teamFavorabilityScore = getTeamFavorabilityScore(playerData, teamData)
 		teamFavorabilityScore *= FinalRecommendationScoreWeight.TEAM_ATTRIBUTES_WEIGHT
 
-		let finalScore = teamFavorabilityScore + similarityToAverageDeclinedPlayer + rosterSimilarityScore
+		let finalScore =
+			teamFavorabilityScore +
+			similarityToAverageDeclinedPlayer +
+			rosterSimilarityScore
 		finalScore = Math.min(finalScore, MAX_RECOMMENDATION_SCORE)
 
 		recommendations.push({ team: teamData, score: finalScore })
 	}
 
-	console.log(recommendations)
 	return recommendations
 }
 
