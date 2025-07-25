@@ -38,6 +38,13 @@ export const SkillLevelOptions = {
 	ELITE: "Elite",
 }
 
+export const TournamentSchedulingWeights = {
+	LOCATION: 10,
+	GAME: 15,
+	SKILL_LEVEL: 5,
+	PLAYER: 20,
+}
+
 export function convertYesOrNoToBoolean(value) {
 	const YES_VALUE = "yes"
 	if (value.toLowerCase() == YES_VALUE) {
