@@ -11,7 +11,7 @@ export function calculateRoundsFromNumberOfTeams(numberOfTeams) {
 	return parseInt(rounds)
 }
 
-export function createRoundsJson(numberOfTeams) {
+export function createEmptyTournamentRoundsJson(numberOfTeams) {
 	const numberOfRounds = calculateRoundsFromNumberOfTeams(numberOfTeams)
 	const rounds = {}
 	if (numberOfRounds === -1) {
