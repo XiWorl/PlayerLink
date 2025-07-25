@@ -58,18 +58,20 @@ export async function getTeamRosterAttributesFrequency(teamData) {
 
 export function getEligibleTeams(playerData, allTeams) {
 	const eligibleTeams = []
+	
 	for (const team of allTeams) {
-		const playerInteractionsWithTeam =
-			playerData.recommendationHistory.interactions[team.teamId]
+		const playerInteractions = playerData.recommendationStatistics.interactions
 
 		if (team.currentlyHiring == false) continue
 		if (team.rosterAccountIds.includes(playerData.accountId)) continue
 		if (playerData.willingToRelocate == false && team.location != playerData.location)
 			continue
-		if (playerInteractionsWithTeam != null) {
-			if (playerInteractionsWithTeam.declinedRecommendation == true) continue
-			if (playerInteractionsWithTeam.acceptedRecommendation == true) continue
-			if (playerInteractionsWithTeam.rejectedFromTeam == true) continue
+		if (playerInteractions[team.accountId] != null) {
+			if (playerInteractions[team.accountId].declinedRecommendation == true)
+				continue
+			if (playerInteractions[team.accountId].acceptedRecommendation == true)
+				continue
+			if (playerInteractions[team.accountId].rejectedFromTeam == true) continue
 		}
 
 		eligibleTeams.push(team)

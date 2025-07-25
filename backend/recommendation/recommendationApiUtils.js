@@ -118,6 +118,11 @@ export function userInteractedWithRecommendation(
 	teamData,
 	recommendationStatus
 ) {
+	const playerInteractions = playerData.recommendationStatistics.interactions
+	if (!playerInteractions[teamData.accountId]) {
+		playerInteractions[teamData.accountId] = getDefaultInteractions()
+	}
+	
 	if (recommendationStatus == RecommendationStatus.INTERESTED) {
 		return acceptedRecommendation(playerData, teamData)
 	} else {

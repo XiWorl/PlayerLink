@@ -23,7 +23,7 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 	const [bio, setBio] = useState(accountData.bio || DEFAULT_PROFILE_INFO)
 	const [about, setAbout] = useState(accountData.about || DEFAULT_PROFILE_INFO)
 	const { id } = useParams()
-
+	
 	return (
 		<>
 			<Navbar />
