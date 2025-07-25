@@ -45,6 +45,7 @@ model Player {
   about      String?
   accountId  Int @unique
   rosterAccountIds Int[]
+  recommendationStatistics Json
   account     Account @relation(fields: [accountId], references: [id])
 }
 
@@ -59,6 +60,7 @@ model Team {
   desiredSkillLevel String
   description String?
   overview   String?
+  recommendationHistory Json
   accountId  Int @unique
   account     Account @relation(fields: [accountId], references: [id])
 }
