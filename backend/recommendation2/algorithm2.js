@@ -20,13 +20,19 @@ const CollaborativeFilteringWeight = {
 	PLAYSTYLE_WEIGHT: 0.3,
 }
 
+const RosterSimilarityWeight = {
+	LOCATION_WEIGHT: 0.4,
+	SKILL_LEVEL_WEIGHT: 0.3,
+	PLAYSTYLE_WEIGHT: 0.3,
+}
+
 const TeamRejectionWeight = {
 	BASE_VALUE: 0.1,
 }
 
 const FinalRecommendationScoreWeight = {
 	TEAM_ATTRIBUTES_WEIGHT: 0.5,
-	TEAM_REJECTIONS_WEIGHT: 0.3,
+	ROSTER_SIMILARITY_WEIGHT: 0.3,
 	COLLABORATIVE_FILTERING_WEIGHT: 0.2,
 }
 
@@ -91,95 +97,92 @@ export function updateAllWeights(
 	)
 }
 
-function getIncrementProfileVisitIncrementValue(playerInteractions) {
-	if (playerInteractions == null) return 0
 
-	const profileVisits = Math.min(
-		playerInteractions.profileVisits,
-		ProfileVisitEnum.MAX_VISITS_THRESHOLD
-	)
-	if (profileVisits < ProfileVisitEnum.MIN_VISITS_THRESHOLD) return
-	const decayRate = Math.sqrt(profileVisits - ProfileVisitEnum.MIN_VISITS_THRESHOLD)
-	const weightIncrement =
-		ProfileVisitEnum.BASE_VALUE + decayRate * ProfileVisitEnum.ROOT_FACTOR
-	return weightIncrement
-}
 
-function declinedRecommendation(playerData, teamData) {
-	const teamLocation = teamData.location
-	for (const playstyle of teamData.desiredPlaystyle) {
-		console.log(playstyle)
-	}
-
-	const currentWeight =
-		playerData.recommendationStatistics.favorabilityWeights.locations[teamLocation]
-	const incrementMultiplier = Math.min(
-		LocationFavorabilityWeight.MAX_WEIGHT - currentWeight
-	)
-	playerData.recommendationStatistics.favorabilityWeights.locations[teamLocation] -=
-		incrementMultiplier * TeamRejectionWeight.BASE_VALUE
-	playerData.recommendationStatistics.interactions[
-		teamData.accountId
-	].declinedRecommendations = true
-}
-
-function getTeamRecommendationScore(playerData, teamData) {
+function getTeamFavorabilityScore(playerData, teamData) {
 	const favorabilityWeights = playerData.recommendationStatistics.favorabilityWeights
-	const locationScore =
-		favorabilityWeights.locations[teamData.location] *
-		TeamAttributeWeight.LOCATION_WEIGHT
-	const skillLevelScore = Math.min(
-		favorabilityWeights.skillLevels[teamData.desiredSkillLevel] *
-			TeamAttributeWeight.SKILL_LEVEL_WEIGHT,
-		MAX_RECOMMENDATION_SCORE
-	)
+	const locationFavorability = favorabilityWeights.locations[teamData.location]
+	const skillLevelFavorability =
+		favorabilityWeights.skillLevels[teamData.desiredSkillLevel]
+
+	const locationScore = locationFavorability * TeamAttributeWeight.LOCATION_WEIGHT
+	const skillLevelScore =
+		skillLevelFavorability * TeamAttributeWeight.SKILL_LEVEL_WEIGHT
 
 	let playstyleScore = 0
 	for (const playstyle of teamData.desiredPlaystyle) {
-		playstyleScore += Math.min(
-			favorabilityWeights.playstyles[playstyle],
-			MAX_RECOMMENDATION_SCORE
-		)
+		playstyleScore += favorabilityWeights.playstyles[playstyle]
 	}
-	playstyleScore =
-		(playstyleScore / teamData.desiredPlaystyle.length) *
-		TeamAttributeWeight.PLAYSTYLE_WEIGHT
-	return locationScore + skillLevelScore + playstyleScore
+	playstyleScore = playstyleScore / teamData.desiredPlaystyle.length
+	playstyleScore *= TeamAttributeWeight.PLAYSTYLE_WEIGHT
+	const finalFavorabilityScore = locationScore + skillLevelScore + playstyleScore
+
+	return Math.min(finalFavorabilityScore, MAX_RECOMMENDATION_SCORE)
 }
 
-async function getAverageRejectedPlayerAttributesScore(teamData, playerData) {
-	const teamAttributesFrequency = await getRejectedTeamAttributesFrequency(teamData)
+async function getSimilarityScore(teamAttributesFrequency, playerData, weight) {
 	const playerSkillLevel = translateExperience(playerData.yearsOfExperience)
-	let finalTeamScore = 0
+	let finalScore = 0
 
 	if (teamAttributesFrequency[playerSkillLevel]) {
 		const score = teamAttributesFrequency[playerSkillLevel]
-		finalTeamScore += score * CollaborativeFilteringWeight.SKILL_LEVEL_WEIGHT
+		finalScore += score * weight.SKILL_LEVEL_WEIGHT
 	}
 	if (teamAttributesFrequency[playerData.location]) {
 		const score = teamAttributesFrequency[playerData.location]
-		finalTeamScore += score * CollaborativeFilteringWeight.LOCATION_WEIGHT
+		finalScore += score * weight.LOCATION_WEIGHT
 	}
 	if (teamAttributesFrequency[playerData.playstyle]) {
 		const score = teamAttributesFrequency[playerData.playstyle]
-		finalTeamScore += score * CollaborativeFilteringWeight.PLAYSTYLE_WEIGHT
+		finalScore += score * weight.PLAYSTYLE_WEIGHT
 	}
-	return finalTeamScore
+	return finalScore
+}
+
+async function getRosterSimilarityScore(teamData, playerData) {
+	const teamRosterAttributesFrequency = await getTeamRosterAttributesFrequency(teamData)
+	const similarityScore = getSimilarityScore(
+		teamRosterAttributesFrequency,
+		playerData,
+		RosterSimilarityWeight
+	)
+	return similarityScore
+}
+
+async function getAverageDeclinedPlayerScore(teamData, playerData) {
+	const teamAttributesFrequency = await getRejectedTeamAttributesFrequency(teamData)
+	const similarityScore = getSimilarityScore(
+		teamAttributesFrequency,
+		playerData,
+		CollaborativeFilteringWeight
+	)
+	return similarityScore
 }
 
 export async function getAllRecommendations(playerData, allTeams) {
 	const recommendations = []
+
 	for (const teamData of allTeams) {
-		const rejectionSimilarity = await getAverageRejectedPlayerAttributesScore(
+		let rosterSimilarityScore = await getRosterSimilarityScore(teamData, playerData)
+		rosterSimilarityScore *= FinalRecommendationScoreWeight.ROSTER_SIMILARITY_WEIGHT
+
+		let similarityToAverageDeclinedPlayer = await getAverageDeclinedPlayerScore(
 			teamData,
 			playerData
-		) * FinalRecommendationScoreWeight.COLLABORATIVE_FILTERING_WEIGHT
-		const teamRecommendationScore = getTeamRecommendationScore(playerData, teamData) * FinalRecommendationScoreWeight.TEAM_ATTRIBUTES_WEIGHT
-		const rosterSimilarityScore = getTeamRosterAttributesFrequency(teamData) //* FinalRecommendationScoreWeight.TEAM_REJECTIONS_WEIGHT
-		const finalScore = teamRecommendationScore + rejectionSimilarity
+		)
+		similarityToAverageDeclinedPlayer *=
+			FinalRecommendationScoreWeight.COLLABORATIVE_FILTERING_WEIGHT
 
-		recommendations.push({team: teamData, score: finalScore})
+		let teamFavorabilityScore = getTeamFavorabilityScore(playerData, teamData)
+		teamFavorabilityScore *= FinalRecommendationScoreWeight.TEAM_ATTRIBUTES_WEIGHT
+
+		let finalScore = teamFavorabilityScore + similarityToAverageDeclinedPlayer + rosterSimilarityScore
+		finalScore = Math.min(finalScore, MAX_RECOMMENDATION_SCORE)
+
+		recommendations.push({ team: teamData, score: finalScore })
 	}
+
+	console.log(recommendations)
 	return recommendations
 }
 
@@ -191,5 +194,5 @@ async function tester() {
 	// )
 	updateAllWeights(increment, increment, increment, playerData, teamData)
 	getAverageRejectedPlayerAttributesScore(teamData, playerData)
-	// const finalRecommendationScore = FinalRecommendationScoreWeight.TEAM_ATTRIBUTES_WEIGHT *getTeamRecommendationScore(playerData, teamData)
+	// const finalRecommendationScore = FinalRecommendationScoreWeight.TEAM_ATTRIBUTES_WEIGHT *getTeamFavorabilityScore(playerData, teamData)
 }

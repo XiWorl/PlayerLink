@@ -28,3 +28,35 @@ export async function getRecommendationData(playerData, allTeams) {
     const recommendations = await getAllRecommendations(playerData, allTeams)
     return(recommendations)
 }
+
+function getIncrementProfileVisitIncrementValue(playerInteractions) {
+    if (playerInteractions == null) return 0
+
+    const profileVisits = Math.min(
+        playerInteractions.profileVisits,
+        ProfileVisitEnum.MAX_VISITS_THRESHOLD
+    )
+    if (profileVisits < ProfileVisitEnum.MIN_VISITS_THRESHOLD) return
+    const decayRate = Math.sqrt(profileVisits - ProfileVisitEnum.MIN_VISITS_THRESHOLD)
+    const weightIncrement =
+        ProfileVisitEnum.BASE_VALUE + decayRate * ProfileVisitEnum.ROOT_FACTOR
+    return weightIncrement
+}
+
+function declinedRecommendation(playerData, teamData) {
+    const teamLocation = teamData.location
+    for (const playstyle of teamData.desiredPlaystyle) {
+        console.log(playstyle)
+    }
+
+    const currentWeight =
+        playerData.recommendationStatistics.favorabilityWeights.locations[teamLocation]
+    const incrementMultiplier = Math.min(
+        LocationFavorabilityWeight.MAX_WEIGHT - currentWeight
+    )
+    playerData.recommendationStatistics.favorabilityWeights.locations[teamLocation] -=
+        incrementMultiplier * TeamRejectionWeight.BASE_VALUE
+    playerData.recommendationStatistics.interactions[
+        teamData.accountId
+    ].declinedRecommendations = true
+}
