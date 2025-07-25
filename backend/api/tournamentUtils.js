@@ -43,7 +43,7 @@ async function updateTournament(tournamentId, tournamentData) {
 	try {
 		const updatedTournament = await prisma.tournament.update({
 			where: { tournamentId: tournamentId },
-			data: tournamentData ,
+			data: tournamentData,
 		})
 		return updatedTournament
 	} catch (error) {
@@ -65,20 +65,22 @@ async function createTournament(teamData, globalTournamentId, MININUM_NUMBER_OF_
 				participantsAdvancedToNextRound: {},
 				allTournaments: {
 					connect: { id: globalTournamentId },
-					[teamData.accountId]: teamData,
 				},
 				allParticipants: {},
 			},
 		})
 
 		const tournamentId = createdTournament.tournamentId
-		const tournamentName = {
+		const tournamentUpdate = {
 			name: TOURNAMENT_NAME + " " + tournamentId,
+			allParticipants: {
+				[teamData.accountId]: teamData,
+			},
 		}
-		const finalizedTournament = await updateTournament(tournamentId, tournamentName)
+		const finalizedTournament = await updateTournament(tournamentId, tournamentUpdate)
 
 		await prisma.tournaments.update({
-			where: { id: GLOBAL_TOURNAMENT_ID },
+			where: { id: globalTournamentId },
 			data: {
 				tournamentIds: {
 					push: tournamentId,
@@ -88,6 +90,7 @@ async function createTournament(teamData, globalTournamentId, MININUM_NUMBER_OF_
 
 		return finalizedTournament
 	} catch (error) {
+		console.log(error)
 		return null
 	}
 }
@@ -162,7 +165,7 @@ async function advanceTeamInTournament(tournamentId, teamAccountId) {
 				[teamAccountId]: teamData,
 			},
 		}
-		
+
 		const tournamentWithAdvancingTeam = await updateTournament(
 			tournamentId,
 			addTeamToNextRound
@@ -218,7 +221,10 @@ async function startTournament(tournamentId) {
 			isActive: true,
 		}
 
-		const updatedTournament = await updateTournament(tournamentId, updatedTournamentData)
+		const updatedTournament = await updateTournament(
+			tournamentId,
+			updatedTournamentData
+		)
 		return updatedTournament
 	} catch (error) {
 		return null

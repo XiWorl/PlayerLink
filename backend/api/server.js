@@ -178,9 +178,10 @@ server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
 
 server.post("/api/tournaments/create", async (req, res, next) => {
 	try {
-		const teamAccountId = parseInt(req.body.accountId)
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
 		const newTournament = await createTournament(
-			teamAccountId,
+			teamData,
 			globalTournamentId,
 			MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT
 		)
