@@ -65,7 +65,7 @@ function getTeamFavorabilityScore(playerData, teamData) {
 	}
 	playstyleScore = playstyleScore / teamData.desiredPlaystyle.length
 	playstyleScore *= TeamAttributeWeight.PLAYSTYLE_WEIGHT
-    
+
 	const finalFavorabilityScore = locationScore + skillLevelScore + playstyleScore
 
 	return Math.min(finalFavorabilityScore, TeamAttributeWeight.MAX_RECOMMENDATION_SCORE)

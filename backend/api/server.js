@@ -24,6 +24,10 @@ const {
 	getAllTournaments,
 	getTournament,
 } = require("./tournamentUtils")
+const {
+	getRecommendationData,
+	userInteractedWithRecommendation,
+} = require("../recommendation/recommendationApiUtils")
 const { AccountType, MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT } = require("../ServerUtils")
 
 let globalTournamentId = -1
@@ -143,9 +147,45 @@ server.get("/api/tournament/:tournamentId", async (req, res, next) => {
 	}
 })
 
-server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
-	//TODO: replace with recommendation algorithm results 
-	return res.status(400).json({ error: "Not implemented" })
+server.get("/api/recommendations/", async (req, res, next) => {
+	try {
+		const accountId = parseInt(req.query.accountId)
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: accountId },
+		})
+		const allTeams = await prisma.team.findMany()
+		const recommendations = await getRecommendationData(playerData, allTeams)
+		return res.status(200).json(recommendations)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/api/recommendations/update", async (req, res, next) => {
+	try {
+		const playerAccountId = parseInt(req.body.playerAccountId)
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const status = req.body.status
+
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: playerAccountId },
+		})
+		const teamData = await prisma.team.findUnique({
+			where: { accountId: teamAccountId },
+		})
+
+		const playerDataWithUpdatedWeights = await userInteractedWithRecommendation(playerData, teamData, status)
+		const updatedPlayerData = await prisma.player.update({
+			where: { accountId: playerAccountId },
+			data: playerDataWithUpdatedWeights,
+		})
+
+		const allTeams = await prisma.team.findMany()
+		const recommendations = await getRecommendationData(updatedPlayerData, allTeams)
+		return res.status(200).json(recommendations)
+	} catch (error) {
+		next(error)
+	}
 })
 
 server.get("/tournaments/start/:tournamentId", async (req, res, next) => {

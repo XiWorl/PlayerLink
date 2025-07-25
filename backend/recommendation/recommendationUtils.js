@@ -1,7 +1,4 @@
-import {
-	translateExperience,
-    AccountType
-} from "../ServerUtils.js"
+import { translateExperience, AccountType } from "../ServerUtils.js"
 import { getAccountData } from "../api/endpointsUtils.js"
 
 export function incrementWithMaximumValue(value, increment, maximum) {
@@ -52,5 +49,9 @@ export async function getRejectedTeamAttributesFrequency(teamData) {
 }
 
 export async function getTeamRosterAttributesFrequency(teamData) {
-	return getAttributesFrequency(teamData.rosterAccountIds, true, teamData.rosterAccountIds.length)
+	return getAttributesFrequency(
+		teamData.rosterAccountIds,
+		true,
+		teamData.rosterAccountIds.length
+	)
 }

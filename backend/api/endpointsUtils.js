@@ -1,5 +1,9 @@
 const { PrismaClient } = require("../generated/prisma")
-const { AccountType, convertYesOrNoToBoolean } = require("../ServerUtils")
+const {
+	AccountType,
+	convertYesOrNoToBoolean,
+	DEFAULT_RECOMMENDATION_STATISTICS,
+} = require("../ServerUtils")
 const prisma = new PrismaClient()
 
 async function getAccountData(accountId, accountType) {
@@ -43,7 +47,7 @@ async function registerPlayerAccount(requestBody) {
 					gameUsernames: requestBody.gameUsernames,
 					games: {},
 					rosterAccountIds: [],
-					recommendationStatistics: {},
+					recommendationStatistics: DEFAULT_RECOMMENDATION_STATISTICS,
 					willingToRelocate: convertYesOrNoToBoolean(
 						requestBody.willingToRelocate
 					),
