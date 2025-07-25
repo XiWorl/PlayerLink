@@ -1,7 +1,10 @@
-import { useContext } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { BASEURL } from "../../utils/globalUtils"
-import { TournamentContext } from "../../pages/TournamentBracketPage"
+import {
+	BASEURL,
+	getAccountDataFromSessionStorage,
+	AccountType,
+} from "../../utils/globalUtils"
 import Navbar from "../Navbar/Navbar"
 
 export const TournamentStateOptions = {
@@ -15,6 +18,7 @@ async function startTournament(tournamentInformation, setIsLoading) {
 		const response = await fetch(
 			`${BASEURL}/tournaments/start/${tournamentInformation.tournamentId}`
 		)
+
 		await response.json()
 		setIsLoading(false)
 	} catch (error) {
@@ -22,17 +26,46 @@ async function startTournament(tournamentInformation, setIsLoading) {
 	}
 }
 
-export default function IntermissionDisplay({ tournamentInformation }) {
-	if (tournamentInformation == null) return
-	const navigate = useNavigate()
-	const { setIsLoading, isLoading } = useContext(TournamentContext)
+async function joinTournament(tournamentInformation) {
+	try {
+		const response = await fetch(`${BASEURL}/tournaments/join/`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				teamAccountId: teamAccountId,
+				tournamentId: tournamentInformation.tournamentId,
+			}),
+		})
+		await response.json()
+	} catch (error) {
+		console.error("Error retrieving profile data:", error)
+	}
+}
 
+function verifyUserIsLoggedIn(navigate, loggedInAccount) {
+	if (!loggedInAccount || !loggedInAccount.id || !loggedInAccount.accountType) {
+		navigate("/")
+	}
+}
+
+export default function IntermissionDisplay({ tournamentInformation, setIsLoading }) {
+	if (tournamentInformation == null) return
+
+	const navigate = useNavigate()
 	const allParticipants = tournamentInformation.allParticipants
 	const minimumParticipants = tournamentInformation.minimumParticipants
 	const numberOfParticipants = Object.keys(allParticipants).length
-	const canStartTournament = numberOfParticipants >= minimumParticipants
+	const loggedInAccount = getAccountDataFromSessionStorage()
 
-    console.log(tournamentInformation)
+	useEffect(() => {
+		verifyUserIsLoggedIn(navigate, loggedInAccount)
+	}, [])
+
+	const canStartTournament = numberOfParticipants >= minimumParticipants
+	const isTournamentCreator =
+		tournamentInformation.creatorAccountId === loggedInAccount.accountId
 
 	return (
 		<>
@@ -40,19 +73,26 @@ export default function IntermissionDisplay({ tournamentInformation }) {
 			<div className="tournament-intermission">
 				<div className="tournament-intermission-information">
 					<h1>{`${numberOfParticipants}/${minimumParticipants} Participants`}</h1>
-					{canStartTournament && (
+					{canStartTournament && isTournamentCreator && (
 						<button
 							className="tournament-start-btn"
 							onClick={() =>
-								startTournament(
-									tournamentInformation,
-									setIsLoading
-								)
+								startTournament(tournamentInformation, setIsLoading)
 							}
 						>
 							Start Tournament
 						</button>
 					)}
+					{!canStartTournament &&
+						!isTournamentCreator &&
+						loggedInAccount.accountType == AccountType.TEAM && (
+							<button
+								className="tournament-start-btn"
+								onClick={() => joinTournament(tournamentInformation)}
+							>
+								Join Tournament
+							</button>
+						)}
 				</div>
 
 				<div className="tournament-intermission-teams">

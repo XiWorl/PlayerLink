@@ -133,7 +133,8 @@ server.get("/api/tournaments", async (req, res, next) => {
 
 server.get("/api/tournament/:tournamentId", async (req, res, next) => {
 	try {
-		const tournamentData = await getTournament()
+		const tournamentId = parseInt(req.params.tournamentId)
+		const tournamentData = await getTournament(tournamentId)
 		if (tournamentData == null) {
 			return res.status(400).json({ error: "Error while getting tournament data" })
 		}
