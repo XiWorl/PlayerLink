@@ -21,6 +21,8 @@ const {
 	advanceTournamentRound,
 	startTournament,
 	joinTournament,
+	getAllTournaments,
+	getTournament,
 } = require("./tournamentUtils")
 const { AccountType, MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT } = require("../ServerUtils")
 const { getTeamRecommendations } = require("../recommendation/main")
@@ -112,6 +114,30 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 			},
 		})
 		return res.status(200).json(userApplications)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/api/tournaments", async (req, res, next) => {
+	try {
+		const allTournaments = await getAllTournaments()
+		if (allTournaments == null) {
+			return res.status(400).json({ error: "Error while getting tournaments" })
+		}
+		return res.status(200).json(allTournaments)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/api/tournament/:tournamentId", async (req, res, next) => {
+	try {
+		const tournamentData = await getTournament()
+		if (tournamentData == null) {
+			return res.status(400).json({ error: "Error while getting tournament data" })
+		}
+		return res.status(200).json(tournamentData)
 	} catch (error) {
 		next(error)
 	}

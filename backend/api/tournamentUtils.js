@@ -230,5 +230,5 @@ module.exports = {
 	advanceTournamentRound,
 	getAllTournaments,
 	startTournament,
-	joinTournament
+	joinTournament,
 }

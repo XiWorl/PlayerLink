@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { BASEURL } from "../../utils/globalUtils"
-import { TournamentContext } from "../../pages/BracketPage"
+import { TournamentContext } from "../../pages/TournamentBracketPage"
 import Navbar from "../Navbar/Navbar"
 
 export const TournamentStateOptions = {

@@ -53,6 +53,7 @@ export default function TournamentsPage() {
 		)
 	}
 
+	console.log(tournaments)
 	const tournamentTiles = tournaments.map((tournament) => {
 		return <TournamentTile key={tournament.id} tournamentInformation={tournament} />
 	})
