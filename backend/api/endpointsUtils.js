@@ -19,6 +19,14 @@ async function getAccountData(accountId, accountType) {
 	}
 }
 
+async function updateAccount(accountId, accountType, data) {
+	const updateAccount = await prisma[accountType].update({
+		where: { id: accountId },
+		data: data,
+	})
+	return updateAccount
+}
+
 async function registerPlayerAccount(requestBody) {
 	const createdAccount = await prisma.account.create({
 		data: {
@@ -73,4 +81,5 @@ module.exports = {
 	getAccountData,
 	registerPlayerAccount,
 	registerTeamAccount,
+	updateAccount,
 }
