@@ -34,6 +34,8 @@ async function registerPlayerAccount(requestBody) {
 					gamingExperience: requestBody.gamingExperience,
 					gameUsernames: requestBody.gameUsernames,
 					games: {},
+					rosterAccountIds: [],
+					recommendationStatistics: {},
 					willingToRelocate: convertYesOrNoToBoolean(
 						requestBody.willingToRelocate
 					),
@@ -57,6 +59,9 @@ async function registerTeamAccount(requestBody) {
 					desiredSkillLevel: requestBody.desiredSkillLevel,
 					supportedGames: requestBody.supportedGames,
 					currentlyHiring: convertYesOrNoToBoolean(requestBody.currentlyHiring),
+					recommendationHistory: {
+						interactions: {},
+					},
 				},
 			},
 		},
