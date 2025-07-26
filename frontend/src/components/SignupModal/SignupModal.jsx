@@ -12,13 +12,19 @@ import "./SignupModal.css"
 
 const MODAL_TITLE = "Create Your Account"
 
-async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
+async function onSubmissionFormValid(
+	formData,
+	selectedAccountType,
+	navigate,
+	setIsLoading
+) {
 	const body = {
 		...formData,
 		email: sessionStorage.getItem(GOOGLE_EMAIL_KEY),
 	}
 
 	try {
+		setIsLoading(true)
 		const response = await fetch(`${BASEURL}/api/signup/${selectedAccountType}`, {
 			method: "POST",
 			headers: {
@@ -31,6 +37,7 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 
 		sessionStorage.setItem(TOKEN_SESSION_KEY, accountData.token)
 		sessionStorage.setItem(ACCOUNT_INFORMATION_KEY, JSON.stringify(accountData))
+		setIsLoading(false)
 
 		const navigationURL =
 			accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
@@ -40,7 +47,7 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 	}
 }
 
-export default function SignupModal({ onClose }) {
+export default function SignupModal({ onClose, setIsLoading }) {
 	const navigate = useNavigate()
 	const [selectedAccountType, _setSelectedAccountType] = useState(AccountType.PLAYER)
 	const [isModalOpen, setIsModalOpen] = useState(true)
@@ -58,7 +65,12 @@ export default function SignupModal({ onClose }) {
 				isOpen={isModalOpen}
 				onClose={handleClose}
 				onSubmit={(submissionFormData, accountType) =>
-					onSubmissionFormValid(submissionFormData, accountType, navigate)
+					onSubmissionFormValid(
+						submissionFormData,
+						accountType,
+						navigate,
+						setIsLoading
+					)
 				}
 				title={MODAL_TITLE}
 				accountType={selectedAccountType}
