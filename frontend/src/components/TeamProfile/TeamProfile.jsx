@@ -1,5 +1,5 @@
-import { EditProfileTextButton, TypeOfEditButton } from "../ProfileUtils/EditButton"
-import { modalSubmitHelper } from "../ProfileUtils/EditButtonUtils"
+import { EditProfileTextButton, TypeOfEditButton } from "../ProfileUtils/EditProfileButton"
+import { modalSubmitHelper } from "../ProfileUtils/EditProfileButtonUtils"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
