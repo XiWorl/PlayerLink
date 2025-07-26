@@ -7,7 +7,14 @@ const {
 	formatClientAccountInformation,
 	dataPagination,
 	verifyUserAuthorization,
-} = require("./utils")
+	getPlayerGamingPerformance,
+	updatePlayerGamingPerformance,
+} = require("./apiUtils")
+const {
+	getAccountData,
+	registerPlayerAccount,
+	registerTeamAccount,
+} = require("./endpointsUtils")
 const { AccountType } = require("../ServerUtils")
 const { getTeamRecommendations } = require("../recommendation/main")
 
@@ -22,18 +29,10 @@ server.use(helmet())
 server.use(express.json())
 server.use(cors())
 
-function convertToBoolean(value) {
-	const YES_VALUE = "yes"
-	if (value.toLowerCase() == YES_VALUE) {
-		return true
-	} else return false
-}
-
 server.get("/teams/:teamId", async (req, res, next) => {
 	try {
-		const teamId = parseInt(req.params.teamId)
-		const teamData = await prisma.team.findUnique({ where: { accountId: teamId } })
-		return res.status(200).json(teamData)
+		const teamAccountData = await getAccountData(req.params.teamId, AccountType.TEAM)
+		return res.status(200).json(teamAccountData)
 	} catch (error) {
 		next(error)
 	}
@@ -41,11 +40,11 @@ server.get("/teams/:teamId", async (req, res, next) => {
 
 server.get("/profiles/:profileId", async (req, res, next) => {
 	try {
-		const playerId = parseInt(req.params.profileId)
-		const playerData = await prisma.player.findUnique({
-			where: { accountId: playerId },
-		})
-		return res.status(200).json(playerData)
+		const playerAccountData = await getAccountData(
+			req.params.profileId,
+			AccountType.PLAYER
+		)
+		return res.status(200).json(playerAccountData)
 	} catch (error) {
 		next(error)
 	}
@@ -111,10 +110,10 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 
 server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
 	try {
-		const playerAccountId = parseInt(req.params.playerAccountId)
-		const playerData = await prisma.player.findUnique({
-			where: { accountId: playerAccountId },
-		})
+		const playerData = await getAccountData(
+			req.params.playerAccountId,
+			AccountType.PLAYER
+		)
 		if (playerData == null) {
 			return res.status(404).json({ error: "Player not found in database" })
 		}
@@ -169,30 +168,16 @@ server.post("/api/signup/player", async (req, res, next) => {
 			return
 		}
 
-		const createdAccount = await prisma.account.create({
-			data: {
-				accountType: AccountType.PLAYER,
-				email: req.body.email,
-				player: {
-					create: {
-						firstName: req.body.firstName,
-						lastName: req.body.lastName,
-						yearsOfExperience: req.body.yearsOfExperience,
-						location: req.body.location,
-						playstyle: req.body.playstyle,
-						gamingExperience: req.body.gamingExperience,
-						gameUsernames: req.body.gameUsernames,
-						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
-					},
-				},
-			},
-		})
+		const createdAccount = await registerPlayerAccount(req.body)
 
 		const jwtToken = await registerSessionToken(createdAccount)
 		const clientAccountInformation = formatClientAccountInformation(
 			createdAccount,
 			jwtToken
 		)
+
+		const playerGamesJson = await getPlayerGamingPerformance(req.body.gameUsernames)
+		await updatePlayerGamingPerformance(prisma, createdAccount.id, playerGamesJson)
 
 		return res.status(200).json(clientAccountInformation)
 	} catch (error) {
@@ -209,22 +194,7 @@ server.post("/api/signup/team", async (req, res, next) => {
 			return
 		}
 
-		const createdAccount = await prisma.account.create({
-			data: {
-				accountType: AccountType.TEAM,
-				email: req.body.email,
-				team: {
-					create: {
-						name: req.body.teamName,
-						location: req.body.location,
-						desiredPlaystyle: req.body.desiredPlaystyle,
-						desiredSkillLevel: req.body.desiredSkillLevel,
-						supportedGames: req.body.supportedGames,
-						currentlyHiring: convertToBoolean(req.body.currentlyHiring),
-					},
-				},
-			},
-		})
+		const createdAccount = await registerTeamAccount(req.body)
 
 		const jwtToken = await registerSessionToken(createdAccount)
 		const clientAccountInformation = formatClientAccountInformation(
