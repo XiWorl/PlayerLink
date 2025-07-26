@@ -8,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage.jsx"
 import PrivateRoute from "./utils/PrivateRoute.jsx"
 import ConnectPage from "./pages/ConnectPage.jsx"
 import ApplyPage from "./pages/ApplyPage.jsx"
+import TournamentsPage from  "./pages/TournamentsPage.jsx"
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
