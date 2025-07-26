@@ -1,5 +1,5 @@
 .apply-page {
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 .header {
@@ -96,6 +96,7 @@
   display: flex;
   flex-direction: row;
   gap: 30px;
+  cursor: pointer;
 }
 
 .empty-applications {
@@ -103,11 +104,10 @@
 }
 
 .apply-details {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }
-
 .post:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
@@ -149,20 +149,16 @@
   line-height: 1.4;
 }
 
-.post-information button {
+.post-information-status {
   padding: 8px 20px;
   background-color: #0073b1;
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 24px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
-}
-
-.post-information button:hover {
-  background-color: #005885;
 }
 
 .recommendation {
@@ -209,6 +205,16 @@
 .recommendation-btn.accept {
   background-color: #0077b5;
   color: #e7e7e7;
+}
+
+.accepted {
+  background-color: #007219;
+  color: white;
+}
+
+.rejected {
+  background-color: #9b2700;
+  color: white;
 }
 
 .recommendation-btn.accept:hover {

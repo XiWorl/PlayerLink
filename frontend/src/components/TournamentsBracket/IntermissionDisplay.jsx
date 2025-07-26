@@ -26,9 +26,9 @@ async function startTournament(tournamentInformation, setIsLoading) {
 	}
 }
 
-async function joinTournament(tournamentInformation) {
+async function joinTournament(tournamentInformation, teamAccountId) {
 	try {
-		const response = await fetch(`${BASEURL}/tournaments/join/`, {
+		const response = await fetch(`${BASEURL}/tournaments/join`, {
 			method: "PATCH",
 			headers: {
 				"Content-Type": "application/json",
@@ -38,7 +38,7 @@ async function joinTournament(tournamentInformation) {
 				tournamentId: tournamentInformation.tournamentId,
 			}),
 		})
-		await response.json()
+		const joinedTournamentData = await response.json()
 	} catch (error) {
 		console.error("Error retrieving profile data:", error)
 	}
@@ -64,7 +64,8 @@ export default function IntermissionDisplay({ tournamentInformation, setIsLoadin
 	}, [])
 
 	const canStartTournament = numberOfParticipants >= minimumParticipants
-	const isTournamentCreator = tournamentInformation.creatorAccountId === loggedInAccount.accountId
+	const isTournamentCreator =
+		tournamentInformation.creatorAccountId === loggedInAccount.id
 
 	return (
 		<>
@@ -87,7 +88,12 @@ export default function IntermissionDisplay({ tournamentInformation, setIsLoadin
 						loggedInAccount.accountType == AccountType.TEAM && (
 							<button
 								className="tournament-start-btn"
-								onClick={() => joinTournament(tournamentInformation)}
+								onClick={() =>
+									joinTournament(
+										tournamentInformation,
+										loggedInAccount.id
+									)
+								}
 							>
 								Join Tournament
 							</button>

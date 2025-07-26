@@ -29,7 +29,11 @@ const {
 	userInteractedWithRecommendation,
 	incrementProfileVisit,
 } = require("../recommendation/recommendationApiUtils")
-const { AccountType, MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT } = require("../ServerUtils")
+const {
+	AccountType,
+	MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT,
+	RosterApplicationStatusOptions,
+} = require("../ServerUtils")
 
 let globalTournamentId = -1
 
@@ -356,11 +360,12 @@ server.patch("/tournaments/team/advance/", async (req, res, next) => {
 	}
 })
 
-server.patch("/tournaments/join/", async (req, res, next) => {
+server.patch("/tournaments/join", async (req, res, next) => {
 	try {
 		const teamAccountId = parseInt(req.body.teamAccountId)
 		const tournamentId = parseInt(req.body.tournamentId)
-		const joinedTournamentData = joinTournament(tournamentId, teamAccountId)
+		const joinedTournamentData = await joinTournament(tournamentId, teamAccountId)
+		
 		if (joinedTournamentData == null) {
 			return res.status(400).json({ error: "Error while starting tournament" })
 		}
@@ -481,6 +486,70 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 
 		res.status(200).json({ updatedAccountInformation: updatedAccountInformation })
 		return
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/applications/status/update", async (req, res, next) => {
+	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
+
+	if (!verifiedAuthorization) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+
+	try {
+		const playerApplicationToTeam = await prisma.application.findUnique({
+			where: {
+				playerAccountId_teamAccountId: {
+					playerAccountId: req.body.playerAccountId,
+					teamAccountId: req.body.teamAccountId,
+				},
+			},
+		})
+
+		if (playerApplicationToTeam == null) {
+			return res.status(400).json({
+				error: "Cannot update application, application does not exist in database",
+			})
+		}
+		if (playerApplicationToTeam.status != RosterApplicationStatusOptions.PENDING) {
+			return res.status(400).json({
+				error: "Cannot update application, application has already been modified in the past",
+			})
+		}
+		const updatedApplication = await prisma.application.update({
+			where: {
+				playerAccountId_teamAccountId: {
+					playerAccountId: req.body.playerAccountId,
+					teamAccountId: req.body.teamAccountId,
+				},
+			},
+			data: {
+				status: req.body.status,
+			},
+		})
+
+		if (updatedApplication.status == RosterApplicationStatusOptions.ACCEPTED) {
+			const updatedPlayerData = await prisma.player.update({
+				where: { accountId: req.body.playerAccountId },
+				data: {
+					rosterAccountIds: {
+						push: req.body.teamAccountId,
+					},
+				},
+			})
+			const updatedTeamData = await prisma.team.update({
+				where: { accountId: req.body.teamAccountId },
+				data: {
+					rosterAccountIds: {
+						push: req.body.playerAccountId,
+					},
+				},
+			})
+		}
+		return res.status(200).json(updatedApplication)
 	} catch (error) {
 		next(error)
 	}
