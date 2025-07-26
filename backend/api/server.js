@@ -18,6 +18,8 @@ const {
 const { AccountType } = require("../ServerUtils")
 const { getTeamRecommendations } = require("../recommendation/main")
 
+let globalTournamentId = -1
+
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -328,5 +330,16 @@ server.use((err, res) => {
 	const { message, status = 500 } = err
 	res.status(status).json({ message })
 })
+
+async function initializeTournaments() {
+	const tournamentsHolder = await prisma.tournaments.create({
+		data: {
+			tournamentIds: [],
+		},
+	})
+	globalTournamentId = tournamentsHolder.id
+}
+
+initializeTournaments()
 
 module.exports = server
