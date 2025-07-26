@@ -24,22 +24,16 @@ export default function ProfilePage({ accountType }) {
 	}, [id])
 
 	return accountType == AccountType.PLAYER ? (
-		<>
-			<Navbar />
-			<PlayerProfile
-				isLoading={isLoading}
-				accountData={accountData}
-				setIsLoading={setIsLoading}
-			/>
-		</>
+		<PlayerProfile
+			isLoading={isLoading}
+			accountData={accountData}
+			setIsLoading={setIsLoading}
+		/>
 	) : (
-		<>
-			<Navbar />
-			<TeamProfile
-				isLoading={isLoading}
-				accountData={accountData}
-				setIsLoading={setIsLoading}
-			/>
-		</>
+		<TeamProfile
+			isLoading={isLoading}
+			accountData={accountData}
+			setIsLoading={setIsLoading}
+		/>
 	)
 }

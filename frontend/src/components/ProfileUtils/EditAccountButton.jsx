@@ -14,7 +14,7 @@ function convertYesOrNoToBoolean(value) {
 	return false
 }
 
-async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
+async function onSubmissionFormValid(formData, selectedAccountType, navigate, setIsLoading) {
 	const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
 	const requestBody = {
 		...formData,
@@ -34,6 +34,7 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 	}
 
 	try {
+		setIsLoading(true)
 		const response = await fetch(`${BASEURL}/api/profiles/edit/account`, {
 			method: "PATCH",
 			headers: {
@@ -52,7 +53,7 @@ async function onSubmissionFormValid(formData, selectedAccountType, navigate) {
 	}
 }
 
-export default function EditAccountButton({ accountType, accountData }) {
+export default function EditAccountButton({ accountType, accountData, setIsLoading }) {
 	const navigate = useNavigate()
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -71,7 +72,7 @@ export default function EditAccountButton({ accountType, accountData }) {
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}
 						onSubmit={(formData) =>
-							onSubmissionFormValid(formData, accountType, navigate)
+							onSubmissionFormValid(formData, accountType, navigate, setIsLoading)
 						}
 						title={MODAL_TITLE}
 						accountType={accountType}
