@@ -17,9 +17,11 @@
     width: 90%;
     max-width: 500px;
     max-height: 90vh;
-    overflow-y: hidden;
+    overflow-y: auto;
+    scrollbar-width: 3px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     animation: modalSlideIn 0.3s ease-out;
+    max-height: 70%;
 }
 
 @keyframes modalSlideIn {
@@ -27,6 +29,7 @@
         opacity: 0;
         transform: translateY(-30px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -217,4 +220,71 @@
     gap: 15px;
     margin-top: 15px;
     padding-top: 5px;
+}
+
+.game-selection-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.username-input-container {
+    margin-left: 24px;
+    margin-top: 4px;
+}
+
+.game-username-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e1e9ee;
+    border-radius: 4px;
+    font-size: 13px;
+    background-color: #f9f9f9;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.game-username-input:focus {
+    outline: none;
+    border-color: #0077b5;
+    background-color: white;
+    box-shadow: 0 0 0 2px rgba(0, 119, 181, 0.1);
+}
+
+.game-checkbox {
+    margin-left: 0;
+    width: 10px;
+}
+
+.form-error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
+}
+
+.games-selection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.game-checkbox-label {
+    display: flex;
+}
+
+.game-checkbox-label h3 {
+    display: flex;
+    font-size: 14px;
+    font-weight: 300;
+    margin: 3px;
+}
+
+.game-checkbox-label input {
+    display: flex;
+    margin-left: auto;
+    width: auto;
+    flex-direction: row;
+    cursor: pointer;
 }

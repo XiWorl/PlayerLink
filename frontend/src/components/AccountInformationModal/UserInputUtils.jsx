@@ -159,7 +159,7 @@ export function handlePlaystyleSelectionLogic(
 		const isPlaystyleSelected = desiredPlaystyles.includes(playstyle)
 
 		const updatedPlaystyles = isPlaystyleSelected
-			? selectedPlaystyles.filter(
+			? desiredPlaystyles.filter(
 					(existingPlaystyle) => existingPlaystyle !== playstyle
 			  )
 			: [...desiredPlaystyles, playstyle]
