@@ -24,6 +24,10 @@ const {
 	getAllTournaments,
 	getTournament,
 } = require("./tournamentUtils")
+const {
+	getRecommendationData,
+	userInteractedWithRecommendation,
+} = require("../recommendation/recommendationApiUtils")
 const { AccountType, MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT } = require("../ServerUtils")
 
 let globalTournamentId = -1
@@ -144,7 +148,7 @@ server.get("/api/tournament/:tournamentId", async (req, res, next) => {
 })
 
 server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
-	//TODO: replace with recommendation algorithm results 
+	//TODO: replace with recommendation algorithm results
 	return res.status(400).json({ error: "Not implemented" })
 })
 
