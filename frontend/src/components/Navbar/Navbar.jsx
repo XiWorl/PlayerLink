@@ -22,17 +22,22 @@ export default function Navbar() {
 		<NavbarContext.Provider value={{ accountData, navigate }}>
 			<div className="navbar">
 				<div className="navbar-contents">
-					<div className="tournament">
-						<TournamentsButton />
+					<div className="logo">
+						<h2 className="logo-text">PlayerLink</h2>
 					</div>
-					<div className="apply">
-						<ApplicationsButton />
-					</div>
-					<div className="connect">
-						<ConnectButton />
-					</div>
-					<div className="profile">
-						<ProfileButton />
+					<div className="nav-items">
+						<div className="tournament">
+							<TournamentsButton />
+						</div>
+						<div className="apply">
+							<ApplicationsButton />
+						</div>
+						<div className="connect">
+							<ConnectButton />
+						</div>
+						<div className="profile">
+							<ProfileButton />
+						</div>
 					</div>
 				</div>
 			</div>
