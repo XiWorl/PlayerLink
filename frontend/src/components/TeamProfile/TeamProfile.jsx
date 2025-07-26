@@ -3,22 +3,26 @@ import {
 	TypeOfEditButton,
 } from "../ProfileUtils/EditProfileButton"
 import { modalSubmitHelper } from "../ProfileUtils/EditProfileButtonUtils"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { getAccountDataFromSessionStorage, AccountType } from "../../utils/globalUtils"
+import { Roster } from "./Roster"
+import { incrementProfileVisit } from "../../api"
 import Navbar from "../Navbar/Navbar"
 import EditAccountButton from "../ProfileUtils/EditAccountButton"
 import ApplyButton from "./ApplyButton"
 import LoadingScreen from "../LoadingScreen/LoadingScreen"
-import { Roster } from "./Roster"
 import "../ProfileUtils/ProfilePage.css"
 
+const DEFAULT_PROFILE_INFO = ""
 const TabOptions = {
 	HOME: "Home",
 	ROSTER: "Roster",
 }
 
-const DEFAULT_PROFILE_INFO = ""
+async function addToProfileVisits(playerAccountId, teamAccountId) {
+	await incrementProfileVisit(playerAccountId, teamAccountId)
+}
 
 export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 	if (isLoading || accountData.playerId != null) {
@@ -33,6 +37,10 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 	const [selectedTab, setSelectedTab] = useState(TabOptions.HOME)
 	const [overview, setOverview] = useState(accountData.overview || DEFAULT_PROFILE_INFO)
 	const sessionStorageAccountData = getAccountDataFromSessionStorage()
+
+	if (sessionStorageAccountData.accountType != AccountType.TEAM) {
+		addToProfileVisits(sessionStorageAccountData.id, accountData.accountId)
+	}
 
 	return (
 		<>
