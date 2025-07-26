@@ -125,14 +125,28 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 						overview || DEFAULT_PROFILE_INFO
 					}`}</p>
 				</div>
-				{selectedTab === TabOptions.HOME && (
-					<div className="profile-about">
-						<div className="profile-about-header">
-							<h3>Overview</h3>
-						</div>
-						<p className="profile-about-text">{`${overview}`}</p>
+				<div className="profile-about">
+					<div className="profile-about-header">
+						<h3>Supported Games</h3>
 					</div>
-				)}
+					{selectedTab === TabOptions.HOME &&
+						accountData.supportedGames.map((gameName) => {
+							const iconSource = `/${gameName}_Icon.png`
+							return (
+								<div className="profile-gaming-container">
+									<div className="profile-gaming-game">
+										<img
+											src={iconSource}
+											className="profile-gaming-icon"
+										/>
+										<div className="profile-gaming-information">
+											<h3>{gameName}</h3>
+										</div>
+									</div>
+								</div>
+							)
+						})}
+				</div>
 				{selectedTab === TabOptions.ROSTER && (
 					<Roster accountRosterIds={accountData.rosterAccountIds} />
 				)}
