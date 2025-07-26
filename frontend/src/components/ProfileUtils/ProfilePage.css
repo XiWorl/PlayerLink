@@ -144,6 +144,112 @@
   white-space: pre-line;
 }
 
+.profile-gaming-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.profile-gaming-game {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.profile-gaming-icon {
+  width: 84px;
+  height: 84px;
+  border-radius: 15px;
+}
+
+.profile-gaming-information {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  width: 100%;
+}
+
+.profile-gaming-performance {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	grid-template-rows: 1fr;
+	gap: 16px;
+	align-items: center;
+	margin-top: 12px;
+}
+
+.profile-gaming-performance p {
+	margin: 0;
+	padding: 8px 12px;
+	background: #f8f9fa;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
+	text-align: center;
+	border: 1px solid #e9ecef;
+}
+
+.profile-gaming-information-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profile-gaming-information-text h4 {
+  margin: 0;
+  margin-left: 20px;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.profile-gaming-information-text h3 {
+  margin: 0;
+}
+
+.roster-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.roster-tile {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 15px;
+  transition: all 0.1s ease-in-out;
+}
+
+.roster-tile.pointer:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.roster-tile-information {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.roster-tile-information h4 {
+  align-items: center;
+  margin: 0;
+}
+.roster-tile-information h5 {
+  margin: 0;
+  margin-top: 10px;
+  font-weight: 400;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .profile-page {
     padding: 10px;

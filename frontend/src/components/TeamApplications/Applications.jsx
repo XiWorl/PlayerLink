@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react"
 import { getApplicationsFromAccountId } from "../../api"
-import { createApplicationTile } from "./Utils"
+import { SidebarTabs, Sidebar } from "./Utils"
+import { AccountType } from "../../utils/globalUtils"
+import { Recommendations } from "./Recommendations"
+import { ApplicationTile } from "./ApplicationTile.jsx"
 import "./ApplyPage.css"
 
 function EmptyApplicationsDisplay() {
@@ -8,23 +11,26 @@ function EmptyApplicationsDisplay() {
 		<div className="empty-applications">
 			<h2>No applications found</h2>
 		</div>
-    )
+	)
 }
 
 async function loadApplications(accountId, setApplicationsDisplay) {
 	const applications = await getApplicationsFromAccountId(accountId)
 
-    if (applications.length === 0) {
-        setApplicationsDisplay(<EmptyApplicationsDisplay />)
-        return
-    }
+	if (applications.length === 0) {
+		setApplicationsDisplay(<EmptyApplicationsDisplay />)
+		return
+	}
 
-	const newApplicationsDisplay = applications.map((applicationData) => createApplicationTile(applicationData))
-    setApplicationsDisplay(newApplicationsDisplay)
+	const newApplicationsDisplay = applications.map((applicationData) => (
+		<ApplicationTile applicationData={applicationData} />
+	))
+	setApplicationsDisplay(newApplicationsDisplay)
 }
 
 export function Applications({ accountData, accountId }) {
 	const [applicationsDisplay, setApplicationsDisplay] = useState([])
+	const [currentTab, setCurrentTab] = useState(SidebarTabs.APPLICATIONS)
 
 	useEffect(() => {
 		loadApplications(accountId, setApplicationsDisplay)
@@ -32,9 +38,26 @@ export function Applications({ accountData, accountId }) {
 
 	return (
 		<div className="apply-page">
-			<div className="page-content">
-				<div className="postings">{applicationsDisplay}</div>
-			</div>
+			{currentTab === SidebarTabs.APPLICATIONS && (
+				<div className="page-content">
+					<Sidebar
+						accountType={accountData.accountType}
+						setCurrentTab={setCurrentTab}
+					/>
+					<div className="postings">{applicationsDisplay}</div>
+				</div>
+			)}
+			{currentTab === SidebarTabs.RECOMMENDATIONS &&
+				accountData != null &&
+				accountData.accountType == AccountType.PLAYER && (
+					<div className="page-content">
+						<Sidebar
+							accountType={accountData.accountType}
+							setCurrentTab={setCurrentTab}
+						/>
+						<Recommendations accountId={accountId} />
+					</div>
+				)}
 		</div>
 	)
 }

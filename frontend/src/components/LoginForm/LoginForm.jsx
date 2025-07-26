@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { LOGIN_FAILURE, onLoginAttempt } from "../../api.js"
 import { AccountType, GOOGLE_EMAIL_KEY } from "../../utils/globalUtils.js"
+import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import SignupModal from "../SignupModal/SignupModal"
 import "./LoginForm.css"
 
@@ -47,11 +48,19 @@ function GoogleLoginCard({ setSignupModalVisible }) {
 
 export default function LoginForm() {
 	const [signupModalVisible, setSignupModalVisible] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
+
+	if (isLoading) {
+		return <LoadingScreen message="Creating your profile..." />
+	}
 
 	return (
 		<div className="login-form-container">
 			{signupModalVisible ? (
-				<SignupModal onClose={() => setSignupModalVisible(false)} />
+				<SignupModal
+					onClose={() => setSignupModalVisible(false)}
+					setIsLoading={setIsLoading}
+				/>
 			) : (
 				<GoogleLoginCard setSignupModalVisible={setSignupModalVisible} />
 			)}

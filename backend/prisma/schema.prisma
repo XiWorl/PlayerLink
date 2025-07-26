@@ -39,10 +39,13 @@ model Player {
   willingToRelocate Boolean
   playstyle String
   gamingExperience String[]
+  games Json
   gameUsernames Json
   bio         String?
   about      String?
   accountId  Int @unique
+  rosterAccountIds Int[]
+  recommendationStatistics Json
   account     Account @relation(fields: [accountId], references: [id])
 }
 
@@ -50,12 +53,14 @@ model Team {
   teamId     Int @id @default(autoincrement())
   name       String
   location   String
+  rosterAccountIds Int[]
   currentlyHiring Boolean
   desiredPlaystyle String[]
   supportedGames String[]
   desiredSkillLevel String
   description String?
   overview   String?
+  recommendationHistory Json
   accountId  Int @unique
   account     Account @relation(fields: [accountId], references: [id])
 }
@@ -70,4 +75,25 @@ model Application {
   teamAccount      Account @relation(fields: [teamAccountId], references: [id], name: "TeamApplications")
 
   @@unique([playerAccountId, teamAccountId])
+}
+
+model Tournaments {
+  id Int @id @default(autoincrement())
+  tournamentIds Int[]
+  tournaments Tournament[] @relation("TournamentsList")
+}
+
+model Tournament {
+  tournamentId Int @id @default(autoincrement())
+  name String
+  rounds Json
+  minimumParticipants Int
+  currentRound Int @default(1)
+  createdAt DateTime @default(now())
+  creatorAccountId Int
+  allTournamentsId Int
+  isActive Boolean
+  allParticipants Json
+  participantsAdvancedToNextRound Json
+  allTournaments Tournaments @relation("TournamentsList", fields: [allTournamentsId], references: [id])
 }

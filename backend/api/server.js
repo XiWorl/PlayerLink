@@ -7,9 +7,35 @@ const {
 	formatClientAccountInformation,
 	dataPagination,
 	verifyUserAuthorization,
-} = require("./utils")
-const { AccountType } = require("../ServerUtils")
-const { getTeamRecommendations } = require("../recommendation/main")
+	getPlayerGamingPerformance,
+	updatePlayerGamingPerformance,
+} = require("./apiUtils")
+const {
+	getAccountData,
+	registerPlayerAccount,
+	registerTeamAccount,
+} = require("./endpointsUtils")
+const {
+	createTournament,
+	advanceTeamInTournament,
+	advanceTournamentRound,
+	startTournament,
+	joinTournament,
+	getAllTournaments,
+	getTournament,
+} = require("./tournamentUtils")
+const {
+	getRecommendationData,
+	userInteractedWithRecommendation,
+	incrementProfileVisit,
+} = require("../recommendation/recommendationApiUtils")
+const {
+	AccountType,
+	MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT,
+	RosterApplicationStatusOptions,
+} = require("../ServerUtils")
+
+let globalTournamentId = -1
 
 const express = require("express")
 const cors = require("cors")
@@ -22,18 +48,10 @@ server.use(helmet())
 server.use(express.json())
 server.use(cors())
 
-function convertToBoolean(value) {
-	const YES_VALUE = "yes"
-	if (value.toLowerCase() == YES_VALUE) {
-		return true
-	} else return false
-}
-
 server.get("/teams/:teamId", async (req, res, next) => {
 	try {
-		const teamId = parseInt(req.params.teamId)
-		const teamData = await prisma.team.findUnique({ where: { accountId: teamId } })
-		return res.status(200).json(teamData)
+		const teamAccountData = await getAccountData(req.params.teamId, AccountType.TEAM)
+		return res.status(200).json(teamAccountData)
 	} catch (error) {
 		next(error)
 	}
@@ -41,11 +59,11 @@ server.get("/teams/:teamId", async (req, res, next) => {
 
 server.get("/profiles/:profileId", async (req, res, next) => {
 	try {
-		const playerId = parseInt(req.params.profileId)
-		const playerData = await prisma.player.findUnique({
-			where: { accountId: playerId },
-		})
-		return res.status(200).json(playerData)
+		const playerAccountData = await getAccountData(
+			req.params.profileId,
+			AccountType.PLAYER
+		)
+		return res.status(200).json(playerAccountData)
 	} catch (error) {
 		next(error)
 	}
@@ -109,20 +127,128 @@ server.get("/account/applications/:accountId", async (req, res, next) => {
 	}
 })
 
-server.get("/api/team/recommendations/:playerAccountId", async (req, res, next) => {
+server.get("/api/tournaments", async (req, res, next) => {
 	try {
-		const playerAccountId = parseInt(req.params.playerAccountId)
+		const allTournaments = await getAllTournaments()
+		if (allTournaments == null) {
+			return res.status(400).json({ error: "Error while getting tournaments" })
+		}
+		return res.status(200).json(allTournaments)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/api/tournament/:tournamentId", async (req, res, next) => {
+	try {
+		const tournamentId = parseInt(req.params.tournamentId)
+		const tournamentData = await getTournament(tournamentId)
+		if (tournamentData == null) {
+			return res.status(400).json({ error: "Error while getting tournament data" })
+		}
+		return res.status(200).json(tournamentData)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/api/recommendations/", async (req, res, next) => {
+	try {
+		const accountId = parseInt(req.query.accountId)
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: accountId },
+		})
+		const allTeams = await prisma.team.findMany()
+		const recommendations = await getRecommendationData(playerData, allTeams)
+		return res.status(200).json(recommendations)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/api/recommendations/update", async (req, res, next) => {
+	try {
+		const playerAccountId = parseInt(req.body.playerAccountId)
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const status = req.body.status
+
 		const playerData = await prisma.player.findUnique({
 			where: { accountId: playerAccountId },
 		})
-		if (playerData == null) {
-			return res.status(404).json({ error: "Player not found in database" })
+		const teamData = await prisma.team.findUnique({
+			where: { accountId: teamAccountId },
+		})
+
+		const playerDataWithUpdatedWeights = await userInteractedWithRecommendation(
+			playerData,
+			teamData,
+			status
+		)
+		const updatedPlayerData = await prisma.player.update({
+			where: { accountId: playerAccountId },
+			data: playerDataWithUpdatedWeights,
+		})
+
+		const allTeams = await prisma.team.findMany()
+		const recommendations = await getRecommendationData(updatedPlayerData, allTeams)
+		return res.status(200).json(recommendations)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.get("/tournaments/start/:tournamentId", async (req, res, next) => {
+	try {
+		const tournamentId = parseInt(req.params.tournamentId)
+		const startedTournament = await startTournament(tournamentId)
+		if (startedTournament == null) {
+			return res.status(400).json({ error: "Error while starting tournament" })
+		}
+		return res.status(200).json(startedTournament)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.post("/api/profiles/visit", async (req, res, next) => {
+	try {
+		const playerAccountId = parseInt(req.body.playerAccountId)
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const playerData = await prisma.player.findUnique({
+			where: { accountId: playerAccountId },
+		})
+		const teamData = await prisma.team.findUnique({
+			where: { accountId: teamAccountId },
+		})
+
+		const incremetedPlayerData = await incrementProfileVisit(playerData, teamData)
+
+		await prisma.player.update({
+			where: { accountId: playerAccountId },
+			data: incremetedPlayerData,
+		})
+
+		return res.status(200).json({ success: true })
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.post("/api/tournaments/create", async (req, res, next) => {
+	try {
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const teamData = await getAccountData(teamAccountId, AccountType.TEAM)
+		const newTournament = await createTournament(
+			teamData,
+			globalTournamentId,
+			MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT
+		)
+
+		if (newTournament == null) {
+			return res.status(400).json({ error: "Error while creating tournament" })
 		}
 
-		const allTeamsInDatabase = await prisma.team.findMany()
-		const teamRecommendations = getTeamRecommendations(playerData, allTeamsInDatabase)
-
-		return res.status(200).json(teamRecommendations)
+		return res.status(200).json(newTournament)
 	} catch (error) {
 		next(error)
 	}
@@ -169,27 +295,16 @@ server.post("/api/signup/player", async (req, res, next) => {
 			return
 		}
 
-		const createdAccount = await prisma.account.create({
-			data: {
-				accountType: AccountType.PLAYER,
-				email: req.body.email,
-				player: {
-					create: {
-						firstName: req.body.firstName,
-						lastName: req.body.lastName,
-						yearsOfExperience: req.body.yearsOfExperience,
-						location: req.body.location,
-						willingToRelocate: convertToBoolean(req.body.willingToRelocate),
-					},
-				},
-			},
-		})
+		const createdAccount = await registerPlayerAccount(req.body)
 
 		const jwtToken = await registerSessionToken(createdAccount)
 		const clientAccountInformation = formatClientAccountInformation(
 			createdAccount,
 			jwtToken
 		)
+
+		const playerGamesJson = await getPlayerGamingPerformance(req.body.gameUsernames)
+		await updatePlayerGamingPerformance(prisma, createdAccount.id, playerGamesJson)
 
 		return res.status(200).json(clientAccountInformation)
 	} catch (error) {
@@ -206,20 +321,7 @@ server.post("/api/signup/team", async (req, res, next) => {
 			return
 		}
 
-		const createdAccount = await prisma.account.create({
-			data: {
-				accountType: AccountType.TEAM,
-				email: req.body.email,
-				team: {
-					create: {
-						name: req.body.teamName,
-						yearEstablished: req.body.yearEstablished,
-						location: req.body.location,
-						currentlyHiring: convertToBoolean(req.body.hiring),
-					},
-				},
-			},
-		})
+		const createdAccount = await registerTeamAccount(req.body)
 
 		const jwtToken = await registerSessionToken(createdAccount)
 		const clientAccountInformation = formatClientAccountInformation(
@@ -228,6 +330,46 @@ server.post("/api/signup/team", async (req, res, next) => {
 		)
 
 		return res.status(200).json(clientAccountInformation)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/tournaments/team/advance/", async (req, res, next) => {
+	try {
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const tournamentId = parseInt(req.body.tournamentId)
+
+		const updatedTournamentData = await advanceTeamInTournament(
+			tournamentId,
+			teamAccountId
+		)
+		if (updatedTournamentData == null) {
+			return res
+				.status(400)
+				.json({ error: "Error while advancing team in tournament" })
+		}
+
+		const nextRoundTournament = await advanceTournamentRound(tournamentId)
+		if (nextRoundTournament == null) {
+			return res.status(200).json(updatedTournamentData)
+		}
+		return res.status(200).json(nextRoundTournament)
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/tournaments/join", async (req, res, next) => {
+	try {
+		const teamAccountId = parseInt(req.body.teamAccountId)
+		const tournamentId = parseInt(req.body.tournamentId)
+		const joinedTournamentData = await joinTournament(tournamentId, teamAccountId)
+		
+		if (joinedTournamentData == null) {
+			return res.status(400).json({ error: "Error while starting tournament" })
+		}
+		return res.status(200).json(joinedTournamentData)
 	} catch (error) {
 		next(error)
 	}
@@ -264,9 +406,169 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 	}
 })
 
+server.patch("/api/profiles/edit/account", async (req, res, next) => {
+	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
+	const PAYLOAD_ERROR_MESSAGE =
+		"Invalid request body: JSON payload is incomplete or malformed"
+
+	if (!verifiedAuthorization) {
+		return res.status(401).json({ error: "Invalid authorization token" })
+	}
+
+	try {
+		const accountType = req.body.accountType
+		const accountId = req.body.accountId
+		let isRequestBodyComplete = false
+
+		if (req.body == null || accountType == null || accountId == null) {
+			return res.status(400).json({
+				error: PAYLOAD_ERROR_MESSAGE,
+			})
+		}
+
+		const modifiedRequestBody = req.body
+		modifiedRequestBody.email = verifiedAuthorization.email
+
+		if (modifiedRequestBody.accountType == AccountType.PLAYER) {
+			isRequestBodyComplete = verifyPlayerSignupInformation(modifiedRequestBody)
+		} else if (modifiedRequestBody.accountType == AccountType.TEAM) {
+			isRequestBodyComplete = verifyTeamSignupInformation(modifiedRequestBody)
+		}
+
+		if (!isRequestBodyComplete) {
+			return res.status(400).json({
+				error: PAYLOAD_ERROR_MESSAGE,
+			})
+		}
+
+		delete modifiedRequestBody.accountType
+		delete modifiedRequestBody.accountId
+		delete modifiedRequestBody.email
+		delete modifiedRequestBody.teamName
+		delete modifiedRequestBody.teamId
+
+		const existingAccount = await prisma[accountType].findUnique({
+			where: { accountId: accountId },
+		})
+
+		if (!existingAccount) {
+			res.status(404).json({ error: "Account information not found in database" })
+			return
+		}
+
+		if (accountType == AccountType.PLAYER) {
+			const hasUsernameChanged =
+				JSON.stringify(existingAccount.gameUsernames) !=
+				JSON.stringify(modifiedRequestBody.gameUsernames)
+
+			if (hasUsernameChanged) {
+				for (const gameName of Object.keys(modifiedRequestBody.games)) {
+					if (!modifiedRequestBody.gamingExperience.includes(gameName)) {
+						delete modifiedRequestBody.games[gameName]
+					}
+				}
+				const playerGamingPerformance = await getPlayerGamingPerformance(
+					modifiedRequestBody.gameUsernames
+				)
+				modifiedRequestBody.games = playerGamingPerformance
+			}
+		}
+
+		const updatedAccountInformation = await prisma[accountType].update({
+			where: { accountId: accountId },
+			data: modifiedRequestBody,
+		})
+
+		if (!updatedAccountInformation) {
+			res.status(400).json({ error: "Invalid profile information, cannot update" })
+			return
+		}
+
+		res.status(200).json({ updatedAccountInformation: updatedAccountInformation })
+		return
+	} catch (error) {
+		next(error)
+	}
+})
+
+server.patch("/applications/status/update", async (req, res, next) => {
+	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
+
+	if (!verifiedAuthorization) {
+		res.status(401).json({ error: "Invalid authorization token" })
+		return
+	}
+
+	try {
+		const playerApplicationToTeam = await prisma.application.findUnique({
+			where: {
+				playerAccountId_teamAccountId: {
+					playerAccountId: req.body.playerAccountId,
+					teamAccountId: req.body.teamAccountId,
+				},
+			},
+		})
+
+		if (playerApplicationToTeam == null) {
+			return res.status(400).json({
+				error: "Cannot update application, application does not exist in database",
+			})
+		}
+		if (playerApplicationToTeam.status != RosterApplicationStatusOptions.PENDING) {
+			return res.status(400).json({
+				error: "Cannot update application, application has already been modified in the past",
+			})
+		}
+		const updatedApplication = await prisma.application.update({
+			where: {
+				playerAccountId_teamAccountId: {
+					playerAccountId: req.body.playerAccountId,
+					teamAccountId: req.body.teamAccountId,
+				},
+			},
+			data: {
+				status: req.body.status,
+			},
+		})
+
+		if (updatedApplication.status == RosterApplicationStatusOptions.ACCEPTED) {
+			const updatedPlayerData = await prisma.player.update({
+				where: { accountId: req.body.playerAccountId },
+				data: {
+					rosterAccountIds: {
+						push: req.body.teamAccountId,
+					},
+				},
+			})
+			const updatedTeamData = await prisma.team.update({
+				where: { accountId: req.body.teamAccountId },
+				data: {
+					rosterAccountIds: {
+						push: req.body.playerAccountId,
+					},
+				},
+			})
+		}
+		return res.status(200).json(updatedApplication)
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.use((err, res) => {
 	const { message, status = 500 } = err
 	res.status(status).json({ message })
 })
+
+async function initializeTournaments() {
+	const tournamentsHolder = await prisma.tournaments.create({
+		data: {
+			tournamentIds: [],
+		},
+	})
+	globalTournamentId = tournamentsHolder.id
+}
+
+initializeTournaments()
 
 module.exports = server

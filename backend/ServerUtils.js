@@ -1,3 +1,6 @@
+export const MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT = 16
+const INITIAL_WEIGHT_VALUE = 0.5
+
 export const AccountType = { PLAYER: "player", TEAM: "team" }
 export const LOCATION_OPTIONS = {
 	USA: "USA",
@@ -35,4 +38,80 @@ export const SkillLevelOptions = {
 	SEMI_PRO: "Semi-Pro",
 	PRO: "Pro",
 	ELITE: "Elite",
+}
+
+export const TournamentSchedulingWeights = {
+	LOCATION: 10,
+	GAME: 15,
+	SKILL_LEVEL: 5,
+	PLAYER: 20,
+}
+
+export const RosterApplicationStatusOptions = {
+	PENDING: "pending",
+	ACCEPTED: "accepted",
+	REJECTED: "rejected",
+}
+
+export function convertYesOrNoToBoolean(value) {
+	const YES_VALUE = "yes"
+	if (value.toLowerCase() == YES_VALUE) {
+		return true
+	} else return false
+}
+
+export const NearbyLocations = {
+	[LOCATION_OPTIONS.USA]: new Set([LOCATION_OPTIONS.CANADA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.CANADA]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.MEXICO]: new Set([LOCATION_OPTIONS.USA, LOCATION_OPTIONS.CANADA]),
+	[LOCATION_OPTIONS.SOUTH_AMERICA]: new Set([LOCATION_OPTIONS.MEXICO]),
+	[LOCATION_OPTIONS.EUROPE]: new Set([LOCATION_OPTIONS.ASIA]),
+	[LOCATION_OPTIONS.AFRICA]: new Set(),
+	[LOCATION_OPTIONS.ASIA]: new Set([LOCATION_OPTIONS.EUROPE]),
+	[LOCATION_OPTIONS.OCEANIA]: new Set(),
+}
+
+export function translateExperience(yearsOfExperience) {
+	if (
+		yearsOfExperience === YearsOfExperienceOptions.ZERO_TO_ONE ||
+		yearsOfExperience === YearsOfExperienceOptions.TWO_TO_THREE
+	) {
+		return "Semi-Pro"
+	} else if (
+		yearsOfExperience === YearsOfExperienceOptions.FOUR_TO_FIVE ||
+		yearsOfExperience === YearsOfExperienceOptions.SIX_TO_TEN
+	) {
+		return "Pro"
+	} else if (yearsOfExperience === YearsOfExperienceOptions.TENPLUS) {
+		return "Elite"
+	}
+}
+
+export const DEFAULT_RECOMMENDATION_STATISTICS = {
+	favorabilityWeights: {
+		locations: {
+			[LOCATION_OPTIONS.USA]: INITIAL_WEIGHT_VALUE,
+			[LOCATION_OPTIONS.SOUTH_AMERICA]: INITIAL_WEIGHT_VALUE,
+			[LOCATION_OPTIONS.EUROPE]: INITIAL_WEIGHT_VALUE,
+			[LOCATION_OPTIONS.ASIA]: INITIAL_WEIGHT_VALUE,
+			[LOCATION_OPTIONS.OCEANIA]: INITIAL_WEIGHT_VALUE,
+			[LOCATION_OPTIONS.AFRICA]: INITIAL_WEIGHT_VALUE,
+			[LOCATION_OPTIONS.CANADA]: INITIAL_WEIGHT_VALUE,
+			[LOCATION_OPTIONS.MEXICO]: INITIAL_WEIGHT_VALUE,
+		},
+		skillLevels: {
+			[SkillLevelOptions.SEMI_PRO]: INITIAL_WEIGHT_VALUE,
+			[SkillLevelOptions.PRO]: INITIAL_WEIGHT_VALUE,
+			[SkillLevelOptions.ELITE]: INITIAL_WEIGHT_VALUE,
+		},
+		playstyles: {
+			[PlaystyleOptions.AGGRESSIVE]: INITIAL_WEIGHT_VALUE,
+			[PlaystyleOptions.DEFENSIVE]: INITIAL_WEIGHT_VALUE,
+			[PlaystyleOptions.SUPPORTIVE]: INITIAL_WEIGHT_VALUE,
+			[PlaystyleOptions.TACTICAL]: INITIAL_WEIGHT_VALUE,
+			[PlaystyleOptions.BALANCED]: INITIAL_WEIGHT_VALUE,
+			[PlaystyleOptions.ADAPTABLE]: INITIAL_WEIGHT_VALUE,
+		},
+	},
+	interactions: {},
 }
