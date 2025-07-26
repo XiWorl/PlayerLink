@@ -1,3 +1,4 @@
+export const MININUM_NUMBER_OF_TEAMS_IN_TOURNAMENT = 16
 export const AccountType = { PLAYER: "player", TEAM: "team" }
 export const LOCATION_OPTIONS = {
 	USA: "USA",
@@ -35,6 +36,13 @@ export const SkillLevelOptions = {
 	SEMI_PRO: "Semi-Pro",
 	PRO: "Pro",
 	ELITE: "Elite",
+}
+
+export const TournamentSchedulingWeights = {
+	LOCATION: 10,
+	GAME: 15,
+	SKILL_LEVEL: 5,
+	PLAYER: 20,
 }
 
 export function convertYesOrNoToBoolean(value) {
