@@ -1,7 +1,13 @@
 import { TOKEN_SESSION_KEY, BASEURL, AccountType } from "../../utils/globalUtils"
 import { LOGIN_FAILURE } from "../../api"
 
-export async function modalSubmitHelper(textValue, detailType, accountType, id, setButtonText) {
+export async function modalSubmitHelper(
+	textValue,
+	detailType,
+	accountType,
+	id,
+	setButtonText
+) {
 	const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
 	if (token == null) {
 		return
@@ -26,7 +32,7 @@ export async function modalSubmitHelper(textValue, detailType, accountType, id, 
 
 		if (response.ok === true) {
 			const profileTextInformation = await response.json()
-			setButtonText(profileTextInformation.updatedValue)
+			setButtonText(profileTextInformation.updatedAccountInformation)
 			return profileTextInformation
 		} else {
 			return LOGIN_FAILURE

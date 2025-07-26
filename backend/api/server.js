@@ -269,6 +269,73 @@ server.patch("/api/profiles/edit", async (req, res, next) => {
 	}
 })
 
+server.patch("/api/profiles/edit/account", async (req, res, next) => {
+	const verifiedAuthorization = await verifyUserAuthorization(req.headers.authorization)
+	const PAYLOAD_ERROR_MESSAGE =
+		"Invalid request body: JSON payload is incomplete or malformed"
+
+	if (!verifiedAuthorization) {
+		return res.status(401).json({ error: "Invalid authorization token" })
+	}
+
+	try {
+		const accountType = req.body.accountType
+		const accountId = req.body.accountId
+		let isRequestBodyComplete = false
+
+		if (req.body == null || accountType == null || accountId == null) {
+			return res.status(400).json({
+				error: PAYLOAD_ERROR_MESSAGE,
+			})
+		}
+
+		const modifiedRequestBody = req.body
+		modifiedRequestBody.email = verifiedAuthorization.email
+
+		if (modifiedRequestBody.accountType == AccountType.PLAYER) {
+			isRequestBodyComplete = verifyPlayerSignupInformation(modifiedRequestBody)
+		} else if (modifiedRequestBody.accountType == AccountType.TEAM) {
+			isRequestBodyComplete = verifyTeamSignupInformation(modifiedRequestBody)
+		}
+
+		if (!isRequestBodyComplete) {
+			return res.status(400).json({
+				error: PAYLOAD_ERROR_MESSAGE,
+			})
+		}
+
+		delete modifiedRequestBody.accountType
+		delete modifiedRequestBody.accountId
+		delete modifiedRequestBody.email
+		delete modifiedRequestBody.teamName
+		delete modifiedRequestBody.teamId
+
+		const existingAccount = await prisma[accountType].findUnique({
+			where: { accountId: accountId },
+		})
+
+		if (!existingAccount) {
+			res.status(404).json({ error: "Account information not found in database" })
+			return
+		}
+
+		const updatedAccountInformation = await prisma[accountType].update({
+			where: { accountId: accountId },
+			data: req.body,
+		})
+
+		if (!updatedAccountInformation) {
+			res.status(400).json({ error: "Invalid profile information, cannot update" })
+			return
+		}
+
+		res.status(200).json({ updatedAccountInformation: updatedAccountInformation })
+		return
+	} catch (error) {
+		next(error)
+	}
+})
+
 server.use((err, res) => {
 	const { message, status = 500 } = err
 	res.status(status).json({ message })
