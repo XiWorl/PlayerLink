@@ -1,9 +1,11 @@
 import {
 	getRejectedTeamAttributesFrequency,
 	getTeamRosterAttributesFrequency,
+	getEligibleTeams
 } from "./recommendationUtils.js"
 import { translateExperience } from "../ServerUtils.js"
 
+const NUMBER_OF_RECOMMENDATIONS = 10
 const CollaborativeFilteringWeight = {
 	LOCATION_WEIGHT: 0.4,
 	SKILL_LEVEL_WEIGHT: 0.3,
@@ -112,8 +114,9 @@ async function getAverageDeclinedPlayerScore(teamData, playerData) {
 
 export async function getAllRecommendations(playerData, allTeams) {
 	const recommendations = []
+	const eligibleTeams = getEligibleTeams(playerData, allTeams)
 
-	for (const teamData of allTeams) {
+	for (const teamData of eligibleTeams) {
 		let rosterSimilarityScore = await getRosterSimilarityScore(teamData, playerData)
 		rosterSimilarityScore *= FinalRecommendationScoreWeight.ROSTER_SIMILARITY_WEIGHT
 
@@ -136,5 +139,6 @@ export async function getAllRecommendations(playerData, allTeams) {
 		recommendations.push({ team: teamData, score: finalScore })
 	}
 
-	return recommendations
+	const topTenRecommendations = recommendations.slice(0, NUMBER_OF_RECOMMENDATIONS)
+	return topTenRecommendations
 }

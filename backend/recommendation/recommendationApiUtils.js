@@ -103,7 +103,7 @@ export function getDefaultInteractions() {
 	return {
 		profileVisits: 0,
 		declinedRecommendation: false,
-		memberOfTeam: false,
+		acceptedRecommendation: false,
 		rejectedFromTeam: false,
 	}
 }
@@ -118,6 +118,11 @@ export function userInteractedWithRecommendation(
 	teamData,
 	recommendationStatus
 ) {
+	const playerInteractions = playerData.recommendationStatistics.interactions
+	if (!playerInteractions[teamData.accountId]) {
+		playerInteractions[teamData.accountId] = getDefaultInteractions()
+	}
+	
 	if (recommendationStatus == RecommendationStatus.INTERESTED) {
 		return acceptedRecommendation(playerData, teamData)
 	} else {
@@ -188,5 +193,10 @@ function acceptedRecommendation(playerData, teamData) {
 		TeamAcceptanceWeight,
 		StatusModifier.ACCEPTED
 	)
+
+	playerData.recommendationStatistics.interactions[
+		teamData.accountId
+	].acceptedRecommendation = true
+
 	return updatedPlayerData
 }
