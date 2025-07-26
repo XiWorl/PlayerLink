@@ -1,5 +1,4 @@
-import { TOKEN_SESSION_KEY, BASEURL, AccountType } from "../../utils/globalUtils"
-import { LOGIN_FAILURE } from "../../api"
+import { TOKEN_SESSION_KEY, BASEURL } from "../../utils/globalUtils"
 
 export async function modalSubmitHelper(
 	textValue,
@@ -29,13 +28,10 @@ export async function modalSubmitHelper(
 				accountType: accountType,
 			}),
 		})
-
 		if (response.ok === true) {
 			const profileTextInformation = await response.json()
-			setButtonText(profileTextInformation.updatedAccountInformation)
+			setButtonText(profileTextInformation.updatedValue)
 			return profileTextInformation
-		} else {
-			return LOGIN_FAILURE
 		}
 	} catch (error) {
 		console.error(`Error while attempting to update ${detailType}:`, error)
