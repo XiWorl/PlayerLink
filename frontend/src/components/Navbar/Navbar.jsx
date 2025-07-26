@@ -48,9 +48,12 @@ export default function Navbar() {
 function ConnectButton() {
 	return (
 		<Link to="/connect">
-			<button className="connect-btn">
-				<h3>Connect</h3>
-			</button>
+			<div className="tooltip">
+				<button className="connect-btn">
+					<h3>Connect</h3>
+				</button>
+				<span className="tooltip-text">Connect</span>
+			</div>
 		</Link>
 	)
 }
@@ -63,23 +66,29 @@ function ProfileButton() {
 		accountData.accountType === AccountType.PLAYER ? "profiles" : "teams"
 
 	return (
-		<button
-			className="profile-btn"
-			onClick={() => {
-				navigate(`/${navigationPath}/${accountData.id}`)
-			}}
-		>
-			<h3>My Profile</h3>
-		</button>
+		<div className="tooltip">
+			<button
+				className="profile-btn"
+				onClick={() => {
+					navigate(`/${navigationPath}/${accountData.id}`)
+				}}
+			>
+				<h3>My Profile</h3>
+			</button>
+			<span className="tooltip-text">My Profile</span>
+		</div>
 	)
 }
 
 function TournamentsButton() {
 	return (
 		<Link to="/tournaments">
-			<button className="tournament-navbar">
-				<h3>Tournaments</h3>
-			</button>
+			<div className="tooltip">
+				<button className="tournament-navbar">
+					<h3>Tournaments</h3>
+				</button>
+				<span className="tooltip-text">Tournaments</span>
+			</div>
 		</Link>
 	)
 }
@@ -89,11 +98,14 @@ function ApplicationsButton() {
 	if (accountData === null) return
 
 	return (
-		<button
-			onClick={() => navigate(`/apply/${accountData.id}`)}
-			className="apply-btn"
-		>
-			<h3>Applications</h3>
-		</button>
+		<div className="tooltip">
+			<button
+				onClick={() => navigate(`/apply/${accountData.id}`)}
+				className="apply-btn"
+			>
+				<h3>Applications</h3>
+			</button>
+			<span className="tooltip-text">Applications</span>
+		</div>
 	)
 }
