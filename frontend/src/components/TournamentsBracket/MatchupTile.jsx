@@ -58,34 +58,36 @@ export function MatchupTile({
 		team2InNextRound = nextRoundParticipants[matchup.team2.accountId]
 
 		team2 = (
-			<div
-				className="team 2"
-				onClick={() => navigate(`/teams/${matchup.team2.accountId}`)}
-			>
-				{!team2InNextRound && showAdvanceButton && !team1InNextRound && (
-					<AdvanceButton
-						accountId={matchup.team2.accountId}
-						setTournamentInformation={setTournamentInformation}
-					/>
-				)}
-				<h2>{matchup.team2.name}</h2>
+			<div className="team 2">
+				<div className="team-content">
+					{!team2InNextRound && showAdvanceButton && !team1InNextRound && (
+						<AdvanceButton
+							accountId={matchup.team2.accountId}
+							setTournamentInformation={setTournamentInformation}
+						/>
+					)}
+					<h2 onClick={() => navigate(`/teams/${matchup.team2.accountId}`)}>
+						{matchup.team2.name}
+					</h2>
+				</div>
 			</div>
 		)
 	}
 	return (
 		<div className="matchup-tile">
 			<div className="teams">
-				<div
-					className="team 1"
-					onClick={() => navigate(`/teams/${matchup.team1.accountId}`)}
-				>
-					{!team1InNextRound && showAdvanceButton && !team2InNextRound && (
-						<AdvanceButton
-							accountId={matchup.team1.accountId}
-							setTournamentInformation={setTournamentInformation}
-						/>
-					)}
-					<h2>{matchup.team1.name}</h2>
+				<div className="team 1">
+					<div className="team-content">
+						{!team1InNextRound && showAdvanceButton && !team2InNextRound && (
+							<AdvanceButton
+								accountId={matchup.team1.accountId}
+								setTournamentInformation={setTournamentInformation}
+							/>
+						)}
+						<h2 onClick={() => navigate(`/teams/${matchup.team1.accountId}`)}>
+							{matchup.team1.name}
+						</h2>
+					</div>
 				</div>
 				<div className="versus">
 					<h2>VS</h2>

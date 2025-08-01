@@ -29,12 +29,63 @@ const PlaystyleOptions = {
 	SUPPORTIVE: "Supportive",
 }
 
+function selectFromList(listOptions) {
+	const newList = []
+	for (let option of listOptions) {
+		if (Math.random() < 0.5) {
+			newList.push(option)
+		}
+	}
+	return newList
+}
+
+function createName() {
+	const prefix = [
+		"Cloud",
+		"Apex",
+		"Surge",
+		"Energy",
+		"Nova",
+		"Millenium",
+		"Turismo",
+		"Sigma",
+		"Star",
+	]
+	const suffix = ["Gaming", "Elites", "Esports", "Clan", "Champions"]
+	const preMadeNames = [
+		"Unlimited Range Gaming",
+		"Team Flames",
+		"Team Secret",
+		"Team Liquid",
+		"Team Envy",
+		"Heroic",
+		"Team Lazarus",
+		"Tencent Gaming",
+		"Limitless Crew",
+		"Headtop",
+		"Rogue",
+		"Team Vitality",
+		"Ghost Gaming",
+		"MV United Esports",
+		"Team ROX",
+	]
+	if (Math.random() < 0.5) {
+		return preMadeNames[Math.floor(Math.random() * preMadeNames.length)]
+	} else {
+		return (
+			prefix[Math.floor(Math.random() * prefix.length)] +
+			" " +
+			suffix[Math.floor(Math.random() * suffix.length)]
+		)
+	}
+}
+
 function generateRandomTeamInfo(index) {
 	const gameOptions = Object.values(GameOptions)
 	const skillLevelOptions = Object.values(SkillLevelOptions)
 	const playstyleOptions = Object.values(PlaystyleOptions)
 	return {
-		name: `Unlimited Range Gaming${index}`,
+		name: createName(),
 		location: ["USA", "Europe", "Asia"][Math.floor(Math.random() * 3)],
 		rosterAccountIds: [],
 		description: [
@@ -48,16 +99,10 @@ function generateRandomTeamInfo(index) {
 			"We are a team of Strategy players looking to expand our reach and grow our community.",
 		][Math.floor(Math.random() * 3)],
 		currentlyHiring: Math.random() < 0.5,
-		supportedGames: Array.from(
-			{ length: Math.floor(Math.random() * 3) + 1 },
-			() => gameOptions[Math.floor(Math.random() * gameOptions.length)]
-		),
+		supportedGames: selectFromList(gameOptions),
 		desiredSkillLevel:
 			skillLevelOptions[Math.floor(Math.random() * skillLevelOptions.length)],
-		desiredPlaystyle: Array.from(
-			{ length: Math.floor(Math.random() * 3) + 1 },
-			() => playstyleOptions[Math.floor(Math.random() * playstyleOptions.length)]
-		),
+		desiredPlaystyle: selectFromList(playstyleOptions),
 		recommendationHistory: {},
 	}
 }
@@ -216,12 +261,6 @@ async function main() {
 			newGeneratedTeamInfos.push(teamUpdate)
 		}
 	}
-
-	// const tournamentInfo = await createNewTournament(generatedTeamInfos[0])
-	// for (const team of newGeneratedTeamInfos) {
-	// 	if (team.rosterAccountIds.length === 0) continue
-	// 	const result = await joinTournament(tournamentInfo.tournamentId, team.accountId)
-	// }
 }
 
 main()
