@@ -6,6 +6,7 @@ import { AccountType, getAccountDataFromSessionStorage } from "../../utils/globa
 import { modalSubmitHelper } from "../ProfileUtils/EditProfileButtonUtils"
 import { useParams } from "react-router-dom"
 import { useState } from "react"
+import TeamAffiliations from "./TeamAffiliations"
 import GamingExperience from "./GamingExperience"
 import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import EditAccountButton from "../ProfileUtils/EditAccountButton"
@@ -96,6 +97,7 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 						<GamingExperience accountData={accountData} />
 					</div>
 				)}
+				{<TeamAffiliations rosterAccountIds={accountData.rosterAccountIds} />}
 			</div>
 		</>
 	)
