@@ -14,6 +14,10 @@ export default function TeamAffiliations({ rosterAccountIds }) {
 	const navigate = useNavigate()
 	const [roster, setRoster] = useState([])
 
+	if (rosterAccountIds.length === 0) {
+		return null
+	}
+	
 	useEffect(() => {
 		for (const id of rosterAccountIds) {
 			addTeamToAffiliations(id, setRoster)
