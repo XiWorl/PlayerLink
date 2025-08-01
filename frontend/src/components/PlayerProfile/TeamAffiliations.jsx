@@ -35,10 +35,10 @@ export default function TeamAffiliations({ rosterAccountIds }) {
 								navigate(`/teams/${profileInformation.accountId}`)
 							}}
 						>
-							<div className="apply-profile-picture"></div>
+							<div className="apply-profile-picture">{profileInformation.name.charAt(0).toUpperCase()}</div>
 							<div className="roster-tile-information">
-								<h4>{profileInformation.name || ""}</h4>
-								<h5>{profileInformation.description}</h5>
+								<h4>{profileInformation.name}</h4>
+								<h5>{profileInformation.description || ""}</h5>
 							</div>
 						</div>
 					)

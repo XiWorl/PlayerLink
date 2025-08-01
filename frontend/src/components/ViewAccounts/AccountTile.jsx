@@ -15,7 +15,14 @@ export default function AccountTile({ accountInformation }) {
 	} else {
 		teamDescription = teamDescription + " • "
 	}
-	
+
+	let accountName = ""
+	if (selectedAccountType == AccountType.TEAM) {
+		accountName = accountInformation.name
+	} else {
+		accountName = `${accountInformation.firstName} ${accountInformation.lastName}`
+	}
+
 	const accountDisplay = (
 		<div
 			className="account"
@@ -26,7 +33,7 @@ export default function AccountTile({ accountInformation }) {
 				navigate
 			)}
 		>
-			<div className="view-profile-picture"></div>
+			<div className="view-profile-picture">{accountName.charAt(0).toUpperCase()}</div>
 			<div className="view-details">
 				<h2>
 					{selectedAccountType == AccountType.TEAM

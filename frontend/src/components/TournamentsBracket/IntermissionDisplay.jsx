@@ -109,7 +109,7 @@ export default function IntermissionDisplay({ tournamentInformation, setIsLoadin
 									navigate(`/teams/${teamInformation.accountId}`)
 								}
 							>
-								<div className="apply-profile-picture"></div>
+								<div className="apply-profile-picture">{teamInformation.name.charAt(0).toUpperCase()}</div>
 								<div className="apply-details">
 									<h2>{teamInformation.name}</h2>
 									<div className="post-information">

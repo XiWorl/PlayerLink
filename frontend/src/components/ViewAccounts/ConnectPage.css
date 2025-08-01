@@ -117,8 +117,14 @@
     height: 60px;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    background: #666666;
+    background: #e1e9ee;
     border: 4px solid #ffffff;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color: #666;
+    font-size: 150%;
+    font-weight: 500;
 }
 
 .account h2 {
@@ -166,18 +172,18 @@
     background-color: rgba(0, 255, 0, 0.8);
 }
 
-.hiring + h4 {
+.hiring+h4 {
     color: rgb(0, 137, 0);
     box-shadow: 0 0 0px 0px transparent;
     background-color: transparent;
 }
 
-.not-hiring  {
+.not-hiring {
     box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.6);
     background-color: rgba(255, 0, 0, 0.8);
 }
 
-.not-hiring + h4 {
+.not-hiring+h4 {
     color: rgb(255, 0, 0);
     box-shadow: 0 0 0px 0px transparent;
     background-color: transparent;

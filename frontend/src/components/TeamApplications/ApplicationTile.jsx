@@ -15,7 +15,7 @@ function getPostContent(
 ) {
 	return (
 		<div className="post" onClick={() => setIsApplicationModalOpen(openValue)}>
-			<div className="apply-profile-picture"></div>
+			<div className="apply-profile-picture">{profileName.charAt(0).toUpperCase()}</div>
 			<div className="apply-details">
 				<h2>{profileName}</h2>
 				<div className="post-information">

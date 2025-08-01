@@ -35,7 +35,7 @@ export function Roster({ accountRosterIds }) {
 								navigate(`/profiles/${profileInformation.accountId}`)
 							}}
 						>
-							<div className="apply-profile-picture"></div>
+							<div className="apply-profile-picture">{profileInformation.firstName.charAt(0).toUpperCase()}</div>
 							<div className="roster-tile-information">
 								<h4>
 									{profileInformation.firstName || ""}{" "}
