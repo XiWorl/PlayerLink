@@ -77,6 +77,10 @@ export function BracketPage() {
 			createNextRoundArray(tournamentInformation).length
 	}
 
+	if (emptyMatchups.length != 0) {
+		setEmptyMatchups([])
+	}
+
 	for (let i = 0; i < numberOfEmptyMatchups; i++) {
 		emptyMatchups.push(<EmptyTile />)
 	}
