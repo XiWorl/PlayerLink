@@ -9,6 +9,13 @@ export default function AccountTile({ accountInformation }) {
 		? "hiring"
 		: "not-hiring"
 
+	let teamDescription = accountInformation.description
+	if (teamDescription == null) {
+		teamDescription = ""
+	} else {
+		teamDescription = teamDescription + " • "
+	}
+	
 	const accountDisplay = (
 		<div
 			className="account"
@@ -29,8 +36,8 @@ export default function AccountTile({ accountInformation }) {
 				<div className="account-information">
 					<h3>
 						{selectedAccountType == AccountType.TEAM
-							? `${accountInformation.description} • ${accountInformation.location}`
-							: accountInformation.bio}
+							? `${teamDescription} ${accountInformation.location}`
+							: accountInformation.bio || ""}
 					</h3>
 					{selectedAccountType == AccountType.TEAM && (
 						<div className="account-information-hiring">
