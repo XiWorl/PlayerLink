@@ -59,7 +59,7 @@ async function submitApplication(
 	}
 }
 
-export function ApplicationModal({teamAccountId}) {
+export function ApplicationModal({ teamAccountId }) {
 	const navigate = useNavigate()
 	const [statusValue, setStatusValue] = useState(DEFAULT_SELECT_VALUE)
 	const {
@@ -70,10 +70,7 @@ export function ApplicationModal({teamAccountId}) {
 	} = useContext(ApplicationTileContext)
 
 	useEffect(() => {
-		if (
-			profileInformation.rosterAccountIds.length > 0 ||
-			applicationStatus != AppicationStatusOptions.PENDING
-		) {
+		if (applicationStatus != AppicationStatusOptions.PENDING) {
 			viewProfile(profileInformation, navigate)
 			return
 		}
@@ -133,7 +130,7 @@ export function ApplicationModal({teamAccountId}) {
 								profileInformation.accountId,
 								teamAccountId,
 								statusValue,
-                                setApplicationStatus
+								setApplicationStatus
 							)
 						}
 					>
