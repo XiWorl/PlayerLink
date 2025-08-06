@@ -447,7 +447,6 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		delete modifiedRequestBody.teamName
 		delete modifiedRequestBody.teamId
 
-
 		const existingAccount = await prisma[accountType].findUnique({
 			where: { accountId: accountId },
 		})
@@ -461,7 +460,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		modifiedRequestBody.about = existingAccount.about
 		modifiedRequestBody.description = existingAccount.description
 		modifiedRequestBody.overview = existingAccount.overview
-		
+
 		if (accountType == AccountType.PLAYER) {
 			const hasUsernameChanged =
 				JSON.stringify(existingAccount.gameUsernames) !=

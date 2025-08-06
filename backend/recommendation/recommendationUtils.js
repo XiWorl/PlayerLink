@@ -58,7 +58,7 @@ export async function getTeamRosterAttributesFrequency(teamData) {
 
 export function getEligibleTeams(playerData, allTeams) {
 	const eligibleTeams = []
-	
+
 	for (const team of allTeams) {
 		const playerInteractions = playerData.recommendationStatistics.interactions
 

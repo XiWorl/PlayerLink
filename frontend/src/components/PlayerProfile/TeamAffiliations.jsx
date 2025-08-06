@@ -17,7 +17,7 @@ export default function TeamAffiliations({ rosterAccountIds }) {
 	if (rosterAccountIds.length === 0) {
 		return null
 	}
-	
+
 	useEffect(() => {
 		for (const id of rosterAccountIds) {
 			addTeamToAffiliations(id, setRoster)
@@ -39,7 +39,9 @@ export default function TeamAffiliations({ rosterAccountIds }) {
 								navigate(`/teams/${profileInformation.accountId}`)
 							}}
 						>
-							<div className="apply-profile-picture">{profileInformation.name.charAt(0).toUpperCase()}</div>
+							<div className="apply-profile-picture">
+								{profileInformation.name.charAt(0).toUpperCase()}
+							</div>
 							<div className="roster-tile-information">
 								<h4>{profileInformation.name}</h4>
 								<h5>{profileInformation.description || ""}</h5>

@@ -7,13 +7,23 @@ const RecommendationStatus = {
 	NOT_INTERESTED: "Not Interested",
 }
 
-async function onRecommendationClick(status, playerAccountId, teamAccountId, navigate, setRecommendations) {
-    const updateRecommendations = await updateRecommendationStatus(playerAccountId, teamAccountId, status)
+async function onRecommendationClick(
+	status,
+	playerAccountId,
+	teamAccountId,
+	navigate,
+	setRecommendations
+) {
+	const updateRecommendations = await updateRecommendationStatus(
+		playerAccountId,
+		teamAccountId,
+		status
+	)
 
 	if (status === RecommendationStatus.INTERESTED) {
 		navigate(`/teams/${teamAccountId}`)
 	} else if (status === RecommendationStatus.NOT_INTERESTED) {
-        setRecommendations(updateRecommendations)
+		setRecommendations(updateRecommendations)
 	}
 }
 function RecommendationTile({ teamData, playerAccountId, setRecommendations }) {
@@ -37,7 +47,8 @@ function RecommendationTile({ teamData, playerAccountId, setRecommendations }) {
 							RecommendationStatus.NOT_INTERESTED,
 							playerAccountId,
 							teamData.team.accountId,
-							navigate, setRecommendations
+							navigate,
+							setRecommendations
 						)
 					}
 				>
@@ -50,7 +61,8 @@ function RecommendationTile({ teamData, playerAccountId, setRecommendations }) {
 							RecommendationStatus.INTERESTED,
 							playerAccountId,
 							teamData.team.accountId,
-							navigate, setRecommendations
+							navigate,
+							setRecommendations
 						)
 					}
 				>
@@ -84,7 +96,7 @@ export function Recommendations({ accountId }) {
 						key={index}
 						teamData={recommendation}
 						playerAccountId={accountId}
-                        setRecommendations={setRecommendations}
+						setRecommendations={setRecommendations}
 					/>
 				)
 			})}

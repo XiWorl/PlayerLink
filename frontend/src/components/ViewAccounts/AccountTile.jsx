@@ -33,7 +33,9 @@ export default function AccountTile({ accountInformation }) {
 				navigate
 			)}
 		>
-			<div className="view-profile-picture">{accountName.charAt(0).toUpperCase()}</div>
+			<div className="view-profile-picture">
+				{accountName.charAt(0).toUpperCase()}
+			</div>
 			<div className="view-details">
 				<h2>
 					{selectedAccountType == AccountType.TEAM
