@@ -50,7 +50,3 @@ async function populateTournamentWithTeams(tournamentId) {
 		await joinTournament(tournamentId, team.accountId)
 	}
 }
-
-populateTournamentWithTeams(1)
-
-applyToUsersTeam(61)

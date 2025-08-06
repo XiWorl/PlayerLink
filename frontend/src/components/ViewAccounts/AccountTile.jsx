@@ -18,7 +18,7 @@ export default function AccountTile({ accountInformation }) {
 
 	let accountName = ""
 	if (selectedAccountType == AccountType.TEAM) {
-		accountName = accountInformation.name
+		accountName = accountInformation.name || ""
 	} else {
 		accountName = `${accountInformation.firstName} ${accountInformation.lastName}`
 	}

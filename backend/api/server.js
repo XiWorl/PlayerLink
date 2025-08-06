@@ -365,7 +365,7 @@ server.patch("/tournaments/join", async (req, res, next) => {
 		const teamAccountId = parseInt(req.body.teamAccountId)
 		const tournamentId = parseInt(req.body.tournamentId)
 		const joinedTournamentData = await joinTournament(tournamentId, teamAccountId)
-		
+
 		if (joinedTournamentData == null) {
 			return res.status(400).json({ error: "Error while starting tournament" })
 		}
@@ -447,6 +447,7 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 		delete modifiedRequestBody.teamName
 		delete modifiedRequestBody.teamId
 
+
 		const existingAccount = await prisma[accountType].findUnique({
 			where: { accountId: accountId },
 		})
@@ -456,6 +457,11 @@ server.patch("/api/profiles/edit/account", async (req, res, next) => {
 			return
 		}
 
+		modifiedRequestBody.bio = existingAccount.bio
+		modifiedRequestBody.about = existingAccount.about
+		modifiedRequestBody.description = existingAccount.description
+		modifiedRequestBody.overview = existingAccount.overview
+		
 		if (accountType == AccountType.PLAYER) {
 			const hasUsernameChanged =
 				JSON.stringify(existingAccount.gameUsernames) !=

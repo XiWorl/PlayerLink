@@ -103,7 +103,7 @@ function generateRandomTeamInfo(index) {
 		desiredSkillLevel:
 			skillLevelOptions[Math.floor(Math.random() * skillLevelOptions.length)],
 		desiredPlaystyle: selectFromList(playstyleOptions),
-		recommendationHistory: {},
+		recommendationHistory: {interactions:{}},
 	}
 }
 
