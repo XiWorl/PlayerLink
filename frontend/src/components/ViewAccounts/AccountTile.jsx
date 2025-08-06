@@ -9,6 +9,20 @@ export default function AccountTile({ accountInformation }) {
 		? "hiring"
 		: "not-hiring"
 
+	let teamDescription = accountInformation.description
+	if (teamDescription == null) {
+		teamDescription = ""
+	} else {
+		teamDescription = teamDescription + " • "
+	}
+
+	let accountName = ""
+	if (selectedAccountType == AccountType.TEAM) {
+		accountName = accountInformation.name || ""
+	} else {
+		accountName = `${accountInformation.firstName} ${accountInformation.lastName}`
+	}
+
 	const accountDisplay = (
 		<div
 			className="account"
@@ -19,7 +33,9 @@ export default function AccountTile({ accountInformation }) {
 				navigate
 			)}
 		>
-			<div className="view-profile-picture"></div>
+			<div className="view-profile-picture">
+				{accountName.charAt(0).toUpperCase()}
+			</div>
 			<div className="view-details">
 				<h2>
 					{selectedAccountType == AccountType.TEAM
@@ -29,8 +45,8 @@ export default function AccountTile({ accountInformation }) {
 				<div className="account-information">
 					<h3>
 						{selectedAccountType == AccountType.TEAM
-							? `${accountInformation.description} • ${accountInformation.location}`
-							: accountInformation.bio}
+							? `${teamDescription} ${accountInformation.location}`
+							: accountInformation.bio || ""}
 					</h3>
 					{selectedAccountType == AccountType.TEAM && (
 						<div className="account-information-hiring">

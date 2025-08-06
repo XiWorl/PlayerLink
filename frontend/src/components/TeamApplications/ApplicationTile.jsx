@@ -15,13 +15,16 @@ function getPostContent(
 ) {
 	return (
 		<div className="post" onClick={() => setIsApplicationModalOpen(openValue)}>
-			<div className="apply-profile-picture"></div>
+			<div className="apply-profile-picture">
+				{profileName.charAt(0).toUpperCase()}
+			</div>
 			<div className="apply-details">
 				<h2>{profileName}</h2>
 				<div className="post-information">
 					<h3>{profileDescription}</h3>
 					<div className={`post-information-status ${applicationStatus}`}>
-						{applicationStatus.charAt(0).toUpperCase() + applicationStatus.slice(1)}
+						{applicationStatus.charAt(0).toUpperCase() +
+							applicationStatus.slice(1)}
 					</div>
 				</div>
 			</div>
@@ -101,7 +104,7 @@ export function ApplicationTile({ applicationData }) {
 				<ApplicationModal
 					playerAccountInformation={profileInformation}
 					setIsApplicationModalOpen={setIsApplicationModalOpen}
-                    teamAccountId={applicationData.teamAccountId}
+					teamAccountId={applicationData.teamAccountId}
 				/>
 			)}
 			{postContent}

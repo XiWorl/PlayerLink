@@ -125,12 +125,12 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 						overview || DEFAULT_PROFILE_INFO
 					}`}</p>
 				</div>
-				<div className="profile-about">
-					<div className="profile-about-header">
-						<h3>Supported Games</h3>
-					</div>
-					{selectedTab === TabOptions.HOME &&
-						accountData.supportedGames.map((gameName) => {
+				{selectedTab === TabOptions.HOME && (
+					<div className="profile-about">
+						<div className="profile-about-header">
+							<h3>Supported Games</h3>
+						</div>
+						{accountData.supportedGames.map((gameName) => {
 							const iconSource = `/${gameName}_Icon.png`
 							return (
 								<div className="profile-gaming-container">
@@ -146,7 +146,8 @@ export default function TeamProfile({ isLoading, accountData, setIsLoading }) {
 								</div>
 							)
 						})}
-				</div>
+					</div>
+				)}
 				{selectedTab === TabOptions.ROSTER && (
 					<Roster accountRosterIds={accountData.rosterAccountIds} />
 				)}

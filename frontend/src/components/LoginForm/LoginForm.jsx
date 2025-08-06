@@ -56,6 +56,7 @@ export default function LoginForm() {
 
 	return (
 		<div className="login-form-container">
+			<h1 className="app-title">PlayerLink</h1>
 			{signupModalVisible ? (
 				<SignupModal
 					onClose={() => setSignupModalVisible(false)}

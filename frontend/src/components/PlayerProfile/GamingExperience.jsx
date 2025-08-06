@@ -12,6 +12,10 @@ function GameInformation({ gameName, gamePerformanceData, gameUsername }) {
 	const performanceMetric = gameName == GameOptions.FORTNITE ? "K/D" : "Elo"
 	const iconSource = `/${gameName}_Icon.png`
 
+	if (gamePerformanceData == null) {
+		return null
+	}
+
 	return (
 		<div className="profile-gaming-game">
 			<img src={iconSource} className="profile-gaming-icon" />
