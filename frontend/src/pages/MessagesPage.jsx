@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 import { TOKEN_SESSION_KEY } from "../utils/globalUtils"
 import messageService from "../services/messageService"
 import ConversationList from "../components/Messages/ConversationList"
@@ -11,6 +12,11 @@ export default function MessagesPage() {
 	const [conversations, setConversations] = useState([])
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(null)
+
+	// Get query parameters
+	const [searchParams] = useSearchParams()
+	const queryUserId = searchParams.get("userId")
+	const queryName = searchParams.get("name")
 
 	// Connect to WebSocket and fetch conversations on component mount
 	useEffect(() => {
@@ -30,6 +36,62 @@ export default function MessagesPage() {
 			})
 			.then((fetchedConversations) => {
 				setConversations(fetchedConversations)
+
+				// If we have query parameters, find or create the conversation
+				if (queryUserId && queryName) {
+					const userId = parseInt(queryUserId)
+					// Check if the conversation already exists
+					const existingConversation = fetchedConversations.find(
+						(conv) => conv.userId === userId
+					)
+
+					if (existingConversation) {
+						// Use the existing conversation
+						setSelectedConversation({
+							id: existingConversation.userId,
+							name: existingConversation.name,
+							avatar: null,
+							lastMessage:
+								existingConversation.lastMessage?.content ||
+								"No messages yet",
+							timestamp: existingConversation.lastMessage
+								? formatTimestamp(
+										new Date(
+											existingConversation.lastMessage.createdAt
+										)
+								  )
+								: "",
+							unread: existingConversation.unreadCount > 0,
+						})
+					} else {
+						// Create a new conversation object
+						const newConversation = {
+							userId: userId,
+							name: queryName,
+							accountType: "unknown", // We don't know the account type yet
+							lastMessage: null,
+							unreadCount: 0,
+							isOnline: false,
+						}
+
+						// Add the new conversation to the list
+						setConversations((prevConversations) => [
+							...prevConversations,
+							newConversation,
+						])
+
+						// Set it as the selected conversation
+						setSelectedConversation({
+							id: userId,
+							name: queryName,
+							avatar: null,
+							lastMessage: "No messages yet",
+							timestamp: "",
+							unread: false,
+						})
+					}
+				}
+
 				setLoading(false)
 			})
 			.catch((err) => {

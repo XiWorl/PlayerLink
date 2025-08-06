@@ -36,7 +36,8 @@ class MessageService {
 			}
 
 			// Connect to the WebSocket server
-			this.socket = io("http://localhost:3000", {
+			const baseUrl = "http://localhost:3000"
+			this.socket = io(baseUrl, {
 				auth: { token },
 			})
 

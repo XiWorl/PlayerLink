@@ -118,14 +118,13 @@ function MessagesButton() {
 	if (accountData === null) return
 
 	return (
-		<div className="tooltip">
-			<button
-				onClick={() => navigate(`/messages/${accountData.id}`)}
-				className="apply-btn"
-			>
-				<h3>Messages</h3>
-			</button>
-			<span className="tooltip-text">Messages</span>
-		</div>
+		<Link to="/messages">
+			<div className="tooltip">
+				<button className="connect-btn">
+					<h3>Messages</h3>
+				</button>
+				<span className="tooltip-text">Messages</span>
+			</div>
+		</Link>
 	)
 }
