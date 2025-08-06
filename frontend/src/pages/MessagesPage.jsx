@@ -195,7 +195,19 @@ export default function MessagesPage() {
 						<ConversationList
 							conversations={formattedConversations}
 							selectedId={selectedConversation?.id}
-							onSelectConversation={setSelectedConversation}
+							onSelectConversation={(conversation) => {
+								// Mark conversation as read when selected
+								if (conversation.unread) {
+									setConversations((prevConversations) =>
+										prevConversations.map((conv) =>
+											conv.userId === conversation.id
+												? { ...conv, unreadCount: 0 }
+												: conv
+										)
+									)
+								}
+								setSelectedConversation(conversation)
+							}}
 						/>
 					)}
 					{selectedConversation ? (
