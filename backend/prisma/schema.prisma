@@ -28,6 +28,8 @@ model Account {
   team  Team?
   playerApplications Application[] @relation("PlayerApplications")
   teamApplications Application[] @relation("TeamApplications")
+  sentMessages Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 }
 
 model Player {
@@ -96,4 +98,20 @@ model Tournament {
   allParticipants Json
   participantsAdvancedToNextRound Json
   allTournaments Tournaments @relation("TournamentsList", fields: [allTournamentsId], references: [id])
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  content String
+  createdAt DateTime @default(now())
+  isRead Boolean @default(false)
+
+  senderId Int
+  sender Account @relation("SentMessages", fields: [senderId], references: [id])
+
+  receiverId Int
+  receiver Account @relation("ReceivedMessages", fields: [receiverId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
 }
