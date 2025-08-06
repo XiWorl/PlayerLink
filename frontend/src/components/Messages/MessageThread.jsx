@@ -78,15 +78,47 @@ function MessageThread({ conversation }) {
 	function handleSendMessage(e) {
 		e.preventDefault()
 		if (messageText.trim() && conversation && conversation.id) {
+			const messageContent = messageText.trim()
+
+			// Create a temporary message to display immediately
+			const tempMessage = {
+				id: `temp-${Date.now()}`,
+				content: messageContent,
+				createdAt: new Date().toISOString(),
+				senderId: currentUserId,
+				receiverId: conversation.id,
+				isRead: false,
+			}
+
+			// Add temporary message to the UI immediately
+			setMessages((prevMessages) => [...prevMessages, tempMessage])
+
+			// Clear the input field
+			setMessageText("")
+
 			// Send message to backend
 			messageService
-				.sendMessageToUser(conversation.id, messageText.trim())
-				.then(() => {
-					// Message will be added via the newMessage event listener
-					setMessageText("")
+				.sendMessageToUser(conversation.id, messageContent)
+				.then((sentMessage) => {
+					// Replace the temporary message with the real one from the server
+					if (sentMessage) {
+						setMessages((prevMessages) =>
+							prevMessages.map((msg) =>
+								msg.id === tempMessage.id ? sentMessage : msg
+							)
+						)
+					}
 				})
 				.catch((err) => {
 					console.error("Error sending message:", err)
+
+					// Mark the temporary message as failed
+					setMessages((prevMessages) =>
+						prevMessages.map((msg) =>
+							msg.id === tempMessage.id ? { ...msg, failed: true } : msg
+						)
+					)
+
 					alert("Failed to send message. Please try again.")
 				})
 		}

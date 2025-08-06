@@ -4,7 +4,7 @@ import messageService from "../../services/messageService"
 
 export default function MessageAccountButton({ profileData }) {
 	const navigate = useNavigate()
-    console.log(profileData)
+	console.log(profileData)
 
 	const handleMessageClick = async () => {
 		try {
@@ -15,10 +15,10 @@ export default function MessageAccountButton({ profileData }) {
 				return
 			}
 
-            let name = profileData.name
-            if (name == null) {
-                name = profileData.firstName + " " + profileData.lastName
-            }
+			let name = profileData.name
+			if (name == null) {
+				name = profileData.firstName + " " + profileData.lastName
+			}
 
 			// Connect to WebSocket if not already connected
 			if (!messageService.connected) {
