@@ -32,6 +32,9 @@ export default function Navbar() {
 						<div className="apply">
 							<ApplicationsButton />
 						</div>
+						<div>
+							<MessagesButton />
+						</div>
 						<div className="connect">
 							<ConnectButton />
 						</div>
@@ -106,6 +109,23 @@ function ApplicationsButton() {
 				<h3>Applications</h3>
 			</button>
 			<span className="tooltip-text">Applications</span>
+		</div>
+	)
+}
+
+function MessagesButton() {
+	const { accountData, navigate } = useContext(NavbarContext)
+	if (accountData === null) return
+
+	return (
+		<div className="tooltip">
+			<button
+				onClick={() => navigate(`/messages/${accountData.id}`)}
+				className="apply-btn"
+			>
+				<h3>Messages</h3>
+			</button>
+			<span className="tooltip-text">Messages</span>
 		</div>
 	)
 }
