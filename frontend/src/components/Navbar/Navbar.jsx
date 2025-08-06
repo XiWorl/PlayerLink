@@ -32,7 +32,7 @@ export default function Navbar() {
 						<div className="apply">
 							<ApplicationsButton />
 						</div>
-						<div className="messages">
+						<div>
 							<MessagesButton />
 						</div>
 						<div className="connect">
