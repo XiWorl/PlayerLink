@@ -52,7 +52,7 @@ createRoot(document.getElementById("root")).render(
 					element={<PrivateRoute page={<BracketPage />} />}
 				/>
 				<Route
-					path="/messages/:id"
+					path="/messages"
 					element={<PrivateRoute page={<MessagesPage />} />}
 				/>
 			</Routes>

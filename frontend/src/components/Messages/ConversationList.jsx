@@ -14,9 +14,15 @@ function ConversationList({ conversations, selectedId, onSelectConversation }) {
 		<div className="conversation-list">
 			<div className="conversation-list-header">
 				<h2>Messages</h2>
-				<button className="new-message-btn" title="New message">
-					+
-				</button>
+				<button
+					className="new-message-btn"
+					title="New message"
+					onClick={() =>
+						alert(
+							"New message functionality will be implemented in a future update."
+						)
+					}
+				></button>
 			</div>
 
 			<div className="search-container">

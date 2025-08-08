@@ -155,3 +155,141 @@ export async function updateRecommendationStatus(playerAccountId, teamAccountId,
 		return null
 	}
 }
+
+// Message API methods
+export async function sendMessage(receiverId, content) {
+	try {
+		const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
+		const response = await fetch(`${BASEURL}/api/messages/send`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({ receiverId, content }),
+		})
+
+		if (!response.ok) {
+			console.error(`Error sending message: ${response.status}`)
+			return null
+		}
+
+		return await response.json()
+	} catch (error) {
+		console.error("Error sending message:", error)
+		return null
+	}
+}
+
+export async function markMessageAsRead(messageId) {
+	try {
+		const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
+		const response = await fetch(`${BASEURL}/api/messages/read/${messageId}`, {
+			method: "PATCH",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		if (!response.ok) {
+			console.error(`Error marking message as read: ${response.status}`)
+			return null
+		}
+
+		return await response.json()
+	} catch (error) {
+		console.error("Error marking message as read:", error)
+		return null
+	}
+}
+
+export async function markAllMessagesAsRead(userId) {
+	try {
+		const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
+		const response = await fetch(`${BASEURL}/api/messages/read-all/${userId}`, {
+			method: "PATCH",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		if (!response.ok) {
+			console.error(`Error marking all messages as read: ${response.status}`)
+			return null
+		}
+
+		return await response.json()
+	} catch (error) {
+		console.error("Error marking all messages as read:", error)
+		return null
+	}
+}
+
+export async function getConversation(userId) {
+	try {
+		const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
+		const response = await fetch(`${BASEURL}/api/messages/conversation/${userId}`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		if (!response.ok) {
+			console.error(`Error getting conversation: ${response.status}`)
+			return null
+		}
+
+		return await response.json()
+	} catch (error) {
+		console.error("Error getting conversation:", error)
+		return null
+	}
+}
+
+export async function getConversations() {
+	try {
+		const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
+		const response = await fetch(`${BASEURL}/api/messages/conversations`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		if (!response.ok) {
+			console.error(`Error getting conversations: ${response.status}`)
+			return null
+		}
+
+		return await response.json()
+	} catch (error) {
+		console.error("Error getting conversations:", error)
+		return null
+	}
+}
+
+export async function getUnreadCount() {
+	try {
+		const token = sessionStorage.getItem(TOKEN_SESSION_KEY)
+		const response = await fetch(`${BASEURL}/api/messages/unread-count`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		if (!response.ok) {
+			console.error(`Error getting unread count: ${response.status}`)
+			return 0
+		}
+
+		const data = await response.json()
+		return data.count
+	} catch (error) {
+		console.error("Error getting unread count:", error)
+		return 0
+	}
+}
+
+// No default export needed as we're using named exports

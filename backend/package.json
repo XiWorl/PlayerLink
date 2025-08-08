@@ -9,7 +9,8 @@
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.16.1"
+    "pg": "^8.16.1",
+    "socket.io": "^4.8.1"
   },
   "name": "back-end",
   "version": "1.0.0",

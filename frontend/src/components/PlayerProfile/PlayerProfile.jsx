@@ -10,6 +10,7 @@ import TeamAffiliations from "./TeamAffiliations"
 import GamingExperience from "./GamingExperience"
 import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import EditAccountButton from "../ProfileUtils/EditAccountButton"
+import MessageAccountButton from "../ProfileUtils/MessageAccountButton"
 import Navbar from "../Navbar/Navbar"
 import "../ProfileUtils/ProfilePage.css"
 
@@ -65,6 +66,11 @@ export default function PlayerProfile({ isLoading, accountData, setIsLoading }) 
 								accountData={accountData}
 								setIsLoading={setIsLoading}
 							/>
+						)}
+					</div>
+					<div>
+						{sessionStorageAccountData.id != accountData.accountId && (
+							<MessageAccountButton profileData={accountData} />
 						)}
 					</div>
 				</div>

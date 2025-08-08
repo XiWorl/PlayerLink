@@ -41,12 +41,16 @@ const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
 const { PrismaClient } = require("../generated/prisma")
+const messageRoutes = require("../messages/messageRoutes")
 const prisma = new PrismaClient()
 
 const server = express()
 server.use(helmet())
 server.use(express.json())
 server.use(cors())
+
+// Message routes
+server.use("/api/messages", messageRoutes)
 
 server.get("/teams/:teamId", async (req, res, next) => {
 	try {
